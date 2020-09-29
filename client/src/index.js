@@ -1,14 +1,26 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+// if you need it
+//import "react-app-polyfill/ie11";
+//import "react-app-polyfill/stable";
+
+import React from "react";
+import ReactDOM from "react-dom";
+import * as serviceWorker from "./serviceWorker";
+import { BrowserRouter } from "react-router-dom";
+
+import { StaticDataProvider } from "./config/staticData";
+
+import MainRouter from "./router";
+import ScrollRestoration from "./router/scrollRestoration";
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
+  <BrowserRouter>
+    <StaticDataProvider>
+      <ScrollRestoration>
+        <MainRouter />
+      </ScrollRestoration>
+    </StaticDataProvider>
+  </BrowserRouter>,
+  document.getElementById("root")
 );
 
 // If you want your app to work offline and load faster, you can change
