@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import axios from 'axios';
-import { Loader } from 'ui/Components/Loader';
+import { Loader } from 'ui/components/Loader';
 
 const AuthContext = createContext({ user: null });
 export const useAuth = () => useContext(AuthContext);

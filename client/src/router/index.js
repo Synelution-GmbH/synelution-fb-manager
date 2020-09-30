@@ -1,10 +1,10 @@
-import React, { Component, Suspense } from "react";
-import { Switch, Route } from "react-router-dom";
+import React, { Component, Suspense } from 'react';
+import { Switch, Route } from 'react-router-dom';
 
-import { Nav } from "./Nav";
-import { Footer } from "./Footer";
+import { Nav } from './Nav';
+import { Footer } from './Footer';
 
-const Home = React.lazy(() => import("../pages/Home"));
+const Dashboard = React.lazy(() => import('../pages/Dashboard'));
 
 export default class MainRouter extends Component {
   render() {
@@ -15,7 +15,7 @@ export default class MainRouter extends Component {
         <Suspense fallback={null}>
           <div className="main-content">
             <Switch>
-              <Route exact path="/" component={Home} />
+              <Route exact path="/" component={Dashboard} />
             </Switch>
             <Footer />
           </div>

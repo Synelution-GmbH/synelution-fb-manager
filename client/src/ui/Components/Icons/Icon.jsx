@@ -1,10 +1,22 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React from 'react';
+import PropTypes from 'prop-types';
 
-import { library } from "@fortawesome/fontawesome-svg-core";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import {
+  faEye,
+  faEyeSlash,
+  faTimesCircle,
+  faSmile,
+  faClipboard,
+  faClipboardCheck,
+  faPlus,
+} from '@fortawesome/free-solid-svg-icons';
+
+import { faInstagram, faFacebook } from '@fortawesome/free-brands-svg-icons';
+
+library.add(
   faEye,
   faEyeSlash,
   faTimesCircle,
@@ -13,9 +25,18 @@ import {
   faFacebook,
   faClipboard,
   faClipboardCheck,
-  faPlus,
-} from "@fortawesome/free-solid-svg-icons";
+  faPlus
+);
 
 export const AwesomeIcon = ({ ...props }) => {
-  <FontAwesomeIcon {...props} icon={icon} />;
+  return <FontAwesomeIcon {...props} icon={[props.prefix, props.icon]} />;
+};
+
+AwesomeIcon.propTypes = {
+  icon: PropTypes.string.isRequired,
+  prefix: PropTypes.string,
+};
+
+AwesomeIcon.defaultProps = {
+  prefix: 'fas',
 };
