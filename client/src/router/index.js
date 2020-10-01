@@ -5,6 +5,7 @@ import { Nav } from './Nav';
 import { Footer } from './Footer';
 
 const Dashboard = React.lazy(() => import('../pages/Dashboard'));
+const Posts = React.lazy(() => import('../pages/Posts'));
 
 export default class MainRouter extends Component {
   render() {
@@ -15,6 +16,11 @@ export default class MainRouter extends Component {
         <Suspense fallback={null}>
           <div className="main-content">
             <Switch>
+              <Route
+                exact
+                path="/posts/:type/from/:from/to/:to"
+                component={Posts}
+              />
               <Route exact path="/" component={Dashboard} />
             </Switch>
             <Footer />
