@@ -4,7 +4,6 @@ import data from 'emoji-mart/data/facebook.json';
 import { NimblePicker } from 'emoji-mart';
 import { Avatar, Box, Grow, makeStyles } from '@material-ui/core';
 import { AwesomeIcon } from '../Icons/Icon';
-import { useEditor } from 'slate-react';
 
 const useStyles = makeStyles((theme) => ({
   avatar: {

@@ -2,7 +2,6 @@ import React from 'react';
 import { CircularProgress, Box, Grid } from '@material-ui/core';
 
 export const Loader = ({ loading }) => {
-  console.log(loading);
   return (
     <Box clone bgcolor="primary.main">
       <Grid

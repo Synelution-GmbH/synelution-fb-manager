@@ -14,7 +14,6 @@ const setAxiosDefaults = () => {
 export const AuthProvider = (props) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  console.log(user);
 
   useEffect(() => {
     if (!user) return;
