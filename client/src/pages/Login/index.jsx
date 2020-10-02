@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Redirect } from 'react-router';
 import { Helmet } from 'react-helmet';
 import { useAuth } from 'services/auth-provider';
 import {
@@ -10,9 +9,7 @@ import {
   Container,
   FormGroup,
   Grid,
-  Input,
   makeStyles,
-  styled,
   TextField,
   Typography,
 } from '@material-ui/core';

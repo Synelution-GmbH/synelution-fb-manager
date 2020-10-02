@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Avatar, Button, Tooltip } from '@material-ui/core';
+import { Button } from '@material-ui/core';
 import { AwesomeIcon } from '../Icons/Icon';
 import { askClipboardPermissions } from './helper';
 
