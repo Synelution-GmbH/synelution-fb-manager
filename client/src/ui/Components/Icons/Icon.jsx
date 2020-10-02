@@ -9,9 +9,12 @@ import {
   faEyeSlash,
   faTimesCircle,
   faSmile,
-  faClipboard,
+  faCopy,
   faClipboardCheck,
   faPlus,
+  faCloudUploadAlt,
+  faSearch,
+  faSave,
 } from '@fortawesome/free-solid-svg-icons';
 
 import { faInstagram, faFacebook } from '@fortawesome/free-brands-svg-icons';
@@ -23,9 +26,12 @@ library.add(
   faSmile,
   faInstagram,
   faFacebook,
-  faClipboard,
+  faCopy,
   faClipboardCheck,
-  faPlus
+  faPlus,
+  faCloudUploadAlt,
+  faSearch,
+  faSave
 );
 
 export const AwesomeIcon = ({ ...props }) => {

@@ -1,5 +1,6 @@
 import React, { Suspense } from 'react';
 import CssBaseline from '@material-ui/core/CssBaseline';
+import 'scss/index.min.css';
 
 import { AuthProvider, useAuth } from './services/auth-provider';
 import ScrollRestoration from './router/scrollRestoration';

@@ -1,6 +1,7 @@
 import passport from 'koa-passport';
 import jsonwebtoken from 'jsonwebtoken';
 import User from '../models/User';
+import koaBody from 'koa-body';
 
 const createToken = async () => {
   return await jsonwebtoken.sign({ id: user.id }, process.env.secret);
@@ -10,6 +11,7 @@ const createToken = async () => {
 export default ({ router }) => {
   router.post(
     '/login',
+    koaBody(),
     passport.authenticate('local', { session: false }),
     async (ctx) => {
       const { user } = ctx.req;
@@ -21,7 +23,7 @@ export default ({ router }) => {
     }
   );
 
-  router.post('/register', async (ctx) => {
+  router.post('/register', koaBody(), async (ctx) => {
     const { username, email, password, role } = ctx.request.body;
 
     if (!username || !password || !email) {

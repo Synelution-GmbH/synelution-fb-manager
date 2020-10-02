@@ -21,15 +21,15 @@ const customerSchema = new mongoose.Schema({
 });
 
 // On Save Hook, encrypt password
-customerSchema.pre('save', function (next) {
-  if (!this.slug)
-    this.slug = this.name
-      .replace(/ /g, '-')
-      .replace(/[^a-zA-Z0-9-_]/g, '')
-      .toLowerCase();
+// customerSchema.pre('save', function (next) {
+//   if (!this.slug)
+//     this.slug = this.name
+//       .replace(/ /g, '-')
+//       .replace(/[^a-zA-Z0-9-_]/g, '')
+//       .toLowerCase();
 
-  next();
-});
+//   next();
+// });
 
 const Customer = mongoose.model('Customer', customerSchema);
 
