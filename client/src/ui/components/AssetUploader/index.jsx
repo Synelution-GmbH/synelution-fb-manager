@@ -52,21 +52,23 @@ const useStyles = makeStyles((theme) => ({
 export const AssetUploader = ({ setFile = () => {} }) => {
   const [image, setImage] = useState();
 
-  const onDrop = useCallback((acceptedFiles) => {
-    acceptedFiles.forEach((file) => {
-      setFile(file);
-      const reader = new FileReader();
+  const onDrop = useCallback(async (acceptedFiles) => {
+    // acceptedFiles.forEach((file) => {
+    const file = acceptedFiles[0];
+    setFile(file);
+    const reader = new FileReader();
 
-      reader.onabort = () => console.log('file reading was aborted');
-      reader.onerror = () => console.log('file reading has failed');
-      reader.onload = () => {
-        // Do whatever you want with the file contents
-        const binaryStr = reader.result;
-        setImage(binaryStr);
-      };
-      // reader.readAsArrayBuffer(file);
-      reader.readAsDataURL(file);
-    });
+    reader.onabort = () => console.log('file reading was aborted');
+    reader.onerror = () => console.log('file reading has failed');
+    reader.onload = async () => {
+      // Do whatever you want with the file contents
+      const binaryStr = reader.result;
+      setImage(binaryStr);
+    };
+    // reader.readAsArrayBuffer(file);
+    reader.readAsDataURL(file);
+
+    // });
   }, []);
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,

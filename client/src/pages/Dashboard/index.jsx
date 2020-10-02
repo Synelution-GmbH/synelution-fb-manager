@@ -1,43 +1,63 @@
 import {
+  Box,
   Container,
-  Fab,
-  FormControl,
   Grid,
-  Input,
-  InputAdornment,
-  InputLabel,
-  TextField,
+  makeStyles,
+  Paper,
   Toolbar,
 } from '@material-ui/core';
-import React from 'react';
-import { Editor } from 'ui/components/Editor';
-import { AwesomeIcon } from 'ui/components/Icons/Icon';
-import { CreateCustomer } from './CreateCustomer';
+import React, { useState } from 'react';
+import { CreateClient } from './CreateClient';
+import { ClientList } from './ClientList';
+import { postClient, getClients } from 'services';
+import { useQuery, useMutation, useQueryCache } from 'react-query';
+import { SearchBar } from './SearchBar';
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    // backgroundColor: theme.palette.background.paper,
+  },
+}));
 
 const Dashboard = () => {
+  const [filtered, setFiltered] = useState(null);
+  const cache = useQueryCache();
+  const classes = useStyles();
+  const { isLoading, data } = useQuery('clients', getClients);
+  const [addClient] = useMutation(postClient, {
+    onSuccess: () => {
+      console.log('invalidate');
+      cache.invalidateQueries('clients');
+    },
+  });
+
+  if (isLoading) return null;
+
   return (
-    <div>
+    <div className={classes.root}>
       <Container maxWidth="lg">
         <Toolbar>
           <Grid container justify="space-between">
-            <FormControl>
-              <InputLabel htmlFor="search">search</InputLabel>
-              <Input
-                type="text"
-                id="search"
-                // endAdornment={<InputAdornment position="end">Kg</InputAdornment>}
-                endAdornment={
-                  <InputAdornment position="end">
-                    <AwesomeIcon icon="search" />
-                  </InputAdornment>
-                }
-              />
-            </FormControl>
-            <CreateCustomer />
+            <SearchBar
+              list={data}
+              setFilteredList={setFiltered}
+              searchProperty="name"
+            />
+            <CreateClient addClient={addClient} />
           </Grid>
         </Toolbar>
       </Container>
-      {/* <Editor /> */}
+      <Container maxWidth="lg">
+        <Box clone mt={2}>
+          <Paper>
+            {data.length > 0 ? (
+              <ClientList clients={filtered ? filtered : data} />
+            ) : (
+              <div></div>
+            )}
+          </Paper>
+        </Box>
+      </Container>
     </div>
   );
 };

@@ -21,6 +21,9 @@
   "bugs": {
     "url": "https://github.com/Synelution-GmbH/synelution-fb-manager/issues"
   },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
   "homepage": "https://github.com/Synelution-GmbH/synelution-fb-manager#readme",
   "dependencies": {
     "@babel/core": "^7.11.6",
