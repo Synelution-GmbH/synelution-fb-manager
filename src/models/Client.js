@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const customerSchema = new mongoose.Schema({
+const clientSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
@@ -21,7 +21,7 @@ const customerSchema = new mongoose.Schema({
 });
 
 // On Save Hook, encrypt password
-// customerSchema.pre('save', function (next) {
+// clientSchema.pre('save', function (next) {
 //   if (!this.slug)
 //     this.slug = this.name
 //       .replace(/ /g, '-')
@@ -31,6 +31,6 @@ const customerSchema = new mongoose.Schema({
 //   next();
 // });
 
-const Customer = mongoose.model('Customer', customerSchema);
+const Client = mongoose.model('Client', clientSchema);
 
-export default Customer;
+export default Client;

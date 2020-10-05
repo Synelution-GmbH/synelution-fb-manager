@@ -1,13 +1,13 @@
 const logger = require('koa-logger');
 const cors = require('@koa/cors');
-const koaBody = require('koa-body');
+// const koaBody = require('koa-body');
 import serve from 'koa-static';
 import compress from 'koa-compress';
 
 export default ({ app }) => {
   app.use(logger());
   app.use(cors());
-  app.use(koaBody());
+  // app.use(koaBody());
   app.use(
     compress({
       filter: function (content_type) {

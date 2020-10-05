@@ -2,6 +2,7 @@ import Router from 'koa-router';
 
 import authRoutes from './auth';
 import clientRoutes from './clients';
+import postRoutes from './posts';
 import passport from 'koa-passport';
 
 export default ({ app }) => {
@@ -16,7 +17,11 @@ export default ({ app }) => {
 
   const clientsRouter = new Router({ prefix: '/clients' });
   clientRoutes({ router: clientsRouter });
-
   app.use(clientsRouter.routes());
   app.use(clientsRouter.allowedMethods());
+
+  const postsRouter = new Router({ prefix: '/posts' });
+  postRoutes({ router: postsRouter });
+  app.use(postsRouter.routes());
+  app.use(postsRouter.allowedMethods());
 };

@@ -20,6 +20,20 @@ initRoutes({ app });
 
 io.on('connection', (socket) => {
   console.log('a user connected');
+  socket.on('join editor', (id) => {
+    console.log(id);
+    socket.join(id);
+  });
+
+  socket.on('leave editor', (id) => {
+    console.log(id);
+    socket.leave(id);
+  });
+  socket.on('editor change', ({ id, operations, selection }) => {
+    // socket.leave(id);
+    console.log(operations);
+    socket.to(id).emit('editor change', { id, operations, selection });
+  });
 
   socket.on('disconnect', () => {
     console.log('user disconnected');
