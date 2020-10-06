@@ -2,7 +2,7 @@ import koaBody from 'koa-body';
 import Client from '../models/Client';
 import fs from 'fs/promises';
 
-import { saveFileAndResize } from '../utils';
+import { saveFileAndResize, deleteDirectory } from '../utils';
 
 // prefix: "/"
 export default ({ router }) => {
@@ -66,7 +66,9 @@ export default ({ router }) => {
         throw 'customer not found';
       }
 
-      await fs.unlink('public' + customer.profilePicture);
+      await deleteDirectory(`public/uploads/${customer.slug}`);
+
+      // await fs.unlink('public' + customer.profilePicture);
       ctx.body = customer;
     } catch (e) {
       console.log(e);

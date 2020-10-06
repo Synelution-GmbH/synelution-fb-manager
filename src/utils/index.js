@@ -2,6 +2,7 @@ import stream from 'stream';
 import { promisify } from 'util';
 import fs from 'fs';
 import sharp from 'sharp';
+import rimraf from 'rimraf';
 
 export const pipeline = promisify(stream.pipeline);
 export const checkCreatePath = async (path) => {
@@ -12,11 +13,11 @@ export const checkCreatePath = async (path) => {
   }
 };
 
-function isDirEmpty(dirname) {
-  return fs.promises.readdir(dirname).then((files) => {
-    return files.length === 0;
-  });
-}
+export const deleteDirectory = (path) =>
+  fs.promises.rmdir(path, { recursive: true });
+// new Promise((resolve, reject) => {
+//   rimraf(path, () => resolve('done'));
+// });
 
 export const saveFileAndResize = async ({
   uploadPath,
