@@ -23,10 +23,11 @@ const Dashboard = () => {
   const [filtered, setFiltered] = useState(null);
   const cache = useQueryCache();
   const classes = useStyles();
-  const { isLoading, data } = useQuery('clients', getClients);
+  const { isLoading, data } = useQuery(['clients', {}], getClients);
   const [addClient] = useMutation(postClient, {
-    onSuccess: () => {
-      console.log('invalidate');
+    onSuccess: (data) => {
+      // const clients = cache.getQueryData('clients');
+      // cache.setQueryData('clients', (old) => [...old, data]);
       cache.invalidateQueries('clients');
     },
   });

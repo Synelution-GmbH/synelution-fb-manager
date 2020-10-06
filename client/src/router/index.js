@@ -16,7 +16,7 @@ export default class MainRouter extends Component {
         <Suspense fallback={null}>
           <div className="main-content">
             <Switch>
-              <Route path="/:customer/posts/:type" component={Posts} />
+              <Route path="/:client/posts/:type" component={Posts} />
               {/* /from/:from/to/:to */}
               <Route exact path="/" component={Dashboard} />
             </Switch>

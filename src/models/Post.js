@@ -1,18 +1,12 @@
 import mongoose from 'mongoose';
 
 const postSchema = new mongoose.Schema({
-  date: {
-    type: String,
-  },
-  budget: {
-    type: Number,
-  },
-  content: {
-    type: String,
-  },
-  asset: {
-    type: String,
-  },
+  client: String,
+  type: String,
+  date: Number,
+  budget: Number,
+  content: String,
+  asset: String,
 });
 
 const Post = mongoose.model('Post', postSchema);

@@ -8,8 +8,8 @@ import {
   Tooltip,
   Typography,
 } from '@material-ui/core';
-import React, { useMemo, useRef, useState } from 'react';
-import { createEditor } from 'slate';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { createEditor, Transforms } from 'slate';
 import { Editable, Slate, withReact } from 'slate-react';
 import { Node } from 'slate';
 
@@ -17,6 +17,7 @@ import { withHistory } from 'slate-history';
 
 import { EmojiePicker } from './EmojiPicker';
 import { CopyToClipboard } from './CopyToClipboard';
+import { useSocket } from 'services/socket-provider';
 
 const serialize = (nodes) => {
   return nodes.map((n) => Node.string(n)).join('\n');
@@ -61,7 +62,8 @@ const useStyles = makeStyles((theme) => {
   };
 });
 
-export const Editor = () => {
+export const Editor = ({ onChange }) => {
+  const socket = useSocket();
   const editor = useMemo(() => withHistory(withReact(createEditor())), []);
   const classes = useStyles();
   const selection = useRef({
@@ -75,8 +77,27 @@ export const Editor = () => {
     },
   ]);
   const handleChange = (newValue) => {
+    const { operations, selection } = editor;
+    console.log(operations);
+    // console.log(editor.selection);
+    if (!operations[0].server) onChange({ operations, selection });
     setValue(newValue);
   };
+
+  useEffect(() => {
+    // editor.onChange((a1, a2) => {
+    //   console.log(a1, a2);
+    // });
+    socket.on('editor change', ({ id, operations, selection }) => {
+      // if (selection) Transforms.setSelection(editor, selection);
+      // console.log(editor.selection);
+      operations.forEach((operation) => {
+        console.log(operation);
+        // if (operation === 'merge_node') Transforms.select(editor, operation.path);
+        editor.apply({ ...operation, server: true });
+      });
+    });
+  }, []);
 
   const serialized = serialize(value);
   return (

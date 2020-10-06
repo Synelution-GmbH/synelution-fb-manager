@@ -1,5 +1,5 @@
 import koaBody from 'koa-body';
-import Customer from '../models/Customer';
+import Client from '../models/Client';
 import fs from 'fs/promises';
 
 import { saveFile } from '../utils';
@@ -12,6 +12,7 @@ export default ({ router }) => {
     async (ctx) => {
       const { name } = ctx.request.body;
       const slug = name
+        .trim()
         .replace(/ /g, '-')
         .replace(/[^a-zA-Z0-9-_]/g, '')
         .toLowerCase();
@@ -21,10 +22,10 @@ export default ({ router }) => {
       const fileName = `${Date.now()}_${file.name}`;
 
       try {
-        const existingCustomer = await Customer.findOne({
+        const existingClient = await Client.findOne({
           slug,
         });
-        if (existingCustomer) {
+        if (existingClient) {
           throw 'user already exists';
         }
         const profilePicture = await saveFile({
@@ -33,14 +34,14 @@ export default ({ router }) => {
           savePath,
         });
 
-        const newCustomer = new Customer({
-          name,
+        const newClient = new Client({
+          name: name.trim(),
           slug,
           profilePicture,
         });
 
-        await newCustomer.save();
-        ctx.body = newCustomer;
+        await newClient.save();
+        ctx.body = newClient;
       } catch (e) {
         ctx.throw(400, e);
       }
@@ -49,7 +50,7 @@ export default ({ router }) => {
 
   router.get('/', async (ctx) => {
     try {
-      const customers = await Customer.find({});
+      const customers = await Client.find({});
       ctx.body = customers;
     } catch (e) {
       ctx.throw(404, 'not found');
@@ -59,7 +60,7 @@ export default ({ router }) => {
   router.delete('/:slug', async (ctx) => {
     const { slug } = ctx.params;
     try {
-      const customer = await Customer.findOneAndDelete({ slug });
+      const customer = await Client.findOneAndDelete({ slug });
       if (!customer) {
         throw 'customer not found';
       }

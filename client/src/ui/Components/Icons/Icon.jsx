@@ -15,6 +15,7 @@ import {
   faCloudUploadAlt,
   faSearch,
   faSave,
+  faTrashAlt,
 } from '@fortawesome/free-solid-svg-icons';
 
 import { faInstagram, faFacebook } from '@fortawesome/free-brands-svg-icons';
@@ -31,7 +32,8 @@ library.add(
   faPlus,
   faCloudUploadAlt,
   faSearch,
-  faSave
+  faSave,
+  faTrashAlt
 );
 
 export const AwesomeIcon = ({ ...props }) => {

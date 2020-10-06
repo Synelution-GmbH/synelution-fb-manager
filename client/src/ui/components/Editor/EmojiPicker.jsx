@@ -34,7 +34,7 @@ export const EmojiePicker = ({ onSelect }) => {
   return (
     <>
       <Avatar
-        className={classes.avtar}
+        className={classes.avatar}
         variant="rounded"
         onClick={() => setOpen(!open)}
       >
