@@ -8,20 +8,12 @@ import {
   Tooltip,
   Typography,
 } from '@material-ui/core';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { createEditor, Transforms } from 'slate';
-import { Editable, Slate, withReact } from 'slate-react';
-import { Node } from 'slate';
-
-import { withHistory } from 'slate-history';
+import React, { useRef, useState } from 'react';
+import { Editable, Slate } from 'slate-react';
+import { Caret } from './Caret';
 
 import { EmojiePicker } from './EmojiPicker';
 import { CopyToClipboard } from './CopyToClipboard';
-import { useSocket } from 'services/socket-provider';
-
-const serialize = (nodes) => {
-  return nodes.map((n) => Node.string(n)).join('\n');
-};
 
 const EDITABLE = styled(Editable)(({ theme }) => ({
   padding: theme.spacing(2),
@@ -62,44 +54,36 @@ const useStyles = makeStyles((theme) => {
   };
 });
 
-export const Editor = ({ onChange }) => {
-  const socket = useSocket();
-  const editor = useMemo(() => withHistory(withReact(createEditor())), []);
+export const Editor = ({ onChange, decorate, serializedValue, value, editor }) => {
+  // const socket = useSocket();
+  // const editor = useMemo(() => withHistory(withReact(createEditor())), []);
   const classes = useStyles();
   const selection = useRef({
     focus: { offset: 0, path: [0, 0] },
     anchor: { offset: 0, path: [0, 0] },
   });
-  const [value, setValue] = useState([
-    {
-      type: 'paragraph',
-      children: [{ text: '' }],
-    },
-  ]);
-  const handleChange = (newValue) => {
-    const { operations, selection } = editor;
-    console.log(operations);
-    // console.log(editor.selection);
-    if (!operations[0].server) onChange({ operations, selection });
-    setValue(newValue);
-  };
 
-  useEffect(() => {
-    // editor.onChange((a1, a2) => {
-    //   console.log(a1, a2);
-    // });
-    socket.on('editor change', ({ id, operations, selection }) => {
-      // if (selection) Transforms.setSelection(editor, selection);
-      // console.log(editor.selection);
-      operations.forEach((operation) => {
-        console.log(operation);
-        // if (operation === 'merge_node') Transforms.select(editor, operation.path);
-        editor.apply({ ...operation, server: true });
-      });
-    });
-  }, []);
+  // const renderLeaf = useCallback((props) => <Leaf {...props} />, [decorate]);
 
-  const serialized = serialize(value);
+  // const handleChange = (newValue) => {
+  //   const { operations, selection } = editor;
+  //   console.log(operations);
+  //   // console.log(editor.selection);
+  //   if (!operations[0].server) onChange({ operations, selection });
+  //   setValue(newValue);
+  // };
+
+  // useEffect(() => {
+  //   socket.on('editor change', ({ id: sId, operations, selection }) => {
+  //     if (id !== sId) return;
+
+  //     operations.forEach((operation) => {
+  //       console.log(operation);
+  //       editor.apply({ ...operation, server: true });
+  //     });
+  //   });
+  // }, []);
+
   return (
     <Card className={classes.root}>
       <Grid
@@ -108,13 +92,14 @@ export const Editor = ({ onChange }) => {
         alignItems="stretch"
         style={{ height: '100%' }}
       >
-        <Slate editor={editor} value={value} onChange={handleChange}>
+        <Slate editor={editor} value={value} onChange={onChange}>
           <EDITABLE
             spellCheck={true}
             className="editor"
             placeholder="Beginn typing !!"
             onBlur={() => (selection.current = editor.selection)}
-            renderLeaf={(props) => <Leaf {...props} />}
+            // renderLeaf={renderLeaf}
+            // decorate={decorate}
           />
         </Slate>
 
@@ -134,14 +119,14 @@ export const Editor = ({ onChange }) => {
             </Grid>
             <Grid item sm={6}>
               <Grid container justify="flex-end">
-                <CopyToClipboard value={serialized} />
+                <CopyToClipboard value={serializedValue} />
                 <Tooltip title="character count" placement="bottom">
                   <Avatar
                     variant="rounded"
                     color="primary"
                     style={{ marginLeft: '8px' }}
                   >
-                    <Typography>{serialized.length}</Typography>
+                    <Typography>{serializedValue.length}</Typography>
                   </Avatar>
                 </Tooltip>
               </Grid>
@@ -153,12 +138,21 @@ export const Editor = ({ onChange }) => {
   );
 };
 
+Editor.defaultProps = {
+  // onChange: () => {},
+  // decorate: () => {},
+};
+
 const Leaf = ({ attributes, children, leaf }) => {
   return (
     <span
       {...attributes}
-      style={{ fontWeight: leaf.highlight ? 'bold' : 'normal' }}
+      style={{
+        position: 'relative',
+        backgroundColor: leaf.alphaColor,
+      }}
     >
+      {leaf.isCaret ? <Caret {...leaf} /> : null}
       {children}
     </span>
   );

@@ -6,7 +6,7 @@ import {
   Paper,
   Typography,
 } from '@material-ui/core';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { AwesomeIcon } from '../Icons/Icon';
 
@@ -48,12 +48,15 @@ const useStyles = makeStyles((theme) => ({
   }),
 }));
 
-export const AssetUploader = ({ setFile = () => {} }) => {
+export const AssetUploader = ({
+  setFile = () => {},
+  setDataUrl = () => {},
+  previewImage = null,
+}) => {
   const [image, setImage] = useState();
 
   const onDrop = useCallback(
     async (acceptedFiles) => {
-      // acceptedFiles.forEach((file) => {
       const file = acceptedFiles[0];
       setFile(file);
       const reader = new FileReader();
@@ -64,11 +67,10 @@ export const AssetUploader = ({ setFile = () => {} }) => {
         // Do whatever you want with the file contents
         const binaryStr = reader.result;
         setImage(binaryStr);
+        setDataUrl(binaryStr);
       };
       // reader.readAsArrayBuffer(file);
       reader.readAsDataURL(file);
-
-      // });
     },
     [setFile]
   );
@@ -79,6 +81,11 @@ export const AssetUploader = ({ setFile = () => {} }) => {
   });
 
   const classes = useStyles({ isDragActive, image });
+
+  useEffect(() => {
+    if (!previewImage) return;
+    setImage(previewImage);
+  }, [previewImage]);
 
   return (
     <>

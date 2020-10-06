@@ -2,8 +2,7 @@ import koaBody from 'koa-body';
 import Customer from '../models/Client';
 import fs from 'fs/promises';
 
-import { saveFile } from '../utils';
-import Client from '../models/Client';
+import { saveFile, saveFileAndResize } from '../utils';
 import dayjs from 'dayjs';
 import Post from '../models/Post';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
@@ -62,6 +61,36 @@ export default ({ router }) => {
       ctx.throw(404, e);
     }
   });
+
+  router.put(
+    '/:id',
+    koaBody({ multipart: true, uploadDir: '.', urlencoded: true }),
+    async (ctx) => {
+      const { id } = ctx.params;
+      if (!id) return ctx.throw(400, 'bad boy 凸ಠ益ಠ)凸');
+      const { file } = ctx.request.files;
+      try {
+        const post = await Post.findById(id);
+        const savePath = `public/uploads/${post.client}/`;
+        const fileName = `${Date.now()}_${file.name}`;
+
+        const asset = await saveFileAndResize({
+          uploadPath: file.path,
+          fileName,
+          savePath,
+          resize: [1500, 1500],
+        });
+        if (post.asset) await fs.unlink('public' + post.asset);
+        post.asset = asset;
+        await post.save();
+
+        ctx.body = post;
+      } catch (e) {
+        console.log(e);
+        ctx.throw(404, 'post not found');
+      }
+    }
+  );
   router.delete('/:id', koaBody(), async (ctx) => {
     const { id } = ctx.params;
     if (!id) return ctx.throw(400, 'bad boy 凸ಠ益ಠ)凸');

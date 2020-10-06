@@ -2,7 +2,7 @@ import koaBody from 'koa-body';
 import Client from '../models/Client';
 import fs from 'fs/promises';
 
-import { saveFile } from '../utils';
+import { saveFileAndResize } from '../utils';
 
 // prefix: "/"
 export default ({ router }) => {
@@ -28,10 +28,11 @@ export default ({ router }) => {
         if (existingClient) {
           throw 'user already exists';
         }
-        const profilePicture = await saveFile({
+        const profilePicture = await saveFileAndResize({
           uploadPath: file.path,
           fileName,
           savePath,
+          resize: [150, 150],
         });
 
         const newClient = new Client({

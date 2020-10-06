@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Grid, InputAdornment, TextField } from '@material-ui/core';
 import { Editor } from 'ui/components/Editor';
 import { AssetUploader } from 'ui/components/AssetUploader';
@@ -7,20 +7,42 @@ import { FORMAT } from 'config';
 import { DatePicker } from '@material-ui/pickers';
 import { DeleteButton } from './DeleteButton';
 import { useSocket } from 'services/socket-provider';
+import { EditorClient } from 'ui/components/EditorClient';
+import { useAuth, putPost } from 'services';
 
 export const Post = ({ date, budget, content, asset, id, type, removePost }) => {
-  const [post, setPost] = useState({ budget, date });
+  const { user } = useAuth();
+  const [post, setPost] = useState({ budget, date, content, asset });
   const socket = useSocket();
+  const saveTimeout = useRef();
   useEffect(() => {
     setPost({ ...post, date });
   }, [date]);
 
   useEffect(() => {
     socket.emit('join editor', id);
+    socket.on('update post', (data) => {
+      setPost({ ...post, ...data });
+    });
 
     return () => socket.emit('leave editor', id);
   }, []);
-  console.log(post);
+
+  const updatePost = (update) => {
+    setPost({ ...post, ...update });
+    clearTimeout(saveTimeout.current);
+    saveTimeout.current = setTimeout(() => {
+      socket.emit('update post', { id, ...update });
+    }, 300);
+  };
+
+  const updateImage = async (file) => {
+    const data = new FormData();
+    data.append('file', file);
+    const post = await putPost({ id, data });
+    updatePost({ asset: post.asset });
+  };
+
   return (
     <Grid container spacing={2} alignItems="stretch">
       <Grid item xs={10}>
@@ -28,12 +50,13 @@ export const Post = ({ date, budget, content, asset, id, type, removePost }) => 
           <TextField
             label="Budget"
             variant="outlined"
-            onChange={(e) => setPost({ ...post, budget: e.target.value })}
+            onChange={(e) => updatePost({ budget: e.target.value })}
             value={post.budget}
             InputProps={{
               startAdornment: <InputAdornment position="start">€</InputAdornment>,
             }}
           />
+
           <DatePicker
             mask="__.__.____"
             disableToolbar
@@ -42,7 +65,7 @@ export const Post = ({ date, budget, content, asset, id, type, removePost }) => 
             value={post.date}
             defaultValue={'Date'}
             onChange={(value) => {
-              setPost({ ...post, date: value });
+              updatePost({ date: dayjs(value).valueOf() });
             }}
             renderInput={(props) => (
               <TextField
@@ -65,14 +88,17 @@ export const Post = ({ date, budget, content, asset, id, type, removePost }) => 
         </Grid>
       </Grid>
       <Grid item xs={12} md={8}>
-        <Editor
-          onChange={({ operations, selection }) => {
-            socket.emit('editor change', { id, operations, selection });
-          }}
+        <EditorClient
+          id={id}
+          user={user}
+          content={post.content}
+          // onChange={({ operations, selection }) => {
+          //   socket.emit('editor change', { id, operations, selection });
+          // }}
         />
       </Grid>
       <Grid item xs={12} md={4}>
-        <AssetUploader />
+        <AssetUploader previewImage={post.asset} setFile={updateImage} />
       </Grid>
     </Grid>
   );
