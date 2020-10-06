@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import mongoose from 'mongoose';
 
 const postSchema = new mongoose.Schema({
@@ -8,6 +9,17 @@ const postSchema = new mongoose.Schema({
   content: String,
   asset: String,
 });
+
+// postSchema.pre('save', function (next) {
+//   console.log(this.date);
+//   if (typeof this.date !== 'number') {
+//     const fixedDate = dayjs(this.date, 'DD-MM-YYYY');
+//     console.log(fixedDate.isValid());
+//     if (fixedDate.isValid()) this.date = fixedDate.valueOf();
+//   }
+
+//   next();
+// });
 
 const Post = mongoose.model('Post', postSchema);
 

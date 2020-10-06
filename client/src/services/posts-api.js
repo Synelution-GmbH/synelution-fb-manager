@@ -9,3 +9,5 @@ export const createPost = ({ client, ...args }) => {
 export const deletePost = (id) => {
   return axios.delete(`/posts/${id}`).then(({ data }) => data);
 };
+export const putPost = ({ id, data }) =>
+  axios.put(`/posts/${id}`, data).then(({ data }) => data);

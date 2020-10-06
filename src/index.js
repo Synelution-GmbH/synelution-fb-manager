@@ -1,15 +1,40 @@
 import 'dotenv/config';
 import Koa from 'koa';
+import http from 'http';
+import socketIO from 'socket.io';
 
 import initMiddleware from './middleware';
 import initDB from './db';
 import initRoutes from './routes';
 import initAuth from './middleware/auth';
-import http from 'http';
-import socketIO from 'socket.io';
+import initSockets from './sockets';
 
 const app = new Koa();
 const server = http.createServer(app.callback());
+
+// const defaultValue = [
+//   {
+//     type: 'paragraph',
+//     children: [
+//       {
+//         text: 'Hello collaborator!',
+//       },
+//     ],
+//   },
+// ];
+// const connection = new SocketIOConnection({
+//   entry: server,
+//   defaultValue,
+//   saveFrequency: 2000,
+//   // onAuthRequest: async (query, socket) => {
+//   //   // some query validation
+//   //   return true;
+//   // },
+//   onDocumentLoad: async (pathname) => {
+//     console.log(pathname);
+//     return defaultValue;
+//   },
+// });
 const io = socketIO(server);
 
 initDB({ app });
@@ -19,25 +44,7 @@ initAuth({ app });
 initRoutes({ app });
 
 io.on('connection', (socket) => {
-  console.log('a user connected');
-  socket.on('join editor', (id) => {
-    console.log(id);
-    socket.join(id);
-  });
-
-  socket.on('leave editor', (id) => {
-    console.log(id);
-    socket.leave(id);
-  });
-  socket.on('editor change', ({ id, operations, selection }) => {
-    // socket.leave(id);
-    console.log(operations);
-    socket.to(id).emit('editor change', { id, operations, selection });
-  });
-
-  socket.on('disconnect', () => {
-    console.log('user disconnected');
-  });
+  initSockets({ socket });
 });
 
 const PORT = process.env.PORT || 3002;

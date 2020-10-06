@@ -48,7 +48,6 @@ export const EmojiePicker = ({ onSelect }) => {
             set="facebook"
             data={data}
             onSelect={(emoji) => {
-              console.log(emoji);
               onSelect(emoji.native);
               setOpen(false);
             }}
