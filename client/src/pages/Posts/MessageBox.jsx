@@ -12,6 +12,7 @@ export const MessageBox = ({ text, toggle, severity = 'error' }) => {
   useEffect(() => {
     if (!text) return;
     setOpen(true);
+    // eslint-disable-next-line
   }, [toggle]);
   const handleClose = () => setOpen(false);
 

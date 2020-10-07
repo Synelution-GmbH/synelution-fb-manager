@@ -10,8 +10,11 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { AwesomeIcon } from '../Icons/Icon';
 
+import { Video } from './Video';
+
 const useStyles = makeStyles((theme) => ({
   root: ({ image }) => ({
+    overflow: 'hidden',
     position: 'relative',
     paddingTop: '100%',
     '& > .MuiCardContent-root': {
@@ -27,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundSize: 'cover',
     backgroundPosition: 'center',
   }),
-  upload: ({ isDragActive, image }) => ({
+  upload: ({ isDragActive, hide }) => ({
     position: 'relative',
     width: '100%',
     height: '100%',
@@ -37,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.grey[50],
     padding: theme.spacing(3),
     transition: '0.3s',
-    opacity: image && !isDragActive ? 0 : 1,
+    opacity: hide && !isDragActive ? 0 : 1,
 
     '& .svg-inline--fa': {
       transition: '0.3s',
@@ -51,9 +54,11 @@ const useStyles = makeStyles((theme) => ({
 export const AssetUploader = ({
   setFile = () => {},
   setDataUrl = () => {},
-  previewImage = null,
+  preview = null,
+  children,
 }) => {
   const [image, setImage] = useState();
+  const [video, setVideo] = useState();
 
   const onDrop = useCallback(
     async (acceptedFiles) => {
@@ -80,16 +85,18 @@ export const AssetUploader = ({
     multiple: false,
   });
 
-  const classes = useStyles({ isDragActive, image });
+  const classes = useStyles({ isDragActive, hide: image || video, image });
 
   useEffect(() => {
-    if (!previewImage) return;
-    setImage(previewImage);
-  }, [previewImage]);
+    if (!preview) return;
+    if (preview.image) return setImage(preview.path);
+    if (preview.video) return setVideo(preview.path);
+  }, [preview]);
 
   return (
     <>
       <Card className={classes.root} {...getRootProps()}>
+        {video ? <Video src={video}></Video> : null}
         <CardContent>
           <Paper
             className={classes.upload}
@@ -117,6 +124,7 @@ export const AssetUploader = ({
             </Grid>
           </Paper>
         </CardContent>
+        {children}
       </Card>
     </>
   );

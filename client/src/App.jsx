@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import 'scss/index.min.css';
 

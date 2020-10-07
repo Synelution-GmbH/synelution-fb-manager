@@ -1,4 +1,4 @@
-import dayjs from 'dayjs';
+// import dayjs from 'dayjs';
 import mongoose from 'mongoose';
 
 const postSchema = new mongoose.Schema({
@@ -7,7 +7,12 @@ const postSchema = new mongoose.Schema({
   date: Number,
   budget: Number,
   content: String,
-  asset: String,
+  asset: {
+    path: String,
+    type: { type: String },
+    video: Boolean,
+    image: Boolean,
+  },
 });
 
 // postSchema.pre('save', function (next) {

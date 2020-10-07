@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   Box,
   Button,
   Container,
   Grid,
+  makeStyles,
+  TextField,
   Toolbar,
   Typography,
 } from '@material-ui/core';
@@ -21,12 +23,37 @@ import { AwesomeIcon } from 'ui/components/Icons/Icon';
 import { getPosts, createPost, deletePost } from 'services';
 import { PostSkeleton } from './PostSkeleton';
 import { MessageBox } from './MessageBox';
+import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab';
 
 dayjs.extend(customParseFormat);
 dayjs.locale('de');
 
 const formatDateUrl = ({ from, to, client, type }) =>
   `/${client}/posts/${type}/from/${from}/to/${to}`;
+
+const useStyles = makeStyles((theme) => ({
+  toolbar: { paddingLeft: '0px', paddingRight: '0' },
+  ml: {
+    marginLeft: theme.spacing(1),
+    maxWidth: '140px',
+  },
+  mr: {
+    marginRight: theme.spacing(1),
+  },
+  toggleButton: {
+    background: '',
+    padding: `${theme.spacing(1)}px ${theme.spacing(2)}px`,
+    '&.Mui-selected': {
+      color: '#fff',
+      '&[value="fb"]': {
+        background: theme.palette.fb,
+      },
+      '&[value="ig"]': {
+        background: theme.palette.ig,
+      },
+    },
+  },
+}));
 
 const Posts = () => {
   const { pathname } = useLocation();
@@ -35,6 +62,10 @@ const Posts = () => {
   let dateParams = useRouteMatch('/:client/posts/:type/from/:from/to/:to');
   const [value, setValue] = useState([null, null]);
   const [date, setDate] = useState([null, null]);
+  const [dateInterval, setDateInteral] = useState(7);
+  const [type, setType] = useState(params.type);
+
+  const classes = useStyles();
 
   useEffect(() => {
     // set date from URL
@@ -49,6 +80,20 @@ const Posts = () => {
     setDate([from, to]);
     setValue([dayjs(from, FORMAT), dayjs(to, FORMAT)]);
   }, [pathname]);
+
+  useEffect(() => {
+    if (type === params.type) return;
+    const [from, to] = date;
+    const url = formatDateUrl({
+      ...params,
+      type,
+      from,
+      to,
+    });
+
+    if (pathname === url) return;
+    history.push(url);
+  }, [type]);
 
   const handleClose = () => {
     const [vFrom, vTo] = value;
@@ -70,13 +115,34 @@ const Posts = () => {
       locale="de"
     >
       <Container maxWidth="lg">
-        <Box p={2} pt={4} clone>
-          <Toolbar>
-            <Grid container justify="space-between">
+        <Box pt={4} clone>
+          <Toolbar className={classes.toolbar}>
+            <Grid container>
+              <ToggleButtonGroup
+                className={classes.mr}
+                value={type}
+                exclusive
+                onChange={(e, newType) => setType(newType)}
+              >
+                <ToggleButton className={classes.toggleButton} value="fb">
+                  <AwesomeIcon prefix="fab" icon="facebook" />
+                </ToggleButton>
+                <ToggleButton className={classes.toggleButton} value="ig">
+                  <AwesomeIcon prefix="fab" icon="instagram" />
+                </ToggleButton>
+              </ToggleButtonGroup>
               <DatePicker
                 value={value}
                 handleClose={handleClose}
                 setValue={setValue}
+              />
+              <TextField
+                className={classes.ml}
+                value={dateInterval}
+                variant="outlined"
+                label="Post Interval"
+                type="number"
+                onChange={(e) => setDateInteral(e.target.value)}
               />
             </Grid>
           </Toolbar>
@@ -86,7 +152,12 @@ const Posts = () => {
       <Box clone p={2}>
         <Container maxWidth="lg">
           {date[0] && date[1] ? (
-            <PostList from={date[0]} to={date[1]} {...params} />
+            <PostList
+              dateInterval={dateInterval}
+              from={date[0]}
+              to={date[1]}
+              {...params}
+            />
           ) : (
             <></>
           )}
@@ -96,14 +167,20 @@ const Posts = () => {
   );
 };
 
-const PostList = ({ from, to, client, type }) => {
-  const [dateInterval, setDateInteral] = useState(7);
+const PostList = ({ dateInterval, from, to, client, type }) => {
   const [warning, setWarning] = useState({ toggle: false, text: '' });
   const cache = useQueryCache();
+  const QUERY = useMemo(() => ['posts', { client, type, from, to }], [
+    client,
+    type,
+    from,
+    to,
+  ]);
+
   const { isLoading, data } = useQuery(
-    ['posts', { client, type, from, to }],
-    getPosts,
-    { refetchOnWindowFocus: false }
+    QUERY,
+    getPosts
+    // { refetchOnWindowFocus: false }
   );
 
   const [addPost] = useMutation(createPost, {
@@ -115,40 +192,44 @@ const PostList = ({ from, to, client, type }) => {
     //   ]);
     // },
     onMutate: () => {
-      cache.setQueryData(['posts', { client, type, from, to }], (old) => [
-        ...old,
-        data,
-      ]);
+      cache.setQueryData(QUERY, (old) => [...old, data]);
     },
     onSuccess: (data) => {
-      const posts = cache.getQueryData(['posts', { client, type, from, to }]);
-      cache.setQueryData(['posts', { client, type, from, to }], (old) => {
+      const posts = cache.getQueryData(QUERY);
+      cache.setQueryData(QUERY, (old) => {
         // return [...old, data];
         return [...old.slice(0, old.length - 1), data];
       });
     },
   });
+
   const [removePost] = useMutation(deletePost, {
     onMutate: (id) => {
-      const previousValue = cache.getQueryData('todos');
-      cache.setQueryData(['posts', { client, type, from, to }], (old) => {
+      const previousValue = cache.getQueryData(QUERY);
+      cache.setQueryData(QUERY, (old) => {
         return old.filter((item) => item._id !== id);
       });
       return previousValue;
     },
     onSettled: () => {
-      cache.invalidateQueries(['posts', { client, type, from, to }]);
+      cache.invalidateQueries(QUERY);
     },
     onError: (err, variables, previousValue) =>
-      cache.setQueryData('todos', previousValue),
+      cache.setQueryData(QUERY, previousValue),
   });
 
   if (isLoading) return null;
 
   const handleAddPost = () => {
-    const lastPost = data[data.length - 1];
-    const dateFrom = lastPost ? dayjs(lastPost.date) : dayjs(from, FORMAT);
-    let newDate = dateFrom.add(dateInterval, 'days').valueOf();
+    const lastPost =
+      data.length > 0
+        ? data.sort((a, b) => a.date - b.date)[data.length - 1]
+        : null;
+    console.log(data);
+    const dateFrom = lastPost
+      ? dayjs(lastPost.date).add(dateInterval, 'days')
+      : dayjs(from, FORMAT);
+    let newDate = dateFrom.valueOf();
     if (newDate.valueOf() > dayjs(to, FORMAT).valueOf())
       return setWarning({
         toggle: !warning.toggle,
@@ -172,6 +253,7 @@ const PostList = ({ from, to, client, type }) => {
             _id ? (
               <Box mt={2} key={_id}>
                 <Post
+                  QUERY={QUERY}
                   removePost={removePost}
                   {...props}
                   id={_id}

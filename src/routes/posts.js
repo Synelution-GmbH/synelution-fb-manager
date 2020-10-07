@@ -1,5 +1,4 @@
 import koaBody from 'koa-body';
-import Customer from '../models/Client';
 import fs from 'fs/promises';
 
 import { saveFile, saveFileAndResize } from '../utils';
@@ -69,19 +68,38 @@ export default ({ router }) => {
       const { id } = ctx.params;
       if (!id) return ctx.throw(400, 'bad boy 凸ಠ益ಠ)凸');
       const { file } = ctx.request.files;
+
       try {
         const post = await Post.findById(id);
         const savePath = `public/uploads/${post.client}/`;
         const fileName = `${Date.now()}_${file.name}`;
+        const asset = {
+          type: file.type,
+          video: false,
+          image: false,
+        };
 
-        const asset = await saveFileAndResize({
-          uploadPath: file.path,
-          fileName,
-          savePath,
-          resize: [1500, 1500],
-        });
-        if (post.asset) await fs.unlink('public' + post.asset);
+        if (file.type.search('video') !== -1) {
+          asset.video = true;
+          asset.path = await saveFile({
+            uploadPath: file.path,
+            fileName,
+            savePath,
+          });
+        } else {
+          asset.image = true;
+          asset.path = await saveFileAndResize({
+            uploadPath: file.path,
+            fileName,
+            savePath,
+            resize: [1500, 1500],
+          });
+        }
+
+        if (post.asset && post.asset.path)
+          await fs.unlink('public' + post.asset.path);
         post.asset = asset;
+        console.log(post);
         await post.save();
 
         ctx.body = post;
