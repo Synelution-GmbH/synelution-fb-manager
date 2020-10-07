@@ -1,11 +1,6 @@
 import postSockets from './posts';
 import Post from '../models/Post';
-
-function arrayRemove(arr, value) {
-  return arr.filter(function (ele) {
-    return ele != value;
-  });
-}
+import { arrayRemove } from '../utils';
 
 const posts = {};
 const removePosts = ({ socket, id }) => {

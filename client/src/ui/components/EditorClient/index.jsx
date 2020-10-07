@@ -1,11 +1,7 @@
 import React, { useRef, useMemo, useState, useEffect } from 'react';
-import randomColor from 'randomcolor';
 import { createEditor, Node } from 'slate';
 import { withHistory } from 'slate-history';
 import { withReact } from 'slate-react';
-
-import { withIOCollaboration, useCursor } from '@slate-collaborative/client';
-
 import { Editor } from '../Editor';
 import { useSocket } from 'services/socket-provider';
 

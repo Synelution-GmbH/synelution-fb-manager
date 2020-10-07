@@ -14,9 +14,9 @@ export const DatePicker = ({ value, handleClose, setValue }) => {
         onChange={(newValue) => setValue(newValue)}
         renderInput={(startProps, endProps) => (
           <React.Fragment>
-            <TextField {...startProps} />
+            <TextField {...startProps} helperText="" />
             <DateRangeDelimiter> to </DateRangeDelimiter>
-            <TextField {...endProps} />
+            <TextField {...endProps} helperText="" />
           </React.Fragment>
         )}
       />

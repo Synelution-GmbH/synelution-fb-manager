@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import Koa from 'koa';
 import http from 'http';
+import https from 'https';
 import socketIO from 'socket.io';
 
 import initMiddleware from './middleware';
@@ -8,33 +9,11 @@ import initDB from './db';
 import initRoutes from './routes';
 import initAuth from './middleware/auth';
 import initSockets from './sockets';
+import webpush from 'web-push';
 
 const app = new Koa();
 const server = http.createServer(app.callback());
 
-// const defaultValue = [
-//   {
-//     type: 'paragraph',
-//     children: [
-//       {
-//         text: 'Hello collaborator!',
-//       },
-//     ],
-//   },
-// ];
-// const connection = new SocketIOConnection({
-//   entry: server,
-//   defaultValue,
-//   saveFrequency: 2000,
-//   // onAuthRequest: async (query, socket) => {
-//   //   // some query validation
-//   //   return true;
-//   // },
-//   onDocumentLoad: async (pathname) => {
-//     console.log(pathname);
-//     return defaultValue;
-//   },
-// });
 const io = socketIO(server);
 
 initDB({ app });
@@ -42,6 +21,14 @@ initMiddleware({ app });
 
 initAuth({ app });
 initRoutes({ app });
+
+webpush.setVapidDetails(
+  'mailto:web@synelution.com',
+  process.env.VAPID_PUBLIC,
+  process.env.VAPID_PRIVATE
+);
+
+// subscribe
 
 io.on('connection', (socket) => {
   initSockets({ socket });

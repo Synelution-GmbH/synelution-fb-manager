@@ -3,9 +3,10 @@ import { Button } from '@material-ui/core';
 import { AwesomeIcon } from '../Icons/Icon';
 import { askClipboardPermissions } from './helper';
 
-export const CopyToClipboard = ({ value }) => {
+export const CopyToClipboard = ({ value, ...props }) => {
   const [copied, setCopied] = useState(false);
-  const saveToClipboard = async () => {
+  const saveToClipboard = async (e) => {
+    e.stopPropagation();
     await askClipboardPermissions();
     try {
       await navigator.clipboard.writeText(value);
@@ -24,6 +25,7 @@ export const CopyToClipboard = ({ value }) => {
 
   return (
     <Button
+      {...props}
       color="primary"
       onClick={saveToClipboard}
       variant="contained"

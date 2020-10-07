@@ -2,5 +2,10 @@
   "compilerOptions": {
     "baseUrl": "src"
   },
-  "include": ["src"]
+  "include": [
+    "src",
+    "public/custom-sw.js",
+    "custom-sw.js",
+    "public/custom-service-worker.js"
+  ]
 }

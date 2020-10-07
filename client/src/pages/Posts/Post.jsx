@@ -1,28 +1,48 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Grid, InputAdornment, TextField } from '@material-ui/core';
-import { Editor } from 'ui/components/Editor';
+import { Grid, InputAdornment, makeStyles, TextField } from '@material-ui/core';
 import { AssetUploader } from 'ui/components/AssetUploader';
 import dayjs from 'dayjs';
-import { FORMAT } from 'config';
 import { DatePicker } from '@material-ui/pickers';
 import { DeleteButton } from './DeleteButton';
 import { useSocket } from 'services/socket-provider';
 import { EditorClient } from 'ui/components/EditorClient';
+import { CopyToClipboard } from 'ui/components/Editor/CopyToClipboard';
 import { useAuth, putPost } from 'services';
+import { useQueryCache } from 'react-query';
 
-export const Post = ({ date, budget, content, asset, id, type, removePost }) => {
+const useStyles = makeStyles((theme) => ({
+  clipboardButton: {
+    zIndex: 100,
+    position: 'absolute',
+    bottom: theme.spacing(1),
+    right: theme.spacing(1),
+  },
+}));
+
+export const Post = ({ date, budget, content, asset, id, removePost, QUERY }) => {
+  const cache = useQueryCache();
   const { user } = useAuth();
   const [post, setPost] = useState({ budget, date, content, asset });
   const socket = useSocket();
   const saveTimeout = useRef();
-  useEffect(() => {
-    setPost({ ...post, date });
-  }, [date]);
+  const classes = useStyles();
+
+  // const updatePost = () => {
+  //   cache.seQueryData(QUERY, (old) => {
+  //     console.log(old);
+  //   });
+  // }
+
+  // useEffect(() => {
+  //   setPost({ ...post, date });
+  // }, [date]);
 
   useEffect(() => {
     socket.emit('join editor', id);
-    socket.on('update post', (data) => {
+    socket.on('update post', ({ id: sId, data }) => {
+      if (id !== sId) return;
       setPost({ ...post, ...data });
+      cache.invalidateQueries(QUERY);
     });
 
     return () => socket.emit('leave editor', id);
@@ -33,6 +53,7 @@ export const Post = ({ date, budget, content, asset, id, type, removePost }) => 
     clearTimeout(saveTimeout.current);
     saveTimeout.current = setTimeout(() => {
       socket.emit('update post', { id, ...update });
+      cache.invalidateQueries(QUERY);
     }, 300);
   };
 
@@ -98,7 +119,14 @@ export const Post = ({ date, budget, content, asset, id, type, removePost }) => 
         />
       </Grid>
       <Grid item xs={12} md={4}>
-        <AssetUploader previewImage={post.asset} setFile={updateImage} />
+        <AssetUploader preview={post.asset} setFile={updateImage}>
+          {post.asset && post.asset.path ? (
+            <CopyToClipboard
+              className={classes.clipboardButton}
+              value={window.location.origin + post.asset.path}
+            />
+          ) : null}
+        </AssetUploader>
       </Grid>
     </Grid>
   );

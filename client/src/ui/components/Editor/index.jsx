@@ -8,9 +8,8 @@ import {
   Tooltip,
   Typography,
 } from '@material-ui/core';
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { Editable, Slate } from 'slate-react';
-import { Caret } from './Caret';
 
 import { EmojiePicker } from './EmojiPicker';
 import { CopyToClipboard } from './CopyToClipboard';
@@ -20,7 +19,6 @@ const EDITABLE = styled(Editable)(({ theme }) => ({
 }));
 
 const useStyles = makeStyles((theme) => {
-  console.log(theme);
   return {
     root: {
       height: '100%',
@@ -143,17 +141,17 @@ Editor.defaultProps = {
   // decorate: () => {},
 };
 
-const Leaf = ({ attributes, children, leaf }) => {
-  return (
-    <span
-      {...attributes}
-      style={{
-        position: 'relative',
-        backgroundColor: leaf.alphaColor,
-      }}
-    >
-      {leaf.isCaret ? <Caret {...leaf} /> : null}
-      {children}
-    </span>
-  );
-};
+// const Leaf = ({ attributes, children, leaf }) => {
+//   return (
+//     <span
+//       {...attributes}
+//       style={{
+//         position: 'relative',
+//         backgroundColor: leaf.alphaColor,
+//       }}
+//     >
+//       {leaf.isCaret ? <Caret {...leaf} /> : null}
+//       {children}
+//     </span>
+//   );
+// };

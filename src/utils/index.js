@@ -26,6 +26,11 @@ export const saveFileAndResize = async ({
   resize,
 }) => {
   try {
+    // const test = await sharp(uploadPath).resize(...resize);
+    // console.log(await test.metadata());
+    // const jpeg = await test.jpeg({ quality: 80 });
+    // console.log(await jpeg.metadata());
+    // console.log(fileName.replace(test.format, jpeg.format));
     await sharp(uploadPath)
       .resize(...resize)
       .jpeg({ quality: 80 })
@@ -44,6 +49,12 @@ export const saveFile = async ({ uploadPath, fileName, savePath }) => {
     await pipeline(readStream, fs.createWriteStream(`${savePath}${fileName}`));
     return `${savePath.replace('public', '')}${fileName}`;
   } catch (error) {
-    throw 'image couldnt be saved';
+    throw 'file couldnt be saved';
   }
 };
+
+export function arrayRemove(arr, value) {
+  return arr.filter(function (ele) {
+    return ele != value;
+  });
+}

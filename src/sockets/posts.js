@@ -9,6 +9,6 @@ export default ({ socket, posts }) => {
     }
 
     await post.save();
-    socket.to(id).emit('update post', rest);
+    socket.to(id).emit('update post', { id, data: rest });
   });
 };
