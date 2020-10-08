@@ -32,6 +32,7 @@ const deserialize = (string) => {
 export const EditorClient = ({
   id,
   content = null,
+  children,
   name,
   slug,
   removeUser,
@@ -108,6 +109,8 @@ export const EditorClient = ({
         }, 500);
         setValue(value);
       }}
-    />
+    >
+      {children}
+    </Editor>
   );
 };

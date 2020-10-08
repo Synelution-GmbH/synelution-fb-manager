@@ -52,7 +52,7 @@ export const Nav = () => {
             </Link>
           </div>
           <Grid container style={{ width: 'auto' }} justify="flex-end">
-            <GetNotified />
+            <GetNotified color="inherit" />
             <Button
               onClick={() => window.open(extensionLink[getBrowser()], '_blank')}
               color="inherit"

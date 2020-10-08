@@ -14,8 +14,8 @@ const st = {
     '"Segoe UI Symbol"',
   ].join(','),
   palette: {
-    fb: 'repeating-linear-gradient(to right,#3578e5 0%,#2362c8 100%)',
-    ig: 'repeating-linear-gradient(-112deg,#5c0abf 0,#b0377b 100%)',
+    fb: 'linear-gradient(to right,#3578e5 0%,#2362c8 100%)',
+    ig: 'linear-gradient(-112deg,#5c0abf 0,#b0377b 100%)',
   },
 };
 const theme = createMuiTheme({
@@ -25,6 +25,9 @@ const theme = createMuiTheme({
     primary: {
       main: '#2362c8',
     },
+    secondary: {
+      main: '#f58529',
+    },
   },
 });
 const themeIG = createMuiTheme({
@@ -33,6 +36,9 @@ const themeIG = createMuiTheme({
     ...st.palette,
     primary: {
       main: '#b0377b',
+    },
+    secondary: {
+      main: '#f58529',
     },
   },
 });

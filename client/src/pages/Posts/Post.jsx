@@ -1,5 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Grid, InputAdornment, makeStyles, TextField } from '@material-ui/core';
+import {
+  Button,
+  Grid,
+  InputAdornment,
+  makeStyles,
+  TextField,
+} from '@material-ui/core';
 import { AssetUploader } from 'ui/components/AssetUploader';
 import dayjs from 'dayjs';
 import { DatePicker } from '@material-ui/pickers';
@@ -9,6 +15,7 @@ import { EditorClient } from 'ui/components/EditorClient';
 import { CopyToClipboard } from 'ui/components/Editor/CopyToClipboard';
 import { useAuth, putPost } from 'services';
 import { useQueryCache } from 'react-query';
+import { AwesomeIcon } from 'ui/components/Icons/Icon';
 
 const useStyles = makeStyles((theme) => ({
   clipboardButton: {
@@ -19,7 +26,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const Post = ({ date, budget, content, asset, id, removePost, QUERY }) => {
+export const Post = ({
+  date,
+  budget,
+  content,
+  asset,
+  id,
+  checked,
+  removePost,
+  QUERY,
+}) => {
   const cache = useQueryCache();
   const { user } = useAuth();
   const [post, setPost] = useState({ budget, date, content, asset });
@@ -110,14 +126,18 @@ export const Post = ({ date, budget, content, asset, id, removePost, QUERY }) =>
         </Grid>
       </Grid>
       <Grid item xs={12} md={8}>
-        <EditorClient
-          id={id}
-          user={user}
-          content={post.content}
-          // onChange={({ operations, selection }) => {
-          //   socket.emit('editor change', { id, operations, selection });
-          // }}
-        />
+        <EditorClient id={id} user={user} content={post.content}>
+          <Button
+            variant="contained"
+            color="secondary"
+            startIcon={
+              <AwesomeIcon icon={checked ? 'check-circle' : 'times-circle'} />
+            }
+            style={{ marginRight: '8px' }}
+          >
+            {checked ? 'checked' : 'open'}
+          </Button>
+        </EditorClient>
       </Grid>
       <Grid item xs={12} md={4}>
         <AssetUploader preview={post.asset} setFile={updateImage}>

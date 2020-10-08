@@ -25,6 +25,7 @@ import { getPosts, createPost, deletePost } from 'services';
 import { PostSkeleton } from './PostSkeleton';
 import { MessageBox } from './MessageBox';
 import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab';
+import { NotifyProofreaderBtn } from './NotifyProofreaderBtn';
 
 dayjs.extend(customParseFormat);
 dayjs.locale('de');
@@ -121,36 +122,39 @@ const Posts = () => {
         <Container maxWidth="lg">
           <Box pt={2} pb={2} clone>
             <Toolbar className={classes.toolbar}>
-              <Grid container>
-                <ToggleButtonGroup
-                  className={classes.mr}
-                  value={type}
-                  exclusive
-                  onChange={(e, newType) => {
-                    if (e.target.value === type) return;
-                    setType(newType);
-                  }}
-                >
-                  <ToggleButton className={classes.toggleButton} value="fb">
-                    <AwesomeIcon prefix="fab" icon="facebook" />
-                  </ToggleButton>
-                  <ToggleButton className={classes.toggleButton} value="ig">
-                    <AwesomeIcon prefix="fab" icon="instagram" />
-                  </ToggleButton>
-                </ToggleButtonGroup>
-                <DatePicker
-                  value={value}
-                  handleClose={handleClose}
-                  setValue={setValue}
-                />
-                <TextField
-                  className={classes.ml}
-                  value={dateInterval}
-                  variant="outlined"
-                  label="Post Interval"
-                  type="number"
-                  onChange={(e) => setDateInteral(e.target.value)}
-                />
+              <Grid container justify="space-between">
+                <Grid container style={{ flexGrow: 1, width: 'auto' }}>
+                  <ToggleButtonGroup
+                    className={classes.mr}
+                    value={type}
+                    exclusive
+                    onChange={(e, newType) => {
+                      if (e.target.value === type) return;
+                      setType(newType);
+                    }}
+                  >
+                    <ToggleButton className={classes.toggleButton} value="fb">
+                      <AwesomeIcon prefix="fab" icon="facebook" />
+                    </ToggleButton>
+                    <ToggleButton className={classes.toggleButton} value="ig">
+                      <AwesomeIcon prefix="fab" icon="instagram" />
+                    </ToggleButton>
+                  </ToggleButtonGroup>
+                  <DatePicker
+                    value={value}
+                    handleClose={handleClose}
+                    setValue={setValue}
+                  />
+                  <TextField
+                    className={classes.ml}
+                    value={dateInterval}
+                    variant="outlined"
+                    label="Post Interval"
+                    type="number"
+                    onChange={(e) => setDateInteral(e.target.value)}
+                  />
+                </Grid>
+                <NotifyProofreaderBtn data={{ url: pathname }} />
               </Grid>
             </Toolbar>
           </Box>

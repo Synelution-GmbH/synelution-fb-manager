@@ -52,7 +52,14 @@ const useStyles = makeStyles((theme) => {
   };
 });
 
-export const Editor = ({ onChange, decorate, serializedValue, value, editor }) => {
+export const Editor = ({
+  onChange,
+  decorate,
+  children,
+  serializedValue,
+  value,
+  editor,
+}) => {
   // const socket = useSocket();
   // const editor = useMemo(() => withHistory(withReact(createEditor())), []);
   const classes = useStyles();
@@ -117,6 +124,7 @@ export const Editor = ({ onChange, decorate, serializedValue, value, editor }) =
             </Grid>
             <Grid item sm={6}>
               <Grid container justify="flex-end">
+                {children}
                 <CopyToClipboard value={serializedValue} />
                 <Tooltip title="character count" placement="bottom">
                   <Avatar

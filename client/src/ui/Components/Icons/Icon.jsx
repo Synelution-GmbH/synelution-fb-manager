@@ -18,6 +18,9 @@ import {
   faTrashAlt,
   faPlay,
   faPause,
+  faBell,
+  faBellSlash,
+  faCheckCircle,
 } from '@fortawesome/free-solid-svg-icons';
 
 import { faInstagram, faFacebook } from '@fortawesome/free-brands-svg-icons';
@@ -37,7 +40,10 @@ library.add(
   faSave,
   faTrashAlt,
   faPlay,
-  faPause
+  faPause,
+  faBell,
+  faBellSlash,
+  faCheckCircle
 );
 
 export const AwesomeIcon = ({ ...props }) => {

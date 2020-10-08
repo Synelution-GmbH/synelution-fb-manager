@@ -6,7 +6,12 @@ function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
-export const MessageBox = ({ text, toggle, severity = 'error' }) => {
+export const MessageBox = ({
+  text,
+  toggle,
+  severity = 'error',
+  autoHideDuration = 30000,
+}) => {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -17,7 +22,7 @@ export const MessageBox = ({ text, toggle, severity = 'error' }) => {
   const handleClose = () => setOpen(false);
 
   return (
-    <Snackbar open={open} autoHideDuration={30000} onClose={handleClose}>
+    <Snackbar open={open} autoHideDuration={autoHideDuration} onClose={handleClose}>
       <Alert onClose={handleClose} severity={severity}>
         {text}
       </Alert>
