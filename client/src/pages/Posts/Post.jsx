@@ -42,6 +42,7 @@ export const Post = ({ date, budget, content, asset, id, removePost, QUERY }) =>
     socket.on('update post', ({ id: sId, data }) => {
       if (id !== sId) return;
       setPost({ ...post, ...data });
+      console.log(data);
       cache.invalidateQueries(QUERY);
     });
 

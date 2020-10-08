@@ -1,4 +1,6 @@
 console.log('Loaded service worker!');
+console.log(localStorage.getItem('token'));
+console.log('hi');
 
 self.addEventListener('push', (ev) => {
   const data = ev.data.json();

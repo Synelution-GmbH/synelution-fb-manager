@@ -9,6 +9,7 @@
 
 // To learn more about the benefits of this model and instructions on how to
 // opt-in, read https://bit.ly/CRA-PWA
+import { urlBase64ToUint8Array } from './utils';
 
 const isLocalhost = Boolean(
   window.location.hostname === 'localhost' ||
@@ -59,47 +60,34 @@ export function register(config) {
   }
 }
 
-function urlBase64ToUint8Array(base64String) {
-  const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
-  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
-
-  const rawData = window.atob(base64);
-  const outputArray = new Uint8Array(rawData.length);
-
-  for (let i = 0; i < rawData.length; ++i) {
-    outputArray[i] = rawData.charCodeAt(i);
-  }
-  return outputArray;
-}
-
 function registerValidSW(swUrl, config) {
   navigator.serviceWorker
     .register(swUrl)
     .then(async (registration) => {
-      console.log('registering push');
-      registration.pushManager
-        .subscribe({
-          userVisibleOnly: true,
-          applicationServerKey: urlBase64ToUint8Array(
-            'BODI-sL_suVRxxD-ek-DvGQ2yBNTa1pyKpdxpc2jrk_g1C3BJhhn56gNYRPkSKdx1E0k354xlu-v_29PnVEeGKU'
-          ),
-        })
-        .then((subscription) => {
-          console.log('Registered push');
-
-          console.log('Sending push');
-          fetch('/subscribe', {
-            method: 'POST',
-            body: JSON.stringify(subscription),
-            headers: {
-              'content-type': 'application/json',
-            },
-          });
-          console.log('Sent push');
-        })
-        .catch((e) => {
-          console.error(e);
-        });
+      // console.log('registering push');
+      // registration.pushManager
+      //   .subscribe({
+      //     userVisibleOnly: true,
+      //     applicationServerKey: urlBase64ToUint8Array(
+      //       'BODI-sL_suVRxxD-ek-DvGQ2yBNTa1pyKpdxpc2jrk_g1C3BJhhn56gNYRPkSKdx1E0k354xlu-v_29PnVEeGKU'
+      //     ),
+      //   })
+      //   .then((subscription) => {
+      //     console.log('Registered push');
+      //     console.log(subscription);
+      //     console.log('Sending push');
+      //     fetch('/subscription', {
+      //       method: 'POST',
+      //       body: JSON.stringify(subscription),
+      //       headers: {
+      //         'content-type': 'application/json',
+      //       },
+      //     });
+      //     console.log('Sent push');
+      //   })
+      //   .catch((e) => {
+      //     console.error(e);
+      //   });
       registration.onupdatefound = () => {
         const installingWorker = registration.installing;
         if (installingWorker == null) {

@@ -3,31 +3,19 @@ import Router from 'koa-router';
 import authRoutes from './auth';
 import clientRoutes from './clients';
 import postRoutes from './posts';
-import koaBody from 'koa-body';
-import webpush from 'web-push';
+import subscriptionRoutes from './subscription';
+import passport from 'passport';
 
 export default ({ app }) => {
   const router = new Router();
   router.get('/', (ctx) => {
     ctx.body = 'nth 2 see here';
   });
-  router.post('/subscribe', koaBody(), (ctx) => {
-    const subscription = ctx.request.body;
-    ctx.body = {};
-
-    const payload = JSON.stringify({
-      title: 'test',
-      url: 'http://localhost:3001/carlovers/posts/fb',
-    });
-    console.log(subscription);
-    webpush.sendNotification(subscription, payload).catch((error) => {
-      console.error(error.stack);
-    });
-  });
 
   authRoutes({ router, app });
   app.use(router.routes());
   app.use(router.allowedMethods());
+  app.use(passport.authenticate('jwt', { session: false }));
 
   const clientsRouter = new Router({ prefix: '/clients' });
   clientRoutes({ router: clientsRouter });
@@ -38,4 +26,9 @@ export default ({ app }) => {
   postRoutes({ router: postsRouter });
   app.use(postsRouter.routes());
   app.use(postsRouter.allowedMethods());
+
+  const subscriptionRouter = new Router({ prefix: '/subscription' });
+  subscriptionRoutes({ router: subscriptionRouter });
+  app.use(subscriptionRouter.routes());
+  app.use(subscriptionRouter.allowedMethods());
 };
