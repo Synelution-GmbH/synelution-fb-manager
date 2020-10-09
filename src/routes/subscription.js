@@ -57,7 +57,15 @@ export default ({ router }) => {
       for (let i = 0; i < proofreader.length; i++) {
         for (let e = 0; e < proofreader[i].subscriptions.length; e++) {
           const sub = proofreader[i].subscriptions[e];
-          await webpush.sendNotification(sub, payload);
+          try {
+            await webpush.sendNotification(sub, payload);
+          } catch (e) {
+            console.log(e);
+            if (e.statusCode === 410) {
+              await sub.remove();
+              await proofreader[i].save();
+            }
+          }
         }
       }
     } catch (e) {
