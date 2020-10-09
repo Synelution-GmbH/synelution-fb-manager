@@ -135,7 +135,7 @@ export const Post = ({
             }
             style={{ marginRight: '8px' }}
           >
-            {checked ? 'checked' : 'open'}
+            {checked ? 'checked' : 'not checked'}
           </Button>
         </EditorClient>
       </Grid>
