@@ -32,6 +32,9 @@ const deserialize = (string) => {
 export const EditorClient = ({
   id,
   content = null,
+  children,
+  checked,
+  updatePost,
   name,
   slug,
   removeUser,
@@ -104,10 +107,13 @@ export const EditorClient = ({
       onChange={(value) => {
         clearTimeout(saveTimeout.current);
         saveTimeout.current = setTimeout(() => {
+          if (checked) updatePost({ checked: false });
           socket.emit('update post', { id, content: serialize(value) });
-        }, 500);
+        }, 1000);
         setValue(value);
       }}
-    />
+    >
+      {children}
+    </Editor>
   );
 };

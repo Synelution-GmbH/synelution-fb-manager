@@ -13,6 +13,10 @@ const postSchema = new mongoose.Schema({
     video: Boolean,
     image: Boolean,
   },
+  checked: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 // postSchema.pre('save', function (next) {

@@ -1,5 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Grid, InputAdornment, makeStyles, TextField } from '@material-ui/core';
+import {
+  Button,
+  Grid,
+  InputAdornment,
+  makeStyles,
+  TextField,
+} from '@material-ui/core';
 import { AssetUploader } from 'ui/components/AssetUploader';
 import dayjs from 'dayjs';
 import { DatePicker } from '@material-ui/pickers';
@@ -7,8 +13,9 @@ import { DeleteButton } from './DeleteButton';
 import { useSocket } from 'services/socket-provider';
 import { EditorClient } from 'ui/components/EditorClient';
 import { CopyToClipboard } from 'ui/components/Editor/CopyToClipboard';
-import { useAuth, putPost } from 'services';
+import { putPost } from 'services';
 import { useQueryCache } from 'react-query';
+import { CheckedButton } from './CheckedButton';
 
 const useStyles = makeStyles((theme) => ({
   clipboardButton: {
@@ -19,29 +26,28 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const Post = ({ date, budget, content, asset, id, removePost, QUERY }) => {
+export const Post = ({
+  date,
+  budget,
+  content,
+  asset,
+  id,
+  checked,
+  removePost,
+  QUERY,
+}) => {
   const cache = useQueryCache();
-  const { user } = useAuth();
-  const [post, setPost] = useState({ budget, date, content, asset });
+  const [post, setPost] = useState({ budget, date, content, asset, checked });
   const socket = useSocket();
   const saveTimeout = useRef();
   const classes = useStyles();
-
-  // const updatePost = () => {
-  //   cache.seQueryData(QUERY, (old) => {
-  //     console.log(old);
-  //   });
-  // }
-
-  // useEffect(() => {
-  //   setPost({ ...post, date });
-  // }, [date]);
 
   useEffect(() => {
     socket.emit('join editor', id);
     socket.on('update post', ({ id: sId, data }) => {
       if (id !== sId) return;
       setPost({ ...post, ...data });
+      console.log(data);
       cache.invalidateQueries(QUERY);
     });
 
@@ -52,9 +58,13 @@ export const Post = ({ date, budget, content, asset, id, removePost, QUERY }) =>
     setPost({ ...post, ...update });
     clearTimeout(saveTimeout.current);
     saveTimeout.current = setTimeout(() => {
-      socket.emit('update post', { id, ...update });
+      if (post.checked && !update.checked) {
+        socket.emit('update post', { id, ...update, checked: false });
+      } else {
+        socket.emit('update post', { id, ...update });
+      }
       cache.invalidateQueries(QUERY);
-    }, 300);
+    }, 500);
   };
 
   const updateImage = async (file) => {
@@ -111,12 +121,18 @@ export const Post = ({ date, budget, content, asset, id, removePost, QUERY }) =>
       <Grid item xs={12} md={8}>
         <EditorClient
           id={id}
-          user={user}
+          checked={post.checked}
           content={post.content}
-          // onChange={({ operations, selection }) => {
-          //   socket.emit('editor change', { id, operations, selection });
-          // }}
-        />
+          updatePost={updatePost}
+        >
+          <CheckedButton
+            checked={checked}
+            style={{ marginRight: '8px' }}
+            onClick={() => {
+              updatePost({ checked: !checked });
+            }}
+          />
+        </EditorClient>
       </Grid>
       <Grid item xs={12} md={4}>
         <AssetUploader preview={post.asset} setFile={updateImage}>

@@ -12,6 +12,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  organization: {
+    type: String,
+    default: 'synelution',
+  },
   username: {
     type: String,
     required: true,
@@ -23,12 +27,23 @@ const userSchema = new mongoose.Schema({
     enum: ['worker', 'proofreader'],
     default: 'user',
   },
+  subscriptions: [
+    {
+      endpoint: String,
+      expirationTime: String,
+      keys: {
+        p256dh: String,
+        auth: String,
+      },
+    },
+  ],
 });
 
 // On Save Hook, encrypt password
 // "pre" -> Before saving a model, run this function
 userSchema.pre('save', function (next) {
   // get access to the user model
+  if (!this.password) next();
   const user = this;
   // generate a salt
   bcrypt.genSalt(10, function (err, salt) {

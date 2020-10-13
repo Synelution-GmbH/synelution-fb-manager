@@ -27,14 +27,15 @@ const useStyles = makeStyles((theme) => ({
   }),
 }));
 
-export const EmojiePicker = ({ onSelect }) => {
+export const EmojiePicker = ({ onSelect, className, ...props }) => {
   const [open, setOpen] = useState();
   const classes = useStyles({ open });
 
   return (
     <>
       <Avatar
-        className={classes.avatar}
+        {...props}
+        className={classes.avatar + ' ' + className}
         variant="rounded"
         onClick={() => setOpen(!open)}
       >

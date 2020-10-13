@@ -11,12 +11,12 @@ const clientSchema = new mongoose.Schema({
     unique: true,
     lowercase: true,
   },
-  posts: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Post',
-    },
-  ],
+  // posts: [
+  //   {
+  //     type: mongoose.Schema.Types.ObjectId,
+  //     ref: 'Post',
+  //   },
+  // ],
   profilePicture: String,
 });
 

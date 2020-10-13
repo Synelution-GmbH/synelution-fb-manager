@@ -10,6 +10,7 @@ import {
 } from '@material-ui/core';
 import { useAuth } from 'services/auth-provider';
 import { Link as RouterLink, useRouteMatch } from 'react-router-dom';
+import { GetNotified } from './GetNotified';
 
 const useStyles = makeStyles((theme) => ({
   appBar: ({ type }) => ({
@@ -51,6 +52,7 @@ export const Nav = () => {
             </Link>
           </div>
           <Grid container style={{ width: 'auto' }} justify="flex-end">
+            <GetNotified color="inherit" />
             <Button
               onClick={() => window.open(extensionLink[getBrowser()], '_blank')}
               color="inherit"

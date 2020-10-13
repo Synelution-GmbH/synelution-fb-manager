@@ -24,7 +24,6 @@ const useStyles = makeStyles((theme) => {
       height: '100%',
       overflow: 'visible',
       '& .MuiAvatar-root': {
-        cursor: 'pointer',
         // marginRight: theme.spacing(1),
         backgroundColor: theme.palette.primary.main,
         transition: '0.3s',
@@ -32,6 +31,10 @@ const useStyles = makeStyles((theme) => {
         '&:hover': {
           backgroundColor: theme.palette.primary.dark,
         },
+      },
+
+      '& .emoji-picker': {
+        cursor: 'pointer',
       },
 
       '::spelling-error': {
@@ -52,7 +55,14 @@ const useStyles = makeStyles((theme) => {
   };
 });
 
-export const Editor = ({ onChange, decorate, serializedValue, value, editor }) => {
+export const Editor = ({
+  onChange,
+  decorate,
+  children,
+  serializedValue,
+  value,
+  editor,
+}) => {
   // const socket = useSocket();
   // const editor = useMemo(() => withHistory(withReact(createEditor())), []);
   const classes = useStyles();
@@ -103,9 +113,10 @@ export const Editor = ({ onChange, decorate, serializedValue, value, editor }) =
 
         <Toolbar className={classes.toolbar} variant="dense" p={1}>
           <Grid container justify="space-between" alignItems="center">
-            <Grid item sm={6}>
+            <Grid item sm={4}>
               <Grid container justify="flex-start">
                 <EmojiePicker
+                  className="emoji-picker"
                   onSelect={(text) => {
                     if (!editor.selection) {
                       editor.selection = selection.current;
@@ -115,8 +126,9 @@ export const Editor = ({ onChange, decorate, serializedValue, value, editor }) =
                 />
               </Grid>
             </Grid>
-            <Grid item sm={6}>
+            <Grid item sm={8}>
               <Grid container justify="flex-end">
+                {children}
                 <CopyToClipboard value={serializedValue} />
                 <Tooltip title="character count" placement="bottom">
                   <Avatar
