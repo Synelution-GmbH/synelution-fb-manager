@@ -2,7 +2,6 @@ import React, { useEffect, useMemo, useState } from 'react';
 import {
   Box,
   Button,
-  Card,
   Container,
   Grid,
   makeStyles,
@@ -81,6 +80,7 @@ const Posts = () => {
     const to = dayjs().endOf('month').format(FORMAT);
     setDate([from, to]);
     setValue([dayjs(from, FORMAT), dayjs(to, FORMAT)]);
+    // eslint-disable-next-line
   }, [pathname]);
 
   useEffect(() => {
@@ -97,7 +97,7 @@ const Posts = () => {
     history.push(url);
   }, [type]);
 
-  const handleClose = () => {
+  const handleClose = (value) => {
     const [vFrom, vTo] = value;
     const url = formatDateUrl({
       ...params,

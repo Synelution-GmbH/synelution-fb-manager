@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { SocketProvider } from 'services/socket-provider';
 import MainRouter from './router';
 

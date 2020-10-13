@@ -30,7 +30,7 @@ const requestPermission = () =>
           console.log(permission);
           // If the user accepts, let's create a notification
           if (permission === 'granted') {
-            var notification = new Notification('Hi there!');
+            new Notification('Thanks you will be notified!');
             resolve('granted');
           }
         })

@@ -2,7 +2,6 @@ import React from 'react';
 import { DateRangePicker, DateRangeDelimiter } from '@material-ui/pickers';
 import { Avatar, Grid, makeStyles, TextField } from '@material-ui/core';
 import { AwesomeIcon } from 'ui/components/Icons/Icon';
-import dayjs from 'dayjs';
 
 const useStyles = makeStyles((theme) => {
   console.log(theme);
@@ -37,7 +36,9 @@ export const DatePicker = ({ value, handleClose, setValue }) => {
       endOfMonth === to.date() && from.date() === 1
         ? to.add(1, 'month').endOf('month')
         : to.add(diff, 'h').add(1, 'day');
-    setValue([newFrom, newTo]);
+    const newValue = [newFrom, newTo];
+    setValue(newValue);
+    handleClose(newValue);
   };
   const handleDateBackwards = () => {
     const [from, to] = value;
@@ -50,7 +51,9 @@ export const DatePicker = ({ value, handleClose, setValue }) => {
         ? from.subtract(1, 'month').startOf('month')
         : from.subtract(diff, 'h').subtract(1, 'day');
     const newTo = from.subtract(1, 'day');
-    setValue([newFrom, newTo]);
+    const newValue = [newFrom, newTo];
+    setValue(newValue);
+    handleClose(newValue);
   };
 
   return (
@@ -69,7 +72,7 @@ export const DatePicker = ({ value, handleClose, setValue }) => {
         value={value}
         disableCloseOnSelect
         mask="__.__.____"
-        onClose={handleClose}
+        onClose={() => handleClose(value)}
         onChange={(newValue) => setValue(newValue)}
         renderInput={(startProps, endProps) => (
           <React.Fragment>

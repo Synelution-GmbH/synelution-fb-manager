@@ -9,7 +9,7 @@
 
 // To learn more about the benefits of this model and instructions on how to
 // opt-in, read https://bit.ly/CRA-PWA
-import { urlBase64ToUint8Array } from './utils';
+// import { urlBase64ToUint8Array } from './utils';
 
 const isLocalhost = Boolean(
   window.location.hostname === 'localhost' ||

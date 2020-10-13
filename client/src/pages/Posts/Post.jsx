@@ -1,11 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {
-  Button,
-  Grid,
-  InputAdornment,
-  makeStyles,
-  TextField,
-} from '@material-ui/core';
+import { Grid, InputAdornment, makeStyles, TextField } from '@material-ui/core';
 import { AssetUploader } from 'ui/components/AssetUploader';
 import dayjs from 'dayjs';
 import { DatePicker } from '@material-ui/pickers';
@@ -52,6 +46,7 @@ export const Post = ({
     });
 
     return () => socket.emit('leave editor', id);
+    // eslint-disable-next-line
   }, []);
 
   const updatePost = (update) => {
