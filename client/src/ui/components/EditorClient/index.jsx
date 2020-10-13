@@ -57,15 +57,10 @@ export const EditorClient = ({
       onChange={(value) => {
         clearTimeout(saveTimeout.current);
         saveTimeout.current = setTimeout(() => {
-          const content = serialize(value);
-          if (checked)
-            socket.emit('update post', {
-              id,
-              content: serialize(value),
-              checked: false,
-            });
-          else socket.emit('update post', { id, content });
-          updateCache({ content });
+          const update = { id, content: serialize(value) };
+          if (checked) update.checked = false;
+          socket.emit('update post', update);
+          updateCache(update);
         }, 1000);
         setValue(value);
       }}

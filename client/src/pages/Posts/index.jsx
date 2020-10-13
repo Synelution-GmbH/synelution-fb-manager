@@ -21,7 +21,7 @@ import { useMutation, useQuery, useQueryCache } from 'react-query';
 import { FORMAT } from 'config';
 import { AwesomeIcon } from 'ui/components/Icons/Icon';
 import { getPosts, createPost, deletePost } from 'services';
-import { PostSkeleton } from './PostSkeleton';
+import { PostSkeleton } from './Post/PostSkeleton';
 import { MessageBox } from './MessageBox';
 import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab';
 import { NotifyProofreaderBtn } from './NotifyProofreaderBtn';
