@@ -109,6 +109,7 @@ export default ({ router }) => {
       }
     }
   );
+
   router.delete('/:id', koaBody(), async (ctx) => {
     const { id } = ctx.params;
     if (!id) return ctx.throw(400, 'bad boy 凸ಠ益ಠ)凸');

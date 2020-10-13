@@ -25,6 +25,7 @@ import { PostSkeleton } from './Post/PostSkeleton';
 import { MessageBox } from './MessageBox';
 import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab';
 import { NotifyProofreaderBtn } from './NotifyProofreaderBtn';
+import { ShareToClientButton } from './ShareToClientBtn';
 
 dayjs.extend(customParseFormat);
 dayjs.locale('de');
@@ -155,6 +156,9 @@ const Posts = () => {
                   />
                 </Grid>
                 <NotifyProofreaderBtn data={{ url: pathname }} />
+                <ShareToClientButton
+                  data={{ ...params, from: date[0], to: date[1] }}
+                />
               </Grid>
             </Toolbar>
           </Box>

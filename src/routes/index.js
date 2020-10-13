@@ -3,6 +3,7 @@ import Router from 'koa-router';
 import authRoutes from './auth';
 import clientRoutes from './clients';
 import postRoutes from './posts';
+import { clientLinkRoutesWithAuth, clientLinkRoutes } from './client-link';
 import subscriptionRoutes from './subscription';
 import passport from 'passport';
 
@@ -12,10 +13,15 @@ export default ({ app }) => {
     ctx.body = 'nth 2 see here';
   });
 
+  clientLinkRoutes({ router });
+
   authRoutes({ router, app });
   app.use(router.routes());
   app.use(router.allowedMethods());
+
+  // AUTH CHECK ALL BELOW
   app.use(passport.authenticate('jwt', { session: false }));
+  clientLinkRoutesWithAuth({ router });
 
   const clientsRouter = new Router({ prefix: '/clients' });
   clientRoutes({ router: clientsRouter });
