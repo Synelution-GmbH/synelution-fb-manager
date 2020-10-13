@@ -13,9 +13,9 @@ import { DeleteButton } from './DeleteButton';
 import { useSocket } from 'services/socket-provider';
 import { EditorClient } from 'ui/components/EditorClient';
 import { CopyToClipboard } from 'ui/components/Editor/CopyToClipboard';
-import { useAuth, putPost } from 'services';
+import { putPost } from 'services';
 import { useQueryCache } from 'react-query';
-import { AwesomeIcon } from 'ui/components/Icons/Icon';
+import { CheckedButton } from './CheckedButton';
 
 const useStyles = makeStyles((theme) => ({
   clipboardButton: {
@@ -37,21 +37,10 @@ export const Post = ({
   QUERY,
 }) => {
   const cache = useQueryCache();
-  const { user } = useAuth();
-  const [post, setPost] = useState({ budget, date, content, asset });
+  const [post, setPost] = useState({ budget, date, content, asset, checked });
   const socket = useSocket();
   const saveTimeout = useRef();
   const classes = useStyles();
-
-  // const updatePost = () => {
-  //   cache.seQueryData(QUERY, (old) => {
-  //     console.log(old);
-  //   });
-  // }
-
-  // useEffect(() => {
-  //   setPost({ ...post, date });
-  // }, [date]);
 
   useEffect(() => {
     socket.emit('join editor', id);
@@ -69,9 +58,13 @@ export const Post = ({
     setPost({ ...post, ...update });
     clearTimeout(saveTimeout.current);
     saveTimeout.current = setTimeout(() => {
-      socket.emit('update post', { id, ...update });
+      if (post.checked && !update.checked) {
+        socket.emit('update post', { id, ...update, checked: false });
+      } else {
+        socket.emit('update post', { id, ...update });
+      }
       cache.invalidateQueries(QUERY);
-    }, 300);
+    }, 500);
   };
 
   const updateImage = async (file) => {
@@ -126,17 +119,19 @@ export const Post = ({
         </Grid>
       </Grid>
       <Grid item xs={12} md={8}>
-        <EditorClient id={id} user={user} content={post.content}>
-          <Button
-            variant="contained"
-            color="secondary"
-            startIcon={
-              <AwesomeIcon icon={checked ? 'check-circle' : 'times-circle'} />
-            }
+        <EditorClient
+          id={id}
+          checked={post.checked}
+          content={post.content}
+          updatePost={updatePost}
+        >
+          <CheckedButton
+            checked={checked}
             style={{ marginRight: '8px' }}
-          >
-            {checked ? 'checked' : 'not checked'}
-          </Button>
+            onClick={() => {
+              updatePost({ checked: !checked });
+            }}
+          />
         </EditorClient>
       </Grid>
       <Grid item xs={12} md={4}>
