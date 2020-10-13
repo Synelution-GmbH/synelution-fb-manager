@@ -52,7 +52,6 @@ export const Post = ({
   const socket = useSocket();
   const saveTimeout = useRef();
   const classes = useStyles();
-  const [pickerOpen, setPickerOpen] = useState(false);
 
   useEffect(() => {
     socket.emit('join editor', id);
@@ -71,10 +70,9 @@ export const Post = ({
     clearTimeout(saveTimeout.current);
     saveTimeout.current = setTimeout(() => {
       if (post.checked && !update.checked) {
-        socket.emit('update post', { id, ...update, checked: false });
-      } else {
-        socket.emit('update post', { id, ...update });
+        update.checked = false;
       }
+      socket.emit('update post', { id, ...update });
       updateCache({ QUERY, index, update });
     }, 500);
   };
