@@ -77,7 +77,7 @@ export const AssetUploader = ({
       // reader.readAsArrayBuffer(file);
       reader.readAsDataURL(file);
     },
-    [setFile]
+    [setFile, setDataUrl]
   );
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,

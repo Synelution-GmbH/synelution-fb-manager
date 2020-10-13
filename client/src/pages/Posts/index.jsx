@@ -95,6 +95,7 @@ const Posts = () => {
 
     if (pathname === url) return;
     history.push(url);
+    // eslint-disable-next-line
   }, [type]);
 
   const handleClose = (value) => {
@@ -206,11 +207,7 @@ const PostList = ({ dateInterval, from, to, client, type }) => {
       cache.setQueryData(QUERY, (old) => [...old, data]);
     },
     onSuccess: (data) => {
-      const posts = cache.getQueryData(QUERY);
-      cache.setQueryData(QUERY, (old) => {
-        // return [...old, data];
-        return [...old.slice(0, old.length - 1), data];
-      });
+      cache.setQueryData(QUERY, (old) => [...old.slice(0, old.length - 1), data]);
     },
   });
 
