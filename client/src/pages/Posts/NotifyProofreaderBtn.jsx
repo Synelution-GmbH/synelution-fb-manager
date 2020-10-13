@@ -27,7 +27,7 @@ export const NotifyProofreaderBtn = ({ data }) => {
           color="secondary"
           onClick={handleClick}
         >
-          notify proofreader
+          send to project lead
         </Button>
       ) : null}
     </>

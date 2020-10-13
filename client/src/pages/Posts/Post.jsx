@@ -1,8 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Grid, InputAdornment, makeStyles, TextField } from '@material-ui/core';
 import { AssetUploader } from 'ui/components/AssetUploader';
-import dayjs from 'dayjs';
-import { DatePicker } from '@material-ui/pickers';
+
 import { DeleteButton } from './DeleteButton';
 import { useSocket } from 'services/socket-provider';
 import { EditorClient } from 'ui/components/EditorClient';
@@ -10,6 +9,8 @@ import { CopyToClipboard } from 'ui/components/Editor/CopyToClipboard';
 import { putPost } from 'services';
 import { useQueryCache } from 'react-query';
 import { CheckedButton } from './CheckedButton';
+
+import { PostDatePicker } from './PostDatePicker';
 
 const useStyles = makeStyles((theme) => ({
   clipboardButton: {
@@ -20,6 +21,19 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+export const useUpdate = () => {
+  const cache = useQueryCache();
+
+  const updateCache = ({ QUERY, index, update }) => {
+    cache.setQueryData(QUERY, (old) => {
+      old[index] = { ...old[index], ...update };
+      return old;
+    });
+  };
+
+  return { updateCache, cache };
+};
+
 export const Post = ({
   date,
   budget,
@@ -29,20 +43,23 @@ export const Post = ({
   checked,
   removePost,
   QUERY,
+  index,
+  from,
+  to,
 }) => {
-  const cache = useQueryCache();
+  const { updateCache } = useUpdate();
   const [post, setPost] = useState({ budget, date, content, asset, checked });
   const socket = useSocket();
   const saveTimeout = useRef();
   const classes = useStyles();
+  const [pickerOpen, setPickerOpen] = useState(false);
 
   useEffect(() => {
     socket.emit('join editor', id);
     socket.on('update post', ({ id: sId, data }) => {
       if (id !== sId) return;
       setPost({ ...post, ...data });
-      console.log(data);
-      cache.invalidateQueries(QUERY);
+      updateCache({ QUERY, index, update: data });
     });
 
     return () => socket.emit('leave editor', id);
@@ -58,7 +75,7 @@ export const Post = ({
       } else {
         socket.emit('update post', { id, ...update });
       }
-      cache.invalidateQueries(QUERY);
+      updateCache({ QUERY, index, update });
     }, 500);
   };
 
@@ -82,25 +99,11 @@ export const Post = ({
               startAdornment: <InputAdornment position="start">€</InputAdornment>,
             }}
           />
-
-          <DatePicker
-            mask="__.__.____"
-            disableToolbar
-            label="Online am"
-            variant="outlined"
+          <PostDatePicker
             value={post.date}
-            defaultValue={'Date'}
-            onChange={(value) => {
-              updatePost({ date: dayjs(value).valueOf() });
-            }}
-            renderInput={(props) => (
-              <TextField
-                {...props}
-                helperText=""
-                variant="outlined"
-                style={{ marginLeft: '8px' }}
-              />
-            )}
+            from={from}
+            to={to}
+            updatePost={updatePost}
           />
         </Grid>
       </Grid>
@@ -118,7 +121,7 @@ export const Post = ({
           id={id}
           checked={post.checked}
           content={post.content}
-          updatePost={updatePost}
+          updateCache={(update) => updateCache({ QUERY, index, update })}
         >
           <CheckedButton
             checked={checked}

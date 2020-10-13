@@ -65,7 +65,6 @@ const Posts = () => {
   const [date, setDate] = useState([null, null]);
   const [dateInterval, setDateInteral] = useState(7);
   const [type, setType] = useState(params.type);
-
   const classes = useStyles();
 
   useEffect(() => {
@@ -189,20 +188,9 @@ const PostList = ({ dateInterval, from, to, client, type }) => {
     to,
   ]);
 
-  const { isLoading, data } = useQuery(
-    QUERY,
-    getPosts
-    // { refetchOnWindowFocus: false }
-  );
+  const { isLoading, data } = useQuery(QUERY, getPosts);
 
   const [addPost] = useMutation(createPost, {
-    // onMutate: (data) => {
-    //   console.log(data);
-    //   cache.setQueryData(['posts', { client, type, from, to }], (old) => [
-    //     ...old,
-    //     { ...data, _id: `temp-${data.date}` },
-    //   ]);
-    // },
     onMutate: () => {
       cache.setQueryData(QUERY, (old) => [...old, data]);
     },
@@ -266,6 +254,9 @@ const PostList = ({ dateInterval, from, to, client, type }) => {
                   {...props}
                   id={_id}
                   date={dayjs(date)}
+                  index={i}
+                  from={from}
+                  to={to}
                 />
               </Box>
             ) : (

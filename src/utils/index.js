@@ -26,6 +26,7 @@ export const saveFileAndResize = async ({
   resize,
 }) => {
   try {
+    await checkCreatePath(savePath);
     // const test = await sharp(uploadPath).resize(...resize);
     // console.log(await test.metadata());
     // const jpeg = await test.jpeg({ quality: 80 });
