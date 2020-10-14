@@ -6,6 +6,7 @@ import { Nav } from './Nav';
 
 const Dashboard = React.lazy(() => import('../pages/Dashboard'));
 const Posts = React.lazy(() => import('../pages/Posts'));
+const ClientView = React.lazy(() => import('pages/ClientView'));
 
 export default class MainRouter extends Component {
   render() {
@@ -18,6 +19,7 @@ export default class MainRouter extends Component {
             <Switch>
               <Route path="/:client/posts/:type" component={Posts} />
               {/* /from/:from/to/:to */}
+              <Route exact path="/:id" component={ClientView} />
               <Route exact path="/" component={Dashboard} />
             </Switch>
             {/* <Footer /> */}

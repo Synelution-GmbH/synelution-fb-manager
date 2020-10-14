@@ -17,20 +17,20 @@ const ClientView = () => {
   return (
     <>
       <Loader loading={isLoading} />
-      {!data ? null : <PostList posts={data.posts} />}
+      {!data ? null : <PostList client={data.client} posts={data.posts} />}
     </>
   );
 };
 
-const PostList = ({ posts }) => {
+const PostList = ({ posts, client }) => {
   return (
-    <Container maxWidth="lg">
-      <Grid container direction="column">
+    <Container maxWidth="sm">
+      <Grid container direction="column" justify="center">
         {posts.map(({ _id, ...postProps }) => (
-          <>
-            <FacebookPost key={_id} {...postProps}></FacebookPost>
+          <React.Fragment key={_id}>
+            <FacebookPost {...postProps} id={_id} client={client}></FacebookPost>
             <br />
-          </>
+          </React.Fragment>
         ))}
       </Grid>
     </Container>

@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => {
     root: {
       height: '100%',
       overflow: 'visible',
-      '& .MuiAvatar-root': {
+      '& .MuiAvatar-root.tool': {
         // marginRight: theme.spacing(1),
         backgroundColor: theme.palette.primary.main,
         transition: '0.3s',
@@ -57,12 +57,15 @@ const useStyles = makeStyles((theme) => {
 
 export const Editor = ({
   onChange,
-  decorate,
+  toolbar,
   children,
   serializedValue,
   value,
   editor,
+  style = null,
+  disabled = false,
 }) => {
+  console.log(disabled);
   // const socket = useSocket();
   // const editor = useMemo(() => withHistory(withReact(createEditor())), []);
   const classes = useStyles();
@@ -93,7 +96,7 @@ export const Editor = ({
   // }, []);
 
   return (
-    <Card className={classes.root}>
+    <Card className={classes.root} style={style}>
       <Grid
         container
         direction="column"
@@ -102,6 +105,7 @@ export const Editor = ({
       >
         <Slate editor={editor} value={value} onChange={onChange}>
           <EDITABLE
+            readOnly={disabled}
             spellCheck={true}
             className="editor"
             placeholder="Beginn typing !!"
@@ -111,44 +115,48 @@ export const Editor = ({
           />
         </Slate>
 
-        <Toolbar className={classes.toolbar} variant="dense" p={1}>
-          <Grid container justify="space-between" alignItems="center">
-            <Grid item sm={4}>
-              <Grid container justify="flex-start">
-                <EmojiePicker
-                  className="emoji-picker"
-                  onSelect={(text) => {
-                    if (!editor.selection) {
-                      editor.selection = selection.current;
-                    }
-                    editor.insertText(text);
-                  }}
-                />
+        {toolbar ? (
+          <Toolbar className={classes.toolbar} variant="dense" p={1}>
+            <Grid container justify="space-between" alignItems="center">
+              <Grid item sm={4}>
+                <Grid container justify="flex-start">
+                  <EmojiePicker
+                    className="emoji-picker tool"
+                    onSelect={(text) => {
+                      if (!editor.selection) {
+                        editor.selection = selection.current;
+                      }
+                      editor.insertText(text);
+                    }}
+                  />
+                </Grid>
+              </Grid>
+              <Grid item sm={8}>
+                <Grid container justify="flex-end">
+                  {children}
+                  <CopyToClipboard value={serializedValue} />
+                  <Tooltip title="character count" placement="bottom">
+                    <Avatar
+                      variant="rounded"
+                      color="primary"
+                      className="tool"
+                      style={{ marginLeft: '8px' }}
+                    >
+                      <Typography>{serializedValue.length}</Typography>
+                    </Avatar>
+                  </Tooltip>
+                </Grid>
               </Grid>
             </Grid>
-            <Grid item sm={8}>
-              <Grid container justify="flex-end">
-                {children}
-                <CopyToClipboard value={serializedValue} />
-                <Tooltip title="character count" placement="bottom">
-                  <Avatar
-                    variant="rounded"
-                    color="primary"
-                    style={{ marginLeft: '8px' }}
-                  >
-                    <Typography>{serializedValue.length}</Typography>
-                  </Avatar>
-                </Tooltip>
-              </Grid>
-            </Grid>
-          </Grid>
-        </Toolbar>
+          </Toolbar>
+        ) : null}
       </Grid>
     </Card>
   );
 };
 
 Editor.defaultProps = {
+  toolbar: true,
   // onChange: () => {},
   // decorate: () => {},
 };

@@ -56,6 +56,7 @@ export const Post = ({
   useEffect(() => {
     socket.emit('join editor', id);
     socket.on('update post', ({ id: sId, data }) => {
+      console.log(sId, data);
       if (id !== sId) return;
       setPost({ ...post, ...data });
       updateCache({ QUERY, index, update: data });
@@ -66,6 +67,7 @@ export const Post = ({
   }, []);
 
   const updatePost = (update) => {
+    console.log(update);
     setPost({ ...post, ...update });
     clearTimeout(saveTimeout.current);
     saveTimeout.current = setTimeout(() => {
@@ -117,9 +119,13 @@ export const Post = ({
       <Grid item xs={12} md={8}>
         <EditorClient
           id={id}
-          checked={post.checked}
           content={post.content}
-          updateCache={(update) => updateCache({ QUERY, index, update })}
+          onSave={({ serializedValue }) => {
+            const update = { id, content: serializedValue };
+            if (post.checked) update.checked = false;
+            socket.emit('update post', update);
+            updateCache({ QUERY, index, update });
+          }}
         >
           <CheckedButton
             checked={checked}

@@ -4,6 +4,7 @@ import { AwesomeIcon } from 'ui/components/Icons/Icon';
 import { askClipboardPermissions } from 'ui/components/Editor/helper';
 
 import { postClientLink } from 'services/client-link-api';
+import { useAuth } from 'services';
 
 const useStyles = makeStyles((theme) => ({
   wrapper: {
@@ -27,6 +28,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const ShareToClientButton = ({ data }) => {
+  const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState(false);
   const classes = useStyles({ copied });
@@ -64,7 +66,7 @@ export const ShareToClientButton = ({ data }) => {
     setCopied(false);
   }, [data.from, data.to, data.type, data.client]);
 
-  return (
+  return user.role === 'proofreader' ? (
     <div className={classes.wrapper}>
       <Button
         className={classes.button}
@@ -78,5 +80,5 @@ export const ShareToClientButton = ({ data }) => {
       </Button>
       {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
     </div>
-  );
+  ) : null;
 };

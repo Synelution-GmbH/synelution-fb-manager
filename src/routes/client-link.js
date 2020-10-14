@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
 import koaBody from 'koa-body';
+import Client from '../models/Client';
 import ClientLink from '../models/ClientLink';
 import Post from '../models/Post';
 export const FORMAT = 'DD-MM-YYYY';
@@ -40,7 +41,9 @@ export const clientLinkRoutes = ({ router }) => {
         },
       });
 
-      ctx.body = { link: existing, posts };
+      const existingClient = await Client.findOne({ slug: client });
+
+      ctx.body = { link: existing, posts, client: existingClient };
     } catch (e) {
       console.log(e);
       ctx.throw(e);

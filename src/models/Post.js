@@ -7,6 +7,9 @@ const postSchema = new mongoose.Schema({
   date: Number,
   budget: Number,
   content: String,
+  approved: Boolean,
+  clientCorrected: Boolean,
+  imageChanges: String,
   asset: {
     path: String,
     type: { type: String },

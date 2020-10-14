@@ -3,7 +3,6 @@ import { createEditor, Node } from 'slate';
 import { withHistory } from 'slate-history';
 import { withReact } from 'slate-react';
 import { Editor } from '../Editor';
-import { useSocket } from 'services/socket-provider';
 
 const defaultValue = [
   {
@@ -32,15 +31,21 @@ const deserialize = (string) => {
 export const EditorClient = ({
   id,
   content = null,
+  editorRef,
   children,
-  checked,
-  updateCache,
+  onSave = () => {},
+  editorProps = {},
+  disabled = false,
+  saveDelay = 1000,
 }) => {
   const [value, setValue] = useState(content ? deserialize(content) : defaultValue);
   const saveTimeout = useRef();
-  const socket = useSocket();
 
   const editor = useMemo(() => withHistory(withReact(createEditor())), []);
+  useEffect(() => {
+    if (!editorRef) return;
+    editorRef.current = editor;
+  }, []);
 
   useEffect(() => {
     if (!content) return setValue(defaultValue);
@@ -51,17 +56,17 @@ export const EditorClient = ({
   const serialized = serialize(value);
   return (
     <Editor
+      {...editorProps}
       editor={editor}
       value={value}
+      disabled={disabled}
       serializedValue={serialized}
       onChange={(value) => {
         clearTimeout(saveTimeout.current);
         saveTimeout.current = setTimeout(() => {
-          const update = { id, content: serialize(value) };
-          if (checked) update.checked = false;
-          socket.emit('update post', update);
-          updateCache(update);
-        }, 1000);
+          console.log('save');
+          onSave({ value, serializedValue: serialize(value) });
+        }, saveDelay);
         setValue(value);
       }}
     >

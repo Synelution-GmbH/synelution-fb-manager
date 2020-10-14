@@ -22,6 +22,8 @@ import {
   faBellSlash,
   faCheckCircle,
   faLink,
+  faGlobeAmericas,
+  faPen,
 } from '@fortawesome/free-solid-svg-icons';
 
 import { faInstagram, faFacebook } from '@fortawesome/free-brands-svg-icons';
@@ -48,7 +50,9 @@ library.add(
   faCheckCircle,
   faChevronRight,
   faChevronLeft,
-  faLink
+  faLink,
+  faGlobeAmericas,
+  faPen
 );
 
 export const AwesomeIcon = ({ ...props }) => {
