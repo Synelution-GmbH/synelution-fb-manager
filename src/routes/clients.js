@@ -1,6 +1,6 @@
 import koaBody from 'koa-body';
 import Client from '../models/Client';
-import fs from 'fs/promises';
+import Post from '../models/Post';
 
 import { saveFileAndResize, deleteDirectory } from '../utils';
 
@@ -51,8 +51,8 @@ export default ({ router }) => {
 
   router.get('/', async (ctx) => {
     try {
-      const customers = await Client.find({});
-      ctx.body = customers;
+      const clients = await Client.find({});
+      ctx.body = clients;
     } catch (e) {
       ctx.throw(404, 'not found');
     }
@@ -61,15 +61,16 @@ export default ({ router }) => {
   router.delete('/:slug', async (ctx) => {
     const { slug } = ctx.params;
     try {
-      const customer = await Client.findOneAndDelete({ slug });
-      if (!customer) {
-        throw 'customer not found';
+      const client = await Client.findOneAndDelete({ slug });
+      if (!client) {
+        throw 'client not found';
       }
+      const postsDeleted = await Post.deleteMany({ client: client.slug });
+      console.log(postsDeleted);
+      await deleteDirectory(`public/uploads/${client.slug}`);
 
-      await deleteDirectory(`public/uploads/${customer.slug}`);
-
-      // await fs.unlink('public' + customer.profilePicture);
-      ctx.body = customer;
+      // await fs.unlink('public' + client.profilePicture);
+      ctx.body = { client, postsDeleted };
     } catch (e) {
       console.log(e);
       ctx.throw(404, e);

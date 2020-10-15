@@ -42,7 +42,6 @@ const useStyles = makeStyles((theme) => {
       },
 
       '& .editor': {
-        minHeight: '100px',
         flexGrow: 1,
       },
     },
@@ -65,7 +64,6 @@ export const Editor = ({
   style = null,
   disabled = false,
 }) => {
-  console.log(disabled);
   // const socket = useSocket();
   // const editor = useMemo(() => withHistory(withReact(createEditor())), []);
   const classes = useStyles();

@@ -9,7 +9,13 @@ const postSchema = new mongoose.Schema({
   content: String,
   approved: Boolean,
   clientCorrected: Boolean,
-  imageChanges: String,
+  imageChanges: [
+    {
+      text: String,
+      createdAt: { type: Date, default: Date.now },
+      done: Boolean,
+    },
+  ],
   asset: {
     path: String,
     type: { type: String },

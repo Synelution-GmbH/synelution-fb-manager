@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useQuery } from 'react-query';
 import { useParams } from 'react-router';
 import { Loader } from 'ui/components/Loader';
@@ -8,27 +8,31 @@ import { FacebookPost } from './FacebookPost';
 
 const ClientView = () => {
   const { id } = useParams();
-  console.log(id);
-  const { isLoading, error, data } = useQuery(['client-link', { id }], () =>
-    getLinkById(id)
-  );
+  const QUERY = useMemo(() => ['client-link', { id }], [id]);
+  const { isLoading, error, data } = useQuery(QUERY, () => getLinkById(id));
 
-  console.log(data);
   return (
     <>
       <Loader loading={isLoading} />
-      {!data ? null : <PostList client={data.client} posts={data.posts} />}
+      {!data ? null : (
+        <PostList QUERY={QUERY} client={data.client} posts={data.posts} />
+      )}
     </>
   );
 };
 
-const PostList = ({ posts, client }) => {
+const PostList = ({ posts, client, QUERY }) => {
   return (
-    <Container maxWidth="sm">
-      <Grid container direction="column" justify="center">
+    <Container maxWidth="lg">
+      <Grid container justify="center">
         {posts.map(({ _id, ...postProps }) => (
           <React.Fragment key={_id}>
-            <FacebookPost {...postProps} id={_id} client={client}></FacebookPost>
+            <FacebookPost
+              {...postProps}
+              QUERY={QUERY}
+              id={_id}
+              client={client}
+            ></FacebookPost>
             <br />
           </React.Fragment>
         ))}

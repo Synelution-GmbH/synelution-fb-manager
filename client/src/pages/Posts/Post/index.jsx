@@ -1,5 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Grid, InputAdornment, makeStyles, TextField } from '@material-ui/core';
+import {
+  Avatar,
+  Grid,
+  InputAdornment,
+  makeStyles,
+  TextField,
+} from '@material-ui/core';
 import { AssetUploader } from 'ui/components/AssetUploader';
 
 import { DeleteButton } from './DeleteButton';
@@ -11,6 +17,8 @@ import { useQueryCache } from 'react-query';
 import { CheckedButton } from './CheckedButton';
 
 import { PostDatePicker } from './PostDatePicker';
+import { AwesomeIcon } from 'ui/components/Icons/Icon';
+import { ClientToolbox } from './ClientToolbox';
 
 const useStyles = makeStyles((theme) => ({
   clipboardButton: {
@@ -26,6 +34,7 @@ export const useUpdate = () => {
 
   const updateCache = ({ QUERY, index, update }) => {
     cache.setQueryData(QUERY, (old) => {
+      if (!old) return [update];
       old[index] = { ...old[index], ...update };
       return old;
     });
@@ -35,6 +44,9 @@ export const useUpdate = () => {
 };
 
 export const Post = ({
+  approved,
+  clientCorrected,
+  imageChanges,
   date,
   budget,
   content,
@@ -104,6 +116,11 @@ export const Post = ({
             from={from}
             to={to}
             updatePost={updatePost}
+          />
+          <ClientToolbox
+            approved={approved}
+            clientCorrected={clientCorrected}
+            imageChanges={imageChanges}
           />
         </Grid>
       </Grid>
