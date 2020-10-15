@@ -25,6 +25,7 @@ import { PostSkeleton } from './Post/PostSkeleton';
 import { MessageBox } from './MessageBox';
 import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab';
 import { NotifyProofreaderBtn } from './NotifyProofreaderBtn';
+import { ShareToClientButton } from './ShareToClientBtn';
 
 dayjs.extend(customParseFormat);
 dayjs.locale('de');
@@ -149,12 +150,15 @@ const Posts = () => {
                     className={classes.ml}
                     value={dateInterval}
                     variant="outlined"
-                    label="Post Interval"
+                    label="Post Interval (in days)"
                     type="number"
                     onChange={(e) => setDateInteral(e.target.value)}
                   />
                 </Grid>
                 <NotifyProofreaderBtn data={{ url: pathname }} />
+                <ShareToClientButton
+                  data={{ ...params, from: date[0], to: date[1] }}
+                />
               </Grid>
             </Toolbar>
           </Box>
@@ -227,11 +231,12 @@ const PostList = ({ dateInterval, from, to, client, type }) => {
       : dayjs(from, FORMAT);
     let newDate = dateFrom.valueOf();
     if (newDate.valueOf() > dayjs(to, FORMAT).valueOf())
-      return setWarning({
-        toggle: !warning.toggle,
-        text:
-          'Das automatisch ausgewählte Datum hat die filtergrenze überschritten bitte Ändern Sie den Interval oder den Datum-Filter!',
-      });
+      newDate = dayjs(to, FORMAT).valueOf();
+    // return setWarning({
+    //   toggle: !warning.toggle,
+    //   text:
+    //     'Das automatisch ausgewählte Datum hat die filtergrenze überschritten bitte Ändern Sie den Interval oder den Datum-Filter!',
+    // });
     addPost({
       date: newDate,
       client,
@@ -247,7 +252,7 @@ const PostList = ({ dateInterval, from, to, client, type }) => {
           .sort((a, b) => a.date - b.date)
           .map(({ _id, date, ...props }, i) =>
             _id ? (
-              <Box mt={2} key={_id}>
+              <Box mt={2} pb={4} key={_id}>
                 <Post
                   QUERY={QUERY}
                   removePost={removePost}

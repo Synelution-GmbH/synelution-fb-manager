@@ -1,5 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Grid, InputAdornment, makeStyles, TextField } from '@material-ui/core';
+import {
+  Avatar,
+  Grid,
+  InputAdornment,
+  makeStyles,
+  TextField,
+} from '@material-ui/core';
 import { AssetUploader } from 'ui/components/AssetUploader';
 
 import { DeleteButton } from './DeleteButton';
@@ -11,6 +17,8 @@ import { useQueryCache } from 'react-query';
 import { CheckedButton } from './CheckedButton';
 
 import { PostDatePicker } from './PostDatePicker';
+import { AwesomeIcon } from 'ui/components/Icons/Icon';
+import { ClientToolbox } from './ClientToolbox';
 
 const useStyles = makeStyles((theme) => ({
   clipboardButton: {
@@ -26,6 +34,7 @@ export const useUpdate = () => {
 
   const updateCache = ({ QUERY, index, update }) => {
     cache.setQueryData(QUERY, (old) => {
+      if (!old) return [update];
       old[index] = { ...old[index], ...update };
       return old;
     });
@@ -35,6 +44,9 @@ export const useUpdate = () => {
 };
 
 export const Post = ({
+  approved,
+  clientCorrected,
+  imageChanges,
   date,
   budget,
   content,
@@ -56,6 +68,7 @@ export const Post = ({
   useEffect(() => {
     socket.emit('join editor', id);
     socket.on('update post', ({ id: sId, data }) => {
+      console.log(sId, data);
       if (id !== sId) return;
       setPost({ ...post, ...data });
       updateCache({ QUERY, index, update: data });
@@ -66,6 +79,7 @@ export const Post = ({
   }, []);
 
   const updatePost = (update) => {
+    console.log(update);
     setPost({ ...post, ...update });
     clearTimeout(saveTimeout.current);
     saveTimeout.current = setTimeout(() => {
@@ -103,6 +117,11 @@ export const Post = ({
             to={to}
             updatePost={updatePost}
           />
+          <ClientToolbox
+            approved={approved}
+            clientCorrected={clientCorrected}
+            imageChanges={imageChanges}
+          />
         </Grid>
       </Grid>
       <Grid item xs={2}>
@@ -117,9 +136,13 @@ export const Post = ({
       <Grid item xs={12} md={8}>
         <EditorClient
           id={id}
-          checked={post.checked}
           content={post.content}
-          updateCache={(update) => updateCache({ QUERY, index, update })}
+          onSave={({ serializedValue }) => {
+            const update = { id, content: serializedValue };
+            if (post.checked) update.checked = false;
+            socket.emit('update post', update);
+            updateCache({ QUERY, index, update });
+          }}
         >
           <CheckedButton
             checked={checked}

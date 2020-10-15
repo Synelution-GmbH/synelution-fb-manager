@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import { useRouteMatch } from 'react-router';
 
@@ -14,6 +14,7 @@ const st = {
     '"Segoe UI Symbol"',
   ].join(','),
   palette: {
+    // type: 'dark',
     fb: 'linear-gradient(to right,#3578e5 0%,#2362c8 100%)',
     ig: 'linear-gradient(-112deg,#5c0abf 0,#b0377b 100%)',
   },
@@ -43,9 +44,13 @@ const themeIG = createMuiTheme({
   },
 });
 
+console.log(theme);
+
 export const Theme = ({ children }) => {
   let dateParams = useRouteMatch('/:client/posts/:type');
-
+  useEffect(() => {
+    document.body.style.backgroundColor = theme.palette.background.default;
+  }, []);
   return (
     <ThemeProvider
       theme={dateParams && dateParams.params.type === 'ig' ? themeIG : theme}

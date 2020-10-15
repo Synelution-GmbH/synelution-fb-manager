@@ -28,7 +28,7 @@ export const PostDatePicker = ({
   const [error, setError] = useState();
 
   useEffect(() => {
-    if (value && value.isValid()) {
+    if (value && value.isValid() && propValue.valueOf() !== value.valueOf()) {
       if (
         minDate.valueOf() <= value.valueOf() &&
         maxDate.valueOf() >= value.valueOf()

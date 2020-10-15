@@ -5,6 +5,8 @@ import {
   DialogContent,
   DialogTitle,
   Fab,
+  InputLabel,
+  makeStyles,
   TextField,
   Tooltip,
 } from '@material-ui/core';
@@ -12,27 +14,34 @@ import React, { useState } from 'react';
 import { AssetUploader } from 'ui/components/AssetUploader';
 import { AwesomeIcon } from 'ui/components/Icons/Icon';
 
+const useStyles = makeStyles((theme) => ({
+  input: {
+    marginBottom: theme.spacing(1),
+  },
+}));
+
 export const CreateClient = ({ addClient = () => {} }) => {
+  const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [name, setName] = useState('');
+  const [facebookName, setFacebookName] = useState('');
   const [file, setFile] = useState();
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
-    if (!name || !file || loading) return;
+    if (!name || !file || loading || !facebookName) return;
     setLoading(true);
 
     const data = new FormData();
     data.append('name', name);
+    data.append('facebookName', facebookName);
     data.append('file', file);
     try {
-      // const { data: client } = await axios.post('/clients', data, {
-      //   headers: { 'content-type': 'multipart/form-data' },
-      // });
       await addClient(data);
       setLoading(false);
       // reset form
       setName('');
+      setFacebookName('');
       setFile(null);
       handleClose();
     } catch (error) {
@@ -59,6 +68,7 @@ export const CreateClient = ({ addClient = () => {} }) => {
         <DialogTitle id="create-client-dialog">Create Client</DialogTitle>
         <DialogContent style={{ minWidth: '350px' }}>
           <TextField
+            className={classes.input}
             onChange={(e) => setName(e.target.value)}
             value={name}
             autoFocus
@@ -66,6 +76,16 @@ export const CreateClient = ({ addClient = () => {} }) => {
             label="name"
             type="text"
           />
+          <TextField
+            className={classes.input}
+            onChange={(e) => setFacebookName(e.target.value)}
+            value={facebookName}
+            autoFocus
+            fullWidth
+            label="Facebook page title"
+            type="text"
+          />
+          <InputLabel style={{ margin: '16px 0 8px' }}>Profile Picture</InputLabel>
           <AssetUploader setFile={setFile} />
         </DialogContent>
         <DialogActions>

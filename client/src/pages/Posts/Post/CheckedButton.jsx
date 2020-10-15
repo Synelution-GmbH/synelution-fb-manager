@@ -15,9 +15,9 @@ const useStyles = makeStyles((theme) => ({
     },
   }),
   avatar: ({ checked }) => ({
-    backgroundColor:
-      (checked ? theme.palette.success.main : theme.palette.error.main) +
-      '!important',
+    backgroundColor: checked
+      ? theme.palette.success.main
+      : theme.palette.error.main,
     cursor: 'default',
   }),
 }));
