@@ -1,5 +1,5 @@
 import koaBody from 'koa-body';
-import fs from 'fs/promises';
+import fs from 'fs';
 
 import { saveFile, saveFileAndResize } from '../utils';
 import dayjs from 'dayjs';
@@ -97,7 +97,7 @@ export default ({ router }) => {
         }
 
         if (post.asset && post.asset.path)
-          await fs.unlink('public' + post.asset.path);
+          await fs.promises.unlink('public' + post.asset.path);
         post.asset = asset;
         console.log(post);
         await post.save();
