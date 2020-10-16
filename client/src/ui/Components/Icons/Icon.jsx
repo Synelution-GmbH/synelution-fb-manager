@@ -28,7 +28,14 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 import { faInstagram, faFacebook } from '@fortawesome/free-brands-svg-icons';
-import { faChevronRight, faChevronLeft } from './custom-icons';
+import {
+  faChevronRight,
+  faChevronLeft,
+  igLike,
+  igComment,
+  igShare,
+  igSave,
+} from './custom-icons';
 
 library.add(
   faEye,
@@ -54,7 +61,11 @@ library.add(
   faLink,
   faGlobeAmericas,
   faPen,
-  faImage
+  faImage,
+  igLike,
+  igComment,
+  igShare,
+  igSave
 );
 
 export const AwesomeIcon = ({ ...props }) => {

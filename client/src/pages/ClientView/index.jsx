@@ -4,7 +4,7 @@ import { useParams } from 'react-router';
 import { Loader } from 'ui/components/Loader';
 import { getLinkById } from 'services/client-link-api';
 import { Container, Grid } from '@material-ui/core';
-import { FacebookPost } from './FacebookPost';
+import { Post } from './Post';
 
 const ClientView = () => {
   const { id } = useParams();
@@ -32,12 +32,7 @@ const PostList = ({ posts, client, QUERY }) => {
       >
         {posts.map(({ _id, ...postProps }) => (
           <React.Fragment key={_id}>
-            <FacebookPost
-              {...postProps}
-              QUERY={QUERY}
-              id={_id}
-              client={client}
-            ></FacebookPost>
+            <Post {...postProps} QUERY={QUERY} id={_id} client={client}></Post>
             <br />
           </React.Fragment>
         ))}
