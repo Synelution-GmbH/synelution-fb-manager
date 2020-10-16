@@ -9,7 +9,7 @@ import { FacebookPost } from './FacebookPost';
 const ClientView = () => {
   const { id } = useParams();
   const QUERY = useMemo(() => ['client-link', { id }], [id]);
-  const { isLoading, error, data } = useQuery(QUERY, () => getLinkById(id));
+  const { isLoading, data } = useQuery(QUERY, () => getLinkById(id));
 
   return (
     <>
@@ -24,7 +24,12 @@ const ClientView = () => {
 const PostList = ({ posts, client, QUERY }) => {
   return (
     <Container maxWidth="lg">
-      <Grid container justify="center">
+      <Grid
+        container
+        justify="center"
+        alignItems="flex-start"
+        alignContent="flex-start"
+      >
         {posts.map(({ _id, ...postProps }) => (
           <React.Fragment key={_id}>
             <FacebookPost

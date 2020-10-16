@@ -10,7 +10,7 @@ const AuthenticatedApp = () => {
       <div className="main-content">
         <Switch>
           <Route path="/login" component={Login} />
-          <Route exact path="/:id" component={ClientView} />
+          <Route exact path="/preview/:id" component={ClientView} />
           <Route path="/" component={Login} />
         </Switch>
       </div>

@@ -50,7 +50,7 @@ export const ShareToClientButton = ({ data }) => {
         link = copied;
       } else {
         const res = await postClientLink(data);
-        link = window.location.origin + '/' + res.uuid;
+        link = window.location.origin + '/preview/' + res.uuid;
       }
 
       await saveToClipboard(link);

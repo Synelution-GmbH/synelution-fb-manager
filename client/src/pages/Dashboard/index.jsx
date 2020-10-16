@@ -12,6 +12,7 @@ import { ClientList } from './ClientList';
 import { postClient, getClients } from 'services';
 import { useQuery, useMutation, useQueryCache } from 'react-query';
 import { SearchBar } from './SearchBar';
+import { Helmet } from 'react-helmet';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -35,31 +36,36 @@ const Dashboard = () => {
   if (isLoading) return null;
 
   return (
-    <div className={classes.root}>
-      <Container maxWidth="lg">
-        <Toolbar>
-          <Grid container justify="space-between">
-            <SearchBar
-              list={data}
-              setFilteredList={setFiltered}
-              searchProperty="name"
-            />
-            <CreateClient addClient={addClient} />
-          </Grid>
-        </Toolbar>
-      </Container>
-      <Container maxWidth="lg">
-        <Box clone mt={2}>
-          <Paper>
-            {data.length > 0 ? (
-              <ClientList clients={filtered ? filtered : data} />
-            ) : (
-              <div></div>
-            )}
-          </Paper>
-        </Box>
-      </Container>
-    </div>
+    <>
+      <Helmet>
+        <title>Dashboard</title>
+      </Helmet>
+      <div className={classes.root}>
+        <Container maxWidth="lg">
+          <Toolbar>
+            <Grid container justify="space-between">
+              <SearchBar
+                list={data}
+                setFilteredList={setFiltered}
+                searchProperty="name"
+              />
+              <CreateClient addClient={addClient} />
+            </Grid>
+          </Toolbar>
+        </Container>
+        <Container maxWidth="lg">
+          <Box clone mt={2}>
+            <Paper>
+              {data.length > 0 ? (
+                <ClientList clients={filtered ? filtered : data} />
+              ) : (
+                <div></div>
+              )}
+            </Paper>
+          </Box>
+        </Container>
+      </div>
+    </>
   );
 };
 

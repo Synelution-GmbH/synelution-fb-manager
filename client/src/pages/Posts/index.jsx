@@ -26,6 +26,7 @@ import { MessageBox } from './MessageBox';
 import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab';
 import { NotifyProofreaderBtn } from './NotifyProofreaderBtn';
 import { ShareToClientButton } from './ShareToClientBtn';
+import { Helmet } from 'react-helmet';
 
 dayjs.extend(customParseFormat);
 dayjs.locale('de');
@@ -247,6 +248,11 @@ const PostList = ({ dateInterval, from, to, client, type }) => {
 
   return (
     <>
+      <Helmet>
+        <title>
+          {type.toUpperCase()} - {client}
+        </title>
+      </Helmet>
       {data && data.length > 0 ? (
         data
           .sort((a, b) => a.date - b.date)

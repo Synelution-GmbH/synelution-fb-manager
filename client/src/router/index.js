@@ -19,7 +19,7 @@ export default class MainRouter extends Component {
             <Switch>
               <Route path="/:client/posts/:type" component={Posts} />
               {/* /from/:from/to/:to */}
-              <Route exact path="/:id" component={ClientView} />
+              <Route exact path="/preview/:id" component={ClientView} />
               <Route exact path="/" component={Dashboard} />
             </Switch>
             {/* <Footer /> */}

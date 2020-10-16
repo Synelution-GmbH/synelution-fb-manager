@@ -16,7 +16,6 @@ import { useSocket } from 'services/socket-provider';
 import { ReactEditor } from 'slate-react';
 import { MessageBox } from 'pages/Posts/MessageBox';
 import { ChangeImageButton } from '../ChangeImageBtn';
-import { useQueryCache } from 'react-query';
 import { FreigebenBtn } from '../FreigebenBtn';
 
 const FB_CARD = styled(Card)({
@@ -114,11 +113,13 @@ export const FacebookPost = ({
           id={id}
         />
       </div>
-      {asset.image ? (
-        <img className={classes.asset} src={asset.path} />
-      ) : (
-        <video className={classes.asset} src={asset.path}></video>
-      )}
+      {asset && asset.path ? (
+        asset.image ? (
+          <img className={classes.asset} src={asset.path} />
+        ) : (
+          <video className={classes.asset} src={asset.path}></video>
+        )
+      ) : null}
       <FB_CARD_CONTENT>
         <Grid container justify="space-between">
           <FreigebenBtn approved={approved} id={id} QUERY={QUERY}></FreigebenBtn>

@@ -48,7 +48,10 @@ export const ClientToolbox = ({ approved, clientCorrected, imageChanges: ic }) =
   return (
     <>
       <Tooltip title={approved ? 'Freigegeben' : 'nicht Freigegeben'}>
-        <Avatar className={' rainbow ' + classes.large} variant="rounded">
+        <Avatar
+          className={(approved ? ' rainbow ' : '') + classes.large}
+          variant="rounded"
+        >
           <AwesomeIcon icon="check-circle" />
         </Avatar>
       </Tooltip>
