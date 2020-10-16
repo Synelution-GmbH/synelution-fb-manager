@@ -15,6 +15,8 @@ const app = new Koa();
 const server = http.createServer(app.callback());
 
 const io = socketIO(server);
+import serve from 'koa-static';
+import send from 'koa-send';
 
 initDB({ app });
 initMiddleware({ app });
@@ -27,6 +29,10 @@ webpush.setVapidDetails(
   process.env.VAPID_PUBLIC,
   process.env.VAPID_PRIVATE
 );
+
+app.use(async (ctx) => {
+  await send(ctx, 'index.html', { root: 'public' });
+});
 
 // subscribe
 

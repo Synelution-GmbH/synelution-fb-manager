@@ -56,3 +56,5 @@ const jwtLogin = new JwtStrategy(jwtOptions, async (jwt_payload, done) => {
 
 passport.use(localLogin);
 passport.use(jwtLogin);
+
+// export const hasAuth = ;
