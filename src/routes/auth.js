@@ -4,7 +4,7 @@ import User from '../models/User';
 import koaBody from 'koa-body';
 
 const createToken = async () => {
-  return await jsonwebtoken.sign({ id: user.id }, process.env.secret);
+  return await jsonwebtoken.sign({ id: user.id }, process.env.SECRET);
 };
 
 // prefix: "/"
@@ -18,7 +18,7 @@ export default ({ router }) => {
       console.log(user);
       console.log(ctx.isAuthenticated());
 
-      const token = await jsonwebtoken.sign({ id: user.id }, process.env.secret);
+      const token = await jsonwebtoken.sign({ id: user.id }, process.env.SECRET);
       ctx.body = { token, user };
     }
   );
@@ -43,7 +43,7 @@ export default ({ router }) => {
       console.log(createdUser);
       const token = await jsonwebtoken.sign(
         { id: createdUser._id },
-        process.env.secret
+        process.env.SECRET
       );
       ctx.body = { token, msg: 'User Sucessfully created', id: createdUser._id };
     } catch (e) {
