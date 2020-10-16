@@ -9,7 +9,7 @@
     "server": "nodemon --exec babel-node src/index.js",
     "client": "npm run start --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "build": "cd client/ && npm install && npm run build"
+    "build": "cd client/ && npm install && npm run build && cp -r build/* ../public/"
   },
   "repository": {
     "type": "git",
