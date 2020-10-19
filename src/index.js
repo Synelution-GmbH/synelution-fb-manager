@@ -30,9 +30,7 @@ webpush.setVapidDetails(
   process.env.VAPID_PRIVATE
 );
 
-app.use(async (ctx) => {
-  await send(ctx, 'index.html', { root: 'public' });
-});
+app.use(serve(`public`));
 
 // subscribe
 

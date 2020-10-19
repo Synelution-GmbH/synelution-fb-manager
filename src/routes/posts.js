@@ -97,7 +97,11 @@ export default ({ router }) => {
         }
 
         if (post.asset && post.asset.path)
-          await fs.promises.unlink('public' + post.asset.path);
+          try {
+            await fs.promises.unlink('public' + post.asset.path);
+          } catch (e) {
+            console.log(e);
+          }
         post.asset = asset;
         console.log(post);
         await post.save();

@@ -13,7 +13,7 @@ import { AwesomeIcon } from '../Icons/Icon';
 import { Video } from './Video';
 
 const useStyles = makeStyles((theme) => ({
-  root: ({ image }) => ({
+  root: () => ({
     overflow: 'hidden',
     position: 'relative',
     paddingTop: '100%',
@@ -25,8 +25,6 @@ const useStyles = makeStyles((theme) => ({
       height: '100%',
       padding: theme.spacing(3),
     },
-
-    backgroundImage: `url(${image})`,
     backgroundSize: 'cover',
     backgroundPosition: 'center',
   }),
@@ -88,14 +86,18 @@ export const AssetUploader = ({
   const classes = useStyles({ isDragActive, hide: image || video, image });
 
   useEffect(() => {
-    if (!preview) return;
+    if (!preview || !preview.path) return;
     if (preview.image) return setImage(preview.path);
     if (preview.video) return setVideo(preview.path);
   }, [preview]);
-
+  console.log(image);
   return (
     <>
-      <Card className={classes.root} {...getRootProps()}>
+      <Card
+        className={classes.root}
+        style={image ? { backgroundImage: `url(${image})` } : null}
+        {...getRootProps()}
+      >
         {video ? <Video src={video}></Video> : null}
         <CardContent>
           <Paper

@@ -19,6 +19,8 @@ export const deleteDirectory = (path) =>
 //   rimraf(path, () => resolve('done'));
 // });
 
+const formatFileName = () => {};
+
 export const saveFileAndResize = async ({
   uploadPath,
   fileName,
@@ -32,11 +34,12 @@ export const saveFileAndResize = async ({
     // const jpeg = await test.jpeg({ quality: 80 });
     // console.log(await jpeg.metadata());
     // console.log(fileName.replace(test.format, jpeg.format));
+    const saveFileName = fileName.replace(/[ /#\\?%*:;,|"=§$!'<>]/g, '_');
     await sharp(uploadPath)
       .resize(...resize)
       .jpeg({ quality: 80 })
-      .toFile(`${savePath}${fileName}`);
-    return `${savePath.replace('public', '')}${fileName}`;
+      .toFile(`${savePath}${saveFileName}`);
+    return `${savePath.replace('public', '')}${saveFileName}`;
   } catch (e) {
     console.log(e);
     throw 'image couldnt be saved';
@@ -47,8 +50,9 @@ export const saveFile = async ({ uploadPath, fileName, savePath }) => {
   await checkCreatePath(savePath);
   const readStream = fs.createReadStream(uploadPath);
   try {
-    await pipeline(readStream, fs.createWriteStream(`${savePath}${fileName}`));
-    return `${savePath.replace('public', '')}${fileName}`;
+    const saveFileName = fileName.replace(/[ /#]/g, '_');
+    await pipeline(readStream, fs.createWriteStream(`${savePath}${saveFileName}`));
+    return `${savePath.replace('public', '')}${saveFileName}`;
   } catch (error) {
     throw 'file couldnt be saved';
   }
