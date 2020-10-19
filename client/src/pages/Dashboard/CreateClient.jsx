@@ -80,11 +80,18 @@ export const CreateClient = ({ addClient = () => {} }) => {
             className={classes.input}
             onChange={(e) => setFacebookName(e.target.value)}
             value={facebookName}
-            autoFocus
             fullWidth
             label="Facebook page title"
             type="text"
           />
+          {/* <TextField
+            className={classes.input}
+            onChange={(e) => setFacebookName(e.target.value)}
+            value={facebookName}
+            fullWidth
+            label="Instagram username"
+            type="text"
+          /> */}
           <InputLabel style={{ margin: '16px 0 8px' }}>Profile Picture</InputLabel>
           <AssetUploader setFile={setFile} />
         </DialogContent>

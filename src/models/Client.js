@@ -6,6 +6,7 @@ const clientSchema = new mongoose.Schema({
     required: true,
   },
   facebookName: String,
+  // instagramName: String,
   slug: {
     type: String,
     required: true,
