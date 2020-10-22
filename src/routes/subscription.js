@@ -3,6 +3,7 @@ import koaBody from 'koa-body';
 import { use } from 'koa-passport';
 import webpush from 'web-push';
 import User from '../models/User';
+import { v4 as uuidv4 } from 'uuid';
 
 // /subscription
 export default ({ router }) => {
@@ -52,7 +53,7 @@ export default ({ router }) => {
       if (proofreader.length <= 0) ctx.throw(404, 'no proofreaders found ( ≧Д≦)');
       const payload = JSON.stringify({
         ...body,
-        title: `${user.username} requests proofread (ﾉ≧∀≦)ﾉ`,
+        tag: uuidv4(),
       });
       for (let i = 0; i < proofreader.length; i++) {
         for (let e = 0; e < proofreader[i].subscriptions.length; e++) {

@@ -68,7 +68,9 @@ userSchema.methods.comparePassword = function (candidatePassword) {
   const userPassword = this.password;
   return new Promise(async (resolve, reject) => {
     try {
+      console.log(candidatePassword, userPassword);
       const isMatch = await bcrypt.compare(candidatePassword, userPassword);
+      console.log(isMatch);
       resolve(isMatch);
     } catch (err) {
       reject(err);

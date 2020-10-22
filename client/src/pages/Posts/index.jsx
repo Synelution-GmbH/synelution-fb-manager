@@ -156,7 +156,12 @@ const Posts = () => {
                     onChange={(e) => setDateInteral(e.target.value)}
                   />
                 </Grid>
-                <NotifyProofreaderBtn data={{ url: pathname }} />
+                <NotifyProofreaderBtn
+                  data={{
+                    data: { url: pathname },
+                    title: `[${params.type.toUpperCase()}] ${params.client} `,
+                  }}
+                />
                 <ShareToClientButton
                   data={{ ...params, from: date[0], to: date[1] }}
                 />

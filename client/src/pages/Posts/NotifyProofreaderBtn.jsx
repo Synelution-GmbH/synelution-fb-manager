@@ -9,7 +9,12 @@ export const NotifyProofreaderBtn = ({ data }) => {
   const [info, setInfo] = useState({ toggle: false, text: '' });
   const handleClick = async () => {
     try {
-      await axios.post('/subscription/send', data);
+      await axios.post('/subscription/send', {
+        title: `fb-tool notification!`,
+        timestamp: Date.now(),
+        body: `${user.username} requests proofread`,
+        ...data,
+      });
       setInfo({ toggle: true, text: 'successfully send', severity: 'success' });
     } catch (e) {
       console.log(e);
