@@ -3,7 +3,7 @@ import { useQuery } from 'react-query';
 import { useParams } from 'react-router';
 import { Loader } from 'ui/components/Loader';
 import { getLinkById } from 'services/client-link-api';
-import { Container, Grid } from '@material-ui/core';
+import { Container, Grid, Typography } from '@material-ui/core';
 import { Post } from './Post';
 
 const ClientView = () => {
@@ -14,6 +14,15 @@ const ClientView = () => {
   return (
     <>
       <Loader loading={isLoading} />
+      <Container style={{ padding: '1rem', marginBottom: '1rem' }}>
+        <Grid container alignItems="center" justify="center">
+          <img
+            src="/assets/logo.svg"
+            style={{ maxWidth: '300px', marginRight: '1rem' }}
+          />
+          {/* <Typography variant="h4">Post Vorschau</Typography> */}
+        </Grid>
+      </Container>
       {!data ? null : (
         <PostList QUERY={QUERY} client={data.client} posts={data.posts} />
       )}

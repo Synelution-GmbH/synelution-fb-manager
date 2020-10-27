@@ -70,13 +70,14 @@ export const Post = ({
     socket.on('update post', ({ id: sId, data }) => {
       console.log(sId, data);
       if (id !== sId) return;
+      console.log(post, data);
       setPost({ ...post, ...data });
       updateCache({ QUERY, index, update: data });
     });
 
     return () => socket.emit('leave editor', id);
     // eslint-disable-next-line
-  }, []);
+  }, [post, id]);
 
   const updatePost = (update) => {
     console.log(update);

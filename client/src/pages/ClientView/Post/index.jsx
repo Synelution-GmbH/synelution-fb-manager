@@ -10,6 +10,7 @@ import { ChangeImageButton } from '../ChangeImageBtn';
 import { FreigebenBtn } from '../FreigebenBtn';
 import { FacebookView } from './FacebookView';
 import { InstagramView } from './InstagramView';
+import { useQueryCache } from 'react-query';
 
 const useStyles = makeStyles((theme) => ({
   cardContent: {
@@ -26,6 +27,7 @@ const PostView = ({ type, ...props }) => {
 };
 
 export const Post = ({ QUERY, date, approved, id, content, type, ...props }) => {
+  const cache = useQueryCache();
   const classes = useStyles({ type });
   const editor = useRef();
   const socket = useSocket();
@@ -57,6 +59,7 @@ export const Post = ({ QUERY, date, approved, id, content, type, ...props }) => 
           }}
           onSave={({ serializedValue }) => {
             setClientText(serializedValue);
+            cache.invalidateQueries(QUERY);
           }}
           id={id}
         />
