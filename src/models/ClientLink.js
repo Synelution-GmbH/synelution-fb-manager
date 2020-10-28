@@ -10,6 +10,10 @@ const clientLinkSchema = new mongoose.Schema({
   type: String,
   from: String,
   to: String,
+  createdAt: {
+    type: Date,
+    default: date.now,
+  },
 });
 
 const ClientLink = mongoose.model('ClientLink', clientLinkSchema);
