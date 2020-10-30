@@ -1,11 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {
-  Avatar,
-  Grid,
-  InputAdornment,
-  makeStyles,
-  TextField,
-} from '@material-ui/core';
+import { Grid, InputAdornment, makeStyles, TextField } from '@material-ui/core';
 import { AssetUploader } from 'ui/components/AssetUploader';
 
 import { DeleteButton } from './DeleteButton';
@@ -17,7 +11,6 @@ import { useQueryCache } from 'react-query';
 import { CheckedButton } from './CheckedButton';
 
 import { PostDatePicker } from './PostDatePicker';
-import { AwesomeIcon } from 'ui/components/Icons/Icon';
 import { ClientToolbox } from './ClientToolbox';
 
 const useStyles = makeStyles((theme) => ({

@@ -19,6 +19,7 @@ export const clientLinkRoutesWithAuth = ({ router }) => {
       // return (ctx.body = { uuid: 'asd' });
       const newLink = new ClientLink(body);
       const clientLink = await newLink.save();
+      ctx.set('Cache-Control', 'no-cache');
       ctx.body = clientLink;
     } catch (e) {
       console.log(e);

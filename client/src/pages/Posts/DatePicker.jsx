@@ -29,7 +29,6 @@ export const DatePicker = ({ value, handleClose, setValue }) => {
   const [error, setError] = useState([null, null]);
 
   useEffect(() => {
-    console.log(value);
     if (value[0] === date[0] && value[1] === date[1]) return;
     setDate(value);
   }, [value]);

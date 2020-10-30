@@ -3,7 +3,9 @@ import { createEditor, Node } from 'slate';
 import { withHistory } from 'slate-history';
 import { withReact } from 'slate-react';
 import { Editor } from '../Editor';
-export * from './EditorIE';
+import { IE } from 'utils';
+import { logDOM } from '@testing-library/react';
+
 const defaultValue = [
   {
     type: 'paragraph',
@@ -28,7 +30,7 @@ const deserialize = (string) => {
   });
 };
 
-export const EditorClient = ({
+export const EditorIE = ({
   id,
   content = null,
   editorRef,
@@ -38,41 +40,32 @@ export const EditorClient = ({
   disabled = false,
   saveDelay = 1000,
 }) => {
-  const [value, setValue] = useState(content ? deserialize(content) : defaultValue);
+  const [value, setValue] = useState(content);
   const saveTimeout = useRef();
 
-  const editor = useMemo(() => withHistory(withReact(createEditor())), []);
-  useEffect(() => {
-    if (!editorRef) return;
-    editorRef.current = editor;
-    // eslint-disable-next-line
-  }, []);
-
-  useEffect(() => {
-    if (!content) return setValue(defaultValue);
-    setValue(deserialize(content));
-    // eslint-disable-next-line
-  }, [content]);
-
-  const serialized = serialize(value);
   return (
-    <Editor
+    <div
+      contentEditable
+      className="ie-editor editor"
       {...editorProps}
-      editor={editor}
+      ref={editorRef}
       value={value}
       disabled={disabled}
-      serializedValue={serialized}
-      onChange={(value) => {
-        console.log(value);
+      onKeyUp={(e) => {
+        console.log();
+        const value = editorRef.current.innerText;
+
+        // const { value } = e.target;
+
         clearTimeout(saveTimeout.current);
         saveTimeout.current = setTimeout(() => {
           console.log('save');
-          onSave({ value, serializedValue: serialize(value) });
+          onSave({ serializedValue: value });
         }, saveDelay);
         setValue(value);
       }}
     >
-      {children}
-    </Editor>
+      {content}
+    </div>
   );
 };

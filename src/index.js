@@ -45,6 +45,10 @@ server.listen(PORT, () => {
   console.log(`Server running on port: ${PORT}`);
 });
 
+process.on('uncaughtException', function (err) {
+  console.error(err.stack);
+  console.log('Node NOT Exiting...');
+});
 // gracefully shut down
 process.on('SIGTERM', async () => {
   console.info('SIGTERM signal received.');

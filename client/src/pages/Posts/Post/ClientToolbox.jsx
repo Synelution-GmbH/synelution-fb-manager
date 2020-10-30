@@ -3,11 +3,7 @@ import {
   Badge,
   Checkbox,
   Dialog,
-  DialogContent,
   DialogTitle,
-  FormControlLabel,
-  Grid,
-  IconButton,
   List,
   ListItem,
   ListItemIcon,
@@ -15,7 +11,7 @@ import {
   makeStyles,
   Tooltip,
 } from '@material-ui/core';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { AwesomeIcon } from 'ui/components/Icons/Icon';
 
 const useStyles = makeStyles((theme) => ({

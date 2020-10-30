@@ -3,7 +3,7 @@ import { useQuery } from 'react-query';
 import { useParams } from 'react-router';
 import { Loader } from 'ui/components/Loader';
 import { getLinkById } from 'services/client-link-api';
-import { Container, Grid, Typography } from '@material-ui/core';
+import { Container, Grid } from '@material-ui/core';
 import { Post } from './Post';
 
 const ClientView = () => {
@@ -19,6 +19,7 @@ const ClientView = () => {
           <img
             src="/assets/logo.svg"
             style={{ maxWidth: '300px', marginRight: '1rem' }}
+            alt="logo"
           />
           {/* <Typography variant="h4">Post Vorschau</Typography> */}
         </Grid>

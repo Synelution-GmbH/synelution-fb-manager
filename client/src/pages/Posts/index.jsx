@@ -189,6 +189,7 @@ const Posts = () => {
 };
 
 const PostList = ({ dateInterval, from, to, client, type }) => {
+  // eslint-disable-next-line
   const [warning, setWarning] = useState({ toggle: false, text: '' });
   const cache = useQueryCache();
   const QUERY = useMemo(() => ['posts', { client, type, from, to }], [
