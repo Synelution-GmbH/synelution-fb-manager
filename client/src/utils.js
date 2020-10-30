@@ -10,3 +10,16 @@ export function urlBase64ToUint8Array(base64String) {
   }
   return outputArray;
 }
+
+export const getErrorText = (error) => {
+  switch (error) {
+    case 'invalidDate':
+      return 'Invalid Date';
+    case 'minDate':
+    case 'maxDate':
+      return 'Date not in current range';
+
+    default:
+      return null;
+  }
+};

@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { DateRangePicker, DateRangeDelimiter } from '@material-ui/pickers';
 import { Avatar, Grid, makeStyles, TextField } from '@material-ui/core';
 import { AwesomeIcon } from 'ui/components/Icons/Icon';
+import { getErrorText } from 'utils';
 
 const useStyles = makeStyles((theme) => {
   console.log(theme);
@@ -24,6 +25,19 @@ const useStyles = makeStyles((theme) => {
 
 export const DatePicker = ({ value, handleClose, setValue }) => {
   const classes = useStyles();
+  const [date, setDate] = useState(value);
+  const [error, setError] = useState([null, null]);
+
+  useEffect(() => {
+    console.log(value);
+    if (value[0] === date[0] && value[1] === date[1]) return;
+    setDate(value);
+  }, [value]);
+
+  useEffect(() => {
+    if (error[0] || error[1]) return;
+    setValue(date);
+  }, [date, error]);
 
   const handleDateForward = () => {
     const [from, to] = value;
@@ -40,6 +54,7 @@ export const DatePicker = ({ value, handleClose, setValue }) => {
     setValue(newValue);
     handleClose(newValue);
   };
+
   const handleDateBackwards = () => {
     const [from, to] = value;
     if (!to || !from) return;
@@ -56,6 +71,8 @@ export const DatePicker = ({ value, handleClose, setValue }) => {
     handleClose(newValue);
   };
 
+  console.log(date, value);
+
   return (
     <Grid container alignItems="center" style={{ width: 'auto' }}>
       <Avatar
@@ -69,16 +86,22 @@ export const DatePicker = ({ value, handleClose, setValue }) => {
       <DateRangePicker
         startText="Start-date"
         endText="End-date"
-        value={value}
+        value={date}
+        defaultValue={value}
+        inputFormat="DD.MM.YYYY"
         disableCloseOnSelect
         mask="__.__.____"
-        onClose={() => handleClose(value)}
-        onChange={(newValue) => setValue(newValue)}
+        onClose={() => {
+          if (error) return;
+          // handleClose(value);
+        }}
+        onChange={(newValue) => setDate(newValue)}
+        onError={(e) => setError(e.map((err) => getErrorText(err)))}
         renderInput={(startProps, endProps) => (
           <React.Fragment>
-            <TextField {...startProps} helperText="" />
+            <TextField {...startProps} helperText={error[0]} />
             <DateRangeDelimiter> to </DateRangeDelimiter>
-            <TextField {...endProps} helperText="" />
+            <TextField {...endProps} helperText={error[1]} />
           </React.Fragment>
         )}
       />

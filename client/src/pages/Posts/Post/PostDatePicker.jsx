@@ -3,19 +3,7 @@ import { DatePicker } from '@material-ui/pickers';
 import dayjs from 'dayjs';
 import { FORMAT } from 'config';
 import { TextField, Typography } from '@material-ui/core';
-
-const getErrorText = (error) => {
-  switch (error) {
-    case 'invalidDate':
-      return 'Invalid Date';
-    case 'minDate':
-    case 'maxDate':
-      return 'Date not in current range';
-
-    default:
-      return null;
-  }
-};
+import { getErrorText } from 'utils';
 
 export const PostDatePicker = ({
   value: propValue,
