@@ -2,7 +2,8 @@ import stream from 'stream';
 import { promisify } from 'util';
 import fs from 'fs';
 import sharp from 'sharp';
-import rimraf from 'rimraf';
+
+export const FORMAT = 'DD-MM-YYYY';
 
 export const pipeline = promisify(stream.pipeline);
 export const checkCreatePath = async (path) => {

@@ -3,7 +3,8 @@ import koaBody from 'koa-body';
 import Client from '../models/Client';
 import ClientLink from '../models/ClientLink';
 import Post from '../models/Post';
-export const FORMAT = 'DD-MM-YYYY';
+import { FORMAT } from '../utils';
+
 export const clientLinkRoutesWithAuth = ({ router }) => {
   router.post('/client-link', koaBody(), async (ctx) => {
     console.log(body);
@@ -42,7 +43,7 @@ export const clientLinkRoutes = ({ router }) => {
       });
 
       const existingClient = await Client.findOne({ slug: client });
-
+      ctx.set('Cache-Control', 'no-cache');
       ctx.body = { link: existing, posts, client: existingClient };
     } catch (e) {
       console.log(e);
