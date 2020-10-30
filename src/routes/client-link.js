@@ -43,7 +43,7 @@ export const clientLinkRoutes = ({ router }) => {
       });
 
       const existingClient = await Client.findOne({ slug: client });
-
+      ctx.set('Cache-Control', 'no-cache');
       ctx.body = { link: existing, posts, client: existingClient };
     } catch (e) {
       console.log(e);
