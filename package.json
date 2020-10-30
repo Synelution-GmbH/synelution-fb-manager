@@ -46,6 +46,7 @@
     "koa-send": "^5.0.1",
     "koa-static": "^5.0.0",
     "mongoose": "^5.10.7",
+    "nodemailer": "^6.4.14",
     "nodemon": "^2.0.4",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",

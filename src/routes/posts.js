@@ -7,10 +7,10 @@ import Post from '../models/Post';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 
 import 'dayjs/locale/de';
+import { FORMAT } from '../utils';
 
 dayjs.extend(customParseFormat);
 dayjs.locale('de');
-export const FORMAT = 'DD-MM-YYYY';
 
 // prefix: "/"
 export default ({ router }) => {
