@@ -12,7 +12,7 @@ const clientLinkSchema = new mongoose.Schema({
   to: String,
   createdAt: {
     type: Date,
-    default: date.now,
+    default: Date.now,
   },
 });
 
