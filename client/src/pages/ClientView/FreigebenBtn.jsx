@@ -44,6 +44,8 @@ export const FreigebenBtn = ({ approved, id, QUERY }) => {
         disabled={loading}
         onClick={() => {
           setLoading(true);
+          console.log('emitting');
+          console.log(approved);
           socket.emit(
             'client change',
             {
@@ -52,6 +54,7 @@ export const FreigebenBtn = ({ approved, id, QUERY }) => {
             },
             (e) => {
               // setLoading(false);
+              console.log('invalidate query');
               cache.invalidateQueries(QUERY);
             }
           );
