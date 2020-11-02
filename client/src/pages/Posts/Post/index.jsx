@@ -12,6 +12,7 @@ import { CheckedButton } from './CheckedButton';
 
 import { PostDatePicker } from './PostDatePicker';
 import { ClientToolbox } from './ClientToolbox';
+import { AssetUploaderProvider } from 'ui/components/AssetUploader/AssetUploaderContext';
 
 const useStyles = makeStyles((theme) => ({
   clipboardButton: {
@@ -148,6 +149,7 @@ export const Post = ({
         </EditorClient>
       </Grid>
       <Grid item xs={12} md={4}>
+        {/* <AssetUploaderProvider> */}
         <AssetUploader preview={post.asset} setFile={updateImage}>
           {post.asset && post.asset.path ? (
             <CopyToClipboard
@@ -156,6 +158,7 @@ export const Post = ({
             />
           ) : null}
         </AssetUploader>
+        {/* </AssetUploaderProvider> */}
       </Grid>
     </Grid>
   );

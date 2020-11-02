@@ -20,6 +20,7 @@
     "fontsource-roboto": "^3.0.3",
     "react": "^16.13.1",
     "react-app-polyfill": "^2.0.0",
+    "react-beautiful-dnd": "^13.0.0",
     "react-content-loader": "^5.1.2",
     "react-date-range": "^1.0.3",
     "react-dom": "^16.13.1",
