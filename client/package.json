@@ -29,6 +29,7 @@
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.3",
+    "react-textarea-autosize": "^8.2.0",
     "slate": "0.58.3",
     "slate-history": "0.58.3",
     "slate-react": "0.58.3",
