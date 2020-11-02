@@ -72,11 +72,13 @@ export default ({ socket, posts }) => {
 
       const formattedDate = dayjs(post.date).format(FORMAT);
       const emailBody = Object.keys(update).map((key) => getEmailText(key, update));
-      await sendMail({
-        subject: `${post.type} - ${post.client} - ${formattedDate}`,
-        text: emailBody.join('\\n').replace(/<br>/g, '\\n'),
-        html: emailBody.join('<br>'),
-      });
+
+      if (process.env.NODE_ENV === 'production')
+        await sendMail({
+          subject: `${post.type} - ${post.client} - ${formattedDate}`,
+          text: emailBody.join('\\n').replace(/<br>/g, '\\n'),
+          html: emailBody.join('<br>'),
+        });
     } catch (e) {
       console.log(e);
       fn('error');
