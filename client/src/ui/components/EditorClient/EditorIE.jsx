@@ -5,6 +5,7 @@ import { withReact } from 'slate-react';
 import { Editor } from '../Editor';
 import { IE } from 'utils';
 import { logDOM } from '@testing-library/react';
+import { TextareaAutosize } from '@material-ui/core';
 
 const defaultValue = [
   {
@@ -23,11 +24,7 @@ const serialize = (nodes) => {
 
 const deserialize = (string) => {
   // Return a value array of children derived by splitting the string.
-  return string.split('\n').map((line) => {
-    return {
-      children: [{ text: line }],
-    };
-  });
+  return string.split('\n').map((line) => `<p>${line}</p>`);
 };
 
 export const EditorIE = ({
@@ -44,28 +41,22 @@ export const EditorIE = ({
   const saveTimeout = useRef();
 
   return (
-    <div
-      contentEditable
+    <TextareaAutosize
       className="ie-editor editor"
       {...editorProps}
-      ref={editorRef}
+      ref={(tag) => (editorRef.current = tag)}
       value={value}
       disabled={disabled}
-      onKeyUp={(e) => {
-        console.log();
-        const value = editorRef.current.innerText;
-
-        // const { value } = e.target;
-
+      onChange={(e) => {
+        const { value } = e.target;
         clearTimeout(saveTimeout.current);
         saveTimeout.current = setTimeout(() => {
           console.log('save');
+          console.log(value);
           onSave({ serializedValue: value });
         }, saveDelay);
         setValue(value);
       }}
-    >
-      {content}
-    </div>
+    ></TextareaAutosize>
   );
 };

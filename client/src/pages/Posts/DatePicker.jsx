@@ -23,13 +23,25 @@ const useStyles = makeStyles((theme) => {
   };
 });
 
+const compareDates = (date1, date2) => {
+  const filter = date1.filter((value, i) => {
+    console.log(value.valueOf(), date2[i].valueOf());
+    return value.valueOf() === date2[i].valueOf();
+  });
+  console.log(filter);
+  return filter.length > 0;
+};
+
 export const DatePicker = ({ value, handleClose, setValue }) => {
   const classes = useStyles();
   const [date, setDate] = useState(value);
   const [error, setError] = useState([null, null]);
 
   useEffect(() => {
-    if (value[0] === date[0] && value[1] === date[1]) return;
+    if (!date[0] || !date[1]) return setDate(value);
+    if (!value[0] || !value[1]) return;
+    console.log(compareDates(value, date));
+    if (compareDates(value, date)) return;
     setDate(value);
   }, [value]);
 
