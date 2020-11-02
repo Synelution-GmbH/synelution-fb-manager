@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => {
 
 const compareDates = (date1, date2) => {
   const filter = date1.filter((value, i) => {
-    console.log(value.valueOf(), date2[i].valueOf());
+    // console.log(value.valueOf(), date2[i].valueOf());
     return value.valueOf() === date2[i].valueOf();
   });
   console.log(filter);
@@ -38,17 +38,12 @@ export const DatePicker = ({ value, handleClose, setValue }) => {
   const [error, setError] = useState([null, null]);
 
   useEffect(() => {
-    if (!date[0] || !date[1]) return setDate(value);
-    if (!value[0] || !value[1]) return;
-    console.log(compareDates(value, date));
-    if (compareDates(value, date)) return;
+    // if (!date[0] || !date[1]) return setDate(value);
+    // if (!value[0] || !value[1]) return;
+    // console.log(compareDates(value, date));
+    // if (compareDates(value, date)) return;
     setDate(value);
   }, [value]);
-
-  useEffect(() => {
-    if (error[0] || error[1]) return;
-    setValue(date);
-  }, [date, error]);
 
   const handleDateForward = () => {
     const [from, to] = value;
@@ -103,10 +98,13 @@ export const DatePicker = ({ value, handleClose, setValue }) => {
         disableCloseOnSelect
         mask="__.__.____"
         onClose={() => {
-          if (error) return;
-          // handleClose(value);
+          if (error[0] || error[1]) return;
+          handleClose(date);
         }}
-        onChange={(newValue) => setDate(newValue)}
+        onChange={(newValue, test) => {
+          setDate(newValue);
+          console.log(test);
+        }}
         onError={(e) => setError(e.map((err) => getErrorText(err)))}
         renderInput={(startProps, endProps) => (
           <React.Fragment>
