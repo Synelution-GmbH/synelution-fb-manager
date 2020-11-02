@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { CardContent, Grid, makeStyles, Button } from '@material-ui/core';
 import dayjs from 'dayjs';
 import { AwesomeIcon } from 'ui/components/Icons/Icon';
-import { EditorClient } from 'ui/components/EditorClient';
+import { EditorClient, EditorIE } from 'ui/components/EditorClient';
 import { useSocket } from 'services/socket-provider';
 import { ReactEditor } from 'slate-react';
 import { MessageBox } from 'pages/Posts/MessageBox';
@@ -11,6 +11,7 @@ import { FreigebenBtn } from '../FreigebenBtn';
 import { FacebookView } from './FacebookView';
 import { InstagramView } from './InstagramView';
 import { useQueryCache } from 'react-query';
+import { IE } from 'utils';
 
 const useStyles = makeStyles((theme) => ({
   cardContent: {
@@ -35,11 +36,12 @@ export const Post = ({ QUERY, date, approved, id, content, type, ...props }) => 
   const [clientText, setClientText] = useState(null);
   const [correctionMode, setCorrectionMode] = useState(false);
   const [msg, setMsg] = useState({ toggle: false, text: '' });
-
+  console.log(clientText, correctionMode);
   // focus Edtior
   useEffect(() => {
     if (!editor.current || !correctionMode) return;
-    ReactEditor.focus(editor.current);
+    if (!IE) ReactEditor.focus(editor.current);
+    else editor.current.focus();
   }, [correctionMode]);
 
   return (
@@ -48,21 +50,35 @@ export const Post = ({ QUERY, date, approved, id, content, type, ...props }) => 
       type={type}
       dateFormatted={dateFormatted}
       editorComponent={
-        <EditorClient
-          editorRef={editor}
-          disabled={!correctionMode}
-          content={content}
-          saveDelay={300}
-          editorProps={{
-            toolbar: false,
-            style: { boxShadow: 'none' },
-          }}
-          onSave={({ serializedValue }) => {
-            setClientText(serializedValue);
-            cache.invalidateQueries(QUERY);
-          }}
-          id={id}
-        />
+        !IE ? (
+          <EditorClient
+            editorRef={editor}
+            disabled={!correctionMode}
+            content={content}
+            saveDelay={300}
+            editorProps={{
+              toolbar: false,
+              style: { boxShadow: 'none' },
+            }}
+            onSave={({ serializedValue }) => {
+              setClientText(serializedValue);
+              cache.invalidateQueries(QUERY);
+            }}
+            id={id}
+          />
+        ) : (
+          <EditorIE
+            editorRef={editor}
+            disabled={!correctionMode}
+            content={content}
+            saveDelay={300}
+            onSave={({ serializedValue }) => {
+              setClientText(serializedValue);
+              cache.invalidateQueries(QUERY);
+            }}
+            id={id}
+          />
+        )
       }
     >
       <CardContent className={classes.cardContent}>

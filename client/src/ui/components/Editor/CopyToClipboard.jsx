@@ -35,7 +35,7 @@ export const CopyToClipboard = ({ value, ...props }) => {
   const [copied, setCopied] = useState(false);
   const saveToClipboard = async (e) => {
     e.stopPropagation();
-    const permission = await askClipboardPermissions();
+    await askClipboardPermissions();
     try {
       if (value.search(/\.(gif|jpe?g|bmp)$/g) !== -1) {
         const blob = await getPngBlob({ src: value });

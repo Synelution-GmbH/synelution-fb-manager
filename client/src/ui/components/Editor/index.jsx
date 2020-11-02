@@ -63,6 +63,7 @@ export const Editor = ({
   editor,
   style = null,
   disabled = false,
+  ...props
 }) => {
   // const socket = useSocket();
   // const editor = useMemo(() => withHistory(withReact(createEditor())), []);
@@ -71,7 +72,6 @@ export const Editor = ({
     focus: { offset: 0, path: [0, 0] },
     anchor: { offset: 0, path: [0, 0] },
   });
-
   // const renderLeaf = useCallback((props) => <Leaf {...props} />, [decorate]);
 
   // const handleChange = (newValue) => {
@@ -103,6 +103,7 @@ export const Editor = ({
       >
         <Slate editor={editor} value={value} onChange={onChange}>
           <EDITABLE
+            {...props}
             readOnly={disabled}
             spellCheck={true}
             className="editor"

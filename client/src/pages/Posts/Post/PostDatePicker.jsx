@@ -2,7 +2,7 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { DatePicker } from '@material-ui/pickers';
 import dayjs from 'dayjs';
 import { FORMAT } from 'config';
-import { TextField, Typography } from '@material-ui/core';
+import { TextField } from '@material-ui/core';
 import { getErrorText } from 'utils';
 
 export const PostDatePicker = ({
@@ -24,6 +24,7 @@ export const PostDatePicker = ({
         updatePost({ date: dayjs(value).valueOf() });
       }
     }
+    // eslint-disable-next-line
   }, [value]);
 
   const minDate = useMemo(() => dayjs(from, FORMAT), [from]);
