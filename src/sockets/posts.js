@@ -15,6 +15,11 @@ const checkUpdate = (key) => {
   }
 };
 
+const formattedPostType = {
+  fb: 'Facebook',
+  ig: 'Instagram',
+};
+
 const getEmailText = (key, data) => {
   switch (key) {
     case 'clientCorrected':
@@ -71,13 +76,22 @@ export default ({ socket, posts }) => {
       socket.to(id).emit('update post', { id, data: approvedUpdate });
 
       const formattedDate = dayjs(post.date).format(FORMAT);
+      const defaultBody = `<h2>Kunde: ${post.client}</h2><h3>${
+        formattedPostType[post.type]
+      } Post für den ${formattedDate}</h3> <br>`;
       const emailBody = Object.keys(update).map((key) => getEmailText(key, update));
-
+      console.log(emailBody.join('<br>'));
       if (process.env.NODE_ENV === 'production')
         await sendMail({
           subject: `${post.type} - ${post.client} - ${formattedDate}`,
-          text: emailBody.join('\\n').replace(/<br>/g, '\\n'),
-          html: emailBody.join('<br>'),
+          html:
+            `<h3>${emailBody
+              .join('<br>')
+              .replace(/(?:\r\n|\r|\n)/g, '<br>')}</h3>` + `${defaultBody}`,
+          // text: `${emailBody.join('\\n')} <br><br> ${defaultBody}`.replace(
+          //   /<br>/g,
+          //   '\\n'
+          // ),
         });
     } catch (e) {
       console.log(e);
