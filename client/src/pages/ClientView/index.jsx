@@ -1,16 +1,20 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useQuery } from 'react-query';
 import { useParams } from 'react-router';
 import { Loader } from 'ui/components/Loader';
 import { getLinkById } from 'services/client-link-api';
 import { Container, Grid } from '@material-ui/core';
 import { Post } from './Post';
+import { AskCode } from './AskCode';
+import { useAuth } from 'services';
 
 const ClientView = () => {
   const { id } = useParams();
+  const { user } = useAuth();
   const QUERY = useMemo(() => ['client-link', { id }], [id]);
-  const { isLoading, data } = useQuery(QUERY, () => getLinkById(id));
-
+  const { isLoading, data } = useQuery(QUERY, () => getLinkById(id), {
+    enabled: user,
+  });
   return (
     <>
       <Loader loading={isLoading} />
@@ -24,7 +28,8 @@ const ClientView = () => {
           {/* <Typography variant="h4">Post Vorschau</Typography> */}
         </Grid>
       </Container>
-      {!data ? null : (
+      <AskCode id={id} QUERY={QUERY} />
+      {!data || !user ? null : (
         <PostList QUERY={QUERY} client={data.client} posts={data.posts} />
       )}
     </>
@@ -33,21 +38,23 @@ const ClientView = () => {
 
 const PostList = ({ posts, client, QUERY }) => {
   return (
-    <Container maxWidth="lg">
-      <Grid
-        container
-        justify="center"
-        alignItems="flex-start"
-        alignContent="flex-start"
-      >
-        {posts.map(({ _id, ...postProps }) => (
-          <React.Fragment key={_id}>
-            <Post {...postProps} QUERY={QUERY} id={_id} client={client}></Post>
-            <br />
-          </React.Fragment>
-        ))}
-      </Grid>
-    </Container>
+    <>
+      <Container maxWidth="lg">
+        <Grid
+          container
+          justify="center"
+          alignItems="flex-start"
+          alignContent="flex-start"
+        >
+          {posts.map(({ _id, ...postProps }) => (
+            <React.Fragment key={_id}>
+              <Post {...postProps} QUERY={QUERY} id={_id} client={client}></Post>
+              <br />
+            </React.Fragment>
+          ))}
+        </Grid>
+      </Container>
+    </>
   );
 };
 

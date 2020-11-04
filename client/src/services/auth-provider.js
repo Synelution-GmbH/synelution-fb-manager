@@ -16,7 +16,7 @@ export const AuthProvider = (props) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!user) return;
+    if (!user || user.role === 'guest') return;
     setAxiosDefaults();
   }, [user]);
 
@@ -59,7 +59,10 @@ export const AuthProvider = (props) => {
   return (
     <>
       <Loader loading={loading} />
-      <AuthContext.Provider value={{ user, loading, logout, login }} {...props} />
+      <AuthContext.Provider
+        value={{ user, loading, logout, login, setUser }}
+        {...props}
+      />
     </>
   );
 };

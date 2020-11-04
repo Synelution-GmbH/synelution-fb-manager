@@ -62,10 +62,10 @@ export const CopyToClipboard = ({ value, ...props }) => {
 
   return (
     <Button
+      variant="contained"
       {...props}
       color="primary"
       onClick={saveToClipboard}
-      variant="contained"
       size="medium"
       style={{ padding: '8px 16px' }}
       endIcon={<AwesomeIcon icon="copy" style={{ marginLeft: '8px' }} />}

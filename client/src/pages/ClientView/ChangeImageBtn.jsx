@@ -10,6 +10,7 @@ import {
   TextField,
 } from '@material-ui/core';
 import React, { useState } from 'react';
+import { useAuth } from 'services';
 import { useSocket } from 'services/socket-provider';
 
 const useStyles = makeStyles((theme) => ({
@@ -29,16 +30,23 @@ export const ChangeImageButton = ({ id, onSave = () => {}, ...props }) => {
   const [open, setOpen] = useState(false);
   const [text, setText] = useState();
   const [loading, setLoading] = useState();
+  const { user } = useAuth();
 
   const handleSubmit = () => {
     if (!text) return;
     setLoading(true);
-    socket.emit('client change', { id, imageChanges: { text } }, (e) => {
-      setText('');
-      handleClose();
-      onSave();
-      setLoading(false);
-    });
+    const clientName = user.username;
+    const clientEmail = user.email;
+    socket.emit(
+      'client change',
+      { id, imageChanges: { text }, clientName, clientEmail },
+      (e) => {
+        setText('');
+        handleClose();
+        onSave();
+        setLoading(false);
+      }
+    );
   };
 
   const handleOpen = () => setOpen(true);

@@ -51,4 +51,37 @@ export const clientLinkRoutes = ({ router }) => {
       ctx.throw(e);
     }
   });
+
+  router.get('/client-link/:uuid/:code', async (ctx) => {
+    const { uuid, code } = ctx.params;
+    try {
+      const existing = await ClientLink.findOne({ uuid });
+      if (!existing) ctx.throw(404, 'link not found');
+      const { client, from, to, type } = existing;
+      const existingClient = await Client.findOne({ slug: client });
+      const existingCode = existingClient.codes.find((el) => el.code === code);
+      console.log(existingCode);
+      if (!existingCode) {
+        ctx.throw();
+        return;
+      }
+      const posts = await Post.find({
+        client,
+        type,
+        date: {
+          $gte: dayjs(from, FORMAT).startOf('day').valueOf(),
+          $lte: dayjs(to, FORMAT).endOf('day').valueOf(),
+        },
+      });
+
+      ctx.set('Cache-Control', 'no-cache');
+      ctx.body = {
+        code: existingCode,
+        queryData: { link: existing, posts, client: existingClient },
+      };
+    } catch (e) {
+      console.log(e);
+      ctx.throw(400, 'Der Code ist ungültig!');
+    }
+  });
 };

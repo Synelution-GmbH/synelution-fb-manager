@@ -5,6 +5,7 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
+  DialogContentText,
   DialogTitle,
   IconButton,
   makeStyles,
@@ -21,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 }));
-export const DeleteButton = ({ onClick }) => {
+export const DeleteButton = ({ onClick = () => {}, text = '', ...props }) => {
   const [open, setOpen] = useState(false);
 
   const classes = useStyles();
@@ -31,6 +32,7 @@ export const DeleteButton = ({ onClick }) => {
   return (
     <>
       <IconButton
+        {...props}
         onClick={handleOpen}
         variant="rounded"
         aria-label="delete"
@@ -44,8 +46,9 @@ export const DeleteButton = ({ onClick }) => {
         onClose={handleClose}
         aira-labelledby="create-client-dialog"
       >
+        <DialogTitle>Are you sure?</DialogTitle>
         <DialogContent>
-          <DialogTitle>Are you sure?</DialogTitle>
+          {text ? <DialogContentText>{text}</DialogContentText> : null}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>NO D:</Button>
