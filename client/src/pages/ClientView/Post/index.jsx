@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { CardContent, Grid, makeStyles, Button } from '@material-ui/core';
+import { CardContent, Grid, makeStyles, Button, Tooltip } from '@material-ui/core';
 import dayjs from 'dayjs';
 import { AwesomeIcon } from 'ui/components/Icons/Icon';
 import { EditorClient, EditorIE } from 'ui/components/EditorClient';
@@ -12,6 +12,7 @@ import { FacebookView } from './FacebookView';
 import { InstagramView } from './InstagramView';
 import { useQueryCache } from 'react-query';
 import { IE } from 'utils';
+import { useAuth } from 'services';
 
 const useStyles = makeStyles((theme) => ({
   cardContent: {
@@ -36,7 +37,7 @@ export const Post = ({ QUERY, date, approved, id, content, type, ...props }) => 
   const [clientText, setClientText] = useState(null);
   const [correctionMode, setCorrectionMode] = useState(false);
   const [msg, setMsg] = useState({ toggle: false, text: '' });
-  console.log(clientText, correctionMode);
+  const { user } = useAuth();
   // focus Edtior
   useEffect(() => {
     if (!editor.current || !correctionMode) return;
@@ -58,7 +59,11 @@ export const Post = ({ QUERY, date, approved, id, content, type, ...props }) => 
             saveDelay={300}
             editorProps={{
               toolbar: false,
-              style: { boxShadow: 'none' },
+              style: {
+                boxShadow: !correctionMode
+                  ? 'none'
+                  : 'box-shadow: inset 0px -3px 10px rgb(0 0 0 / 0.5)',
+              },
             }}
             onSave={({ serializedValue }) => {
               setClientText(serializedValue);
@@ -99,41 +104,50 @@ export const Post = ({ QUERY, date, approved, id, content, type, ...props }) => 
             >
               Bild Korrekturen
             </ChangeImageButton>
-            <Button
-              variant="contained"
-              color="primary"
-              startIcon={
-                <AwesomeIcon
-                  style={{ fontSize: '100%' }}
-                  icon={correctionMode ? 'check-circle' : 'pen'}
-                />
-              }
-              disabled={correctionMode && !clientText}
-              onClick={() => {
-                if (correctionMode && clientText) {
-                  socket.emit(
-                    'client change',
-                    {
-                      id,
-                      content: clientText,
-                      clientCorrected: true,
-                    },
-                    () => {
-                      setMsg({
-                        toggle: !msg.toggle,
-                        text: 'Korrektur wurde gespeichert!',
-                        severity: 'success',
-                      });
-                    }
-                  );
-
-                  setClientText(null);
-                }
-                setCorrectionMode(!correctionMode);
-              }}
+            <Tooltip
+              title="Ändern Sie den Text gleich direkt am Post!"
+              placement="top"
             >
-              {correctionMode ? 'Speichern' : 'Korrigieren'}
-            </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                startIcon={
+                  <AwesomeIcon
+                    style={{ fontSize: '100%' }}
+                    icon={correctionMode ? 'check-circle' : 'pen'}
+                  />
+                }
+                disabled={correctionMode && !clientText}
+                onClick={() => {
+                  if (correctionMode && clientText) {
+                    const clientName = user.username;
+                    const clientEmail = user.email;
+                    socket.emit(
+                      'client change',
+                      {
+                        id,
+                        content: clientText,
+                        clientCorrected: true,
+                        clientName,
+                        clientEmail,
+                      },
+                      () => {
+                        setMsg({
+                          toggle: !msg.toggle,
+                          text: 'Korrektur wurde gespeichert!',
+                          severity: 'success',
+                        });
+                      }
+                    );
+
+                    setClientText(null);
+                  }
+                  setCorrectionMode(!correctionMode);
+                }}
+              >
+                {correctionMode ? 'Speichern' : 'Korrigieren'}
+              </Button>
+            </Tooltip>
           </Grid>
         </Grid>
       </CardContent>

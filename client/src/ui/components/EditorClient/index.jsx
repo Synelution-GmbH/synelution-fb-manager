@@ -63,10 +63,8 @@ export const EditorClient = ({
       disabled={disabled}
       serializedValue={serialized}
       onChange={(value) => {
-        console.log(value);
         clearTimeout(saveTimeout.current);
         saveTimeout.current = setTimeout(() => {
-          console.log('save');
           onSave({ value, serializedValue: serialize(value) });
         }, saveDelay);
         setValue(value);

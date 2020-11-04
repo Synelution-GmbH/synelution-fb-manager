@@ -14,6 +14,16 @@ const clientSchema = new mongoose.Schema({
     lowercase: true,
   },
   profilePicture: String,
+  codes: [
+    {
+      code: {
+        type: String,
+        unique: true,
+      },
+      name: String,
+      email: String,
+    },
+  ],
 });
 
 const Client = mongoose.model('Client', clientSchema);

@@ -15,6 +15,11 @@ const checkUpdate = (key) => {
   }
 };
 
+const formattedPostType = {
+  fb: 'Facebook',
+  ig: 'Instagram',
+};
+
 const getEmailText = (key, data) => {
   switch (key) {
     case 'clientCorrected':
@@ -49,39 +54,57 @@ export default ({ socket, posts }) => {
     }
   });
 
-  socket.on('client change', async ({ id, ...update }, fn) => {
-    try {
-      const post = posts[id] ? posts[id].post : await Post.findById(id);
-      const approvedUpdate = {};
-      for (const key in update) {
-        if (checkUpdate(key)) {
-          post[key] = update[key];
-          approvedUpdate[key] = update[key];
-        }
-        if (key === 'imageChanges') {
-          if (!post[key]) post[key] = [];
+  socket.on(
+    'client change',
+    async ({ id, clientName, clientEmail, ...update }, fn) => {
+      try {
+        const post = posts[id] ? posts[id].post : await Post.findById(id);
+        const approvedUpdate = {};
+        for (const key in update) {
+          if (checkUpdate(key)) {
+            post[key] = update[key];
+            approvedUpdate[key] = update[key];
+          }
+          if (key === 'imageChanges') {
+            if (!post[key]) post[key] = [];
 
-          post[key].push(update[key]);
-          approvedUpdate[key] = post[key];
+            post[key].push(update[key]);
+            approvedUpdate[key] = post[key];
+          }
         }
+
+        await post.save();
+        fn('success');
+        socket.to(id).emit('update post', { id, data: approvedUpdate });
+
+        const formattedDate = dayjs(post.date).format(FORMAT);
+        const defaultBody = `<h2>Kunde: ${post.client}</h2><p>${
+          formattedPostType[post.type]
+        } Post für den ${formattedDate}</p>
+        <h3>Von:</h3>
+        <p>Name: ${clientName}<br>Email: ${clientEmail}</p>
+      `;
+        const emailBody = Object.keys(update).map((key) =>
+          getEmailText(key, update)
+        );
+        console.log(clientName, clientEmail);
+        if (process.env.NODE_ENV === 'production')
+          await sendMail({
+            // from: clientEmail ? clientEmail : null,
+            subject: `${post.type} - ${post.client} - ${formattedDate}`,
+            html:
+              `<p>${emailBody
+                .join('<br>')
+                .replace(/(?:\r\n|\r|\n)/g, '<br>')}</p>` + `${defaultBody}`,
+            // text: `${emailBody.join('\\n')} <br><br> ${defaultBody}`.replace(
+            //   /<br>/g,
+            //   '\\n'
+            // ),
+          });
+      } catch (e) {
+        console.log(e);
+        fn('error');
       }
-
-      await post.save();
-      fn('success');
-      socket.to(id).emit('update post', { id, data: approvedUpdate });
-
-      const formattedDate = dayjs(post.date).format(FORMAT);
-      const emailBody = Object.keys(update).map((key) => getEmailText(key, update));
-
-      if (process.env.NODE_ENV === 'production')
-        await sendMail({
-          subject: `${post.type} - ${post.client} - ${formattedDate}`,
-          text: emailBody.join('\\n').replace(/<br>/g, '\\n'),
-          html: emailBody.join('<br>'),
-        });
-    } catch (e) {
-      console.log(e);
-      fn('error');
     }
-  });
+  );
 };

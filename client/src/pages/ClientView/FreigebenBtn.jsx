@@ -1,6 +1,7 @@
 import { Button, CircularProgress, makeStyles } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
 import { useQueryCache } from 'react-query';
+import { useAuth } from 'services';
 import { useSocket } from 'services/socket-provider';
 import { AwesomeIcon } from 'ui/components/Icons/Icon';
 
@@ -30,6 +31,7 @@ export const FreigebenBtn = ({ approved, id, QUERY }) => {
   const socket = useSocket();
   const [loading, setLoading] = useState();
   const classes = useStyles({ success: approved });
+  const { user } = useAuth();
 
   useEffect(() => {
     setLoading(false);
@@ -46,11 +48,15 @@ export const FreigebenBtn = ({ approved, id, QUERY }) => {
           setLoading(true);
           console.log('emitting');
           console.log(approved);
+          const clientName = user.username;
+          const clientEmail = user.email;
           socket.emit(
             'client change',
             {
               id,
               approved: !approved,
+              clientName,
+              clientEmail,
             },
             (e) => {
               // setLoading(false);

@@ -64,3 +64,10 @@ export function arrayRemove(arr, value) {
     return ele != value;
   });
 }
+
+export const getNewCode = async (codeList) => {
+  let code = Math.floor(1000 + Math.random() * 9000);
+  let codeExists = codeList.findIndex((el) => el.code === code) !== -1;
+  if (codeExists) return getNewCode(codeList);
+  return code;
+};
