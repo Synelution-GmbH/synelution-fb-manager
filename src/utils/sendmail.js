@@ -13,12 +13,13 @@ let transporter = nodemailer.createTransport({
 export const sendMail = async ({
   // email = 'markus.maelzer@gmail.com',
   email = 'zero@synelution.com',
+  from = 'noreply@synelution.com',
   subject = '',
   text = '',
   html = '',
 }) =>
   transporter.sendMail({
-    from: 'noreply@synelution.com', // sender address
+    from, // sender address
     to: email, // list of receivers
     subject: `facebook tool: ${subject}`,
     text, // plain text body

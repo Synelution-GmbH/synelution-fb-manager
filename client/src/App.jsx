@@ -27,5 +27,9 @@ export const App = () => {
 const AuthSwitcher = () => {
   const { user } = useAuth();
 
-  return user ? <AuthenticatedApp /> : <UnauthenticatedApp />;
+  return user && user.role !== 'guest' ? (
+    <AuthenticatedApp />
+  ) : (
+    <UnauthenticatedApp />
+  );
 };
