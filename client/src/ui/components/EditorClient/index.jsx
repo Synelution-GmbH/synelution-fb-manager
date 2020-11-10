@@ -63,6 +63,12 @@ export const EditorClient = ({
       disabled={disabled}
       serializedValue={serialized}
       onChange={(value) => {
+        if (
+          editor.operations.length === 1 &&
+          editor.operations[0].type === 'set_selection'
+        )
+          return setValue(value);
+
         clearTimeout(saveTimeout.current);
         saveTimeout.current = setTimeout(() => {
           onSave({ value, serializedValue: serialize(value) });
