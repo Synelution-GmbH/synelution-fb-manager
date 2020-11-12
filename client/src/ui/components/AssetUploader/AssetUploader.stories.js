@@ -13,6 +13,7 @@ const Template = (args) => (
     <Container maxWidth="sm">
       <Grid item md={9}>
         <AssetUploader {...args} />
+        <br />
         <AssetUploaderList />
       </Grid>
     </Container>

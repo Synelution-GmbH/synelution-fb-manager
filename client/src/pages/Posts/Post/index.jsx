@@ -1,27 +1,17 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Grid, InputAdornment, makeStyles, TextField } from '@material-ui/core';
-import { AssetUploader } from 'ui/components/AssetUploader';
+import React, { useEffect, useReducer, useRef, useState } from 'react';
+import { Grid, InputAdornment, TextField } from '@material-ui/core';
 
 import { DeleteButton } from './DeleteButton';
 import { useSocket } from 'services/socket-provider';
 import { EditorClient } from 'ui/components/EditorClient';
-import { CopyToClipboard } from 'ui/components/Editor/CopyToClipboard';
 import { putPost } from 'services';
 import { useQueryCache } from 'react-query';
 import { CheckedButton } from './CheckedButton';
 
 import { PostDatePicker } from './PostDatePicker';
 import { ClientToolbox } from './ClientToolbox';
+import { Asset } from './Asset';
 import { AssetUploaderProvider } from 'ui/components/AssetUploader/AssetUploaderContext';
-
-const useStyles = makeStyles((theme) => ({
-  clipboardButton: {
-    zIndex: 100,
-    position: 'absolute',
-    bottom: theme.spacing(1),
-    right: theme.spacing(1),
-  },
-}));
 
 export const useUpdate = () => {
   const cache = useQueryCache();
@@ -37,6 +27,16 @@ export const useUpdate = () => {
   return { updateCache, cache };
 };
 
+const reducer = (state, action) => {
+  switch (action.type) {
+    case 'update_post':
+      return { ...state, ...action.payload };
+
+    default:
+      return state;
+  }
+};
+
 export const Post = ({
   approved,
   clientCorrected,
@@ -44,7 +44,8 @@ export const Post = ({
   date,
   budget,
   content,
-  asset,
+  assets = [],
+  assetOrder = [],
   id,
   checked,
   removePost,
@@ -54,28 +55,40 @@ export const Post = ({
   to,
 }) => {
   const { updateCache } = useUpdate();
-  const [post, setPost] = useState({ budget, date, content, asset, checked });
+  // const [post, setPost] = useState({
+  //   budget,
+  //   date,
+  //   content,
+  //   assets,
+  //   assetOrder,
+  //   checked,
+  // });
+  const [post, dispatch] = useReducer(reducer, {
+    budget,
+    date,
+    content,
+    assets,
+    assetOrder,
+    checked,
+  });
   const socket = useSocket();
   const saveTimeout = useRef();
-  const classes = useStyles();
-
   useEffect(() => {
     socket.emit('join editor', id);
-    socket.on('update post', ({ id: sId, data }) => {
-      console.log(sId, data);
-      if (id !== sId) return;
-      console.log(post, data);
-      setPost({ ...post, ...data });
-      updateCache({ QUERY, index, update: data });
-    });
 
     return () => socket.emit('leave editor', id);
     // eslint-disable-next-line
-  }, [post, id]);
+  }, [id]);
+  useEffect(() => {
+    socket.on('update post', ({ id: sId, data }) => {
+      if (id !== sId) return;
+      dispatch({ type: 'update_post', payload: data });
+      updateCache({ QUERY, index, update: data });
+    });
+  }, []);
 
   const updatePost = (update) => {
-    console.log(update);
-    setPost({ ...post, ...update });
+    dispatch({ type: 'update_post', payload: update });
     clearTimeout(saveTimeout.current);
     saveTimeout.current = setTimeout(() => {
       if (post.checked && !update.checked) {
@@ -85,14 +98,8 @@ export const Post = ({
       updateCache({ QUERY, index, update });
     }, 500);
   };
-
-  const updateImage = async (file) => {
-    const data = new FormData();
-    data.append('file', file);
-    const post = await putPost({ id, data });
-    updatePost({ asset: post.asset });
-  };
-
+  // console.log('post');
+  // console.log(post);
   return (
     <Grid container spacing={2} alignItems="stretch">
       <Grid item xs={10}>
@@ -148,18 +155,14 @@ export const Post = ({
           />
         </EditorClient>
       </Grid>
-      <Grid item xs={12} md={4}>
-        {/* <AssetUploaderProvider> */}
-        <AssetUploader preview={post.asset} setFile={updateImage}>
-          {post.asset && post.asset.path ? (
-            <CopyToClipboard
-              className={classes.clipboardButton}
-              value={window.location.origin + post.asset.path}
-            />
-          ) : null}
-        </AssetUploader>
-        {/* </AssetUploaderProvider> */}
-      </Grid>
+      <AssetUploaderProvider handleDragEnd={updatePost}>
+        <Asset
+          assets={post.assets}
+          assetOrder={post.assetOrder}
+          id={id}
+          updatePost={updatePost}
+        />
+      </AssetUploaderProvider>
     </Grid>
   );
 };

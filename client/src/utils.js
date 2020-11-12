@@ -31,3 +31,51 @@ export const getErrorText = (error) => {
       return null;
   }
 };
+
+export const setQueryFocusHandler = (queryFocus) => {
+  let timeout;
+  const checkRefetch = () => {
+    // const userLeftTab = window.localStorage.getItem('userLeftTab') || 0;
+    // return parseInt(userLeftTab) + 1000 * 5 <= Date.now();
+    const dontRefetch = window.localStorage.getItem('dont-refetch');
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+      window.localStorage.removeItem('dont-refetch');
+    }, 1000);
+    return !dontRefetch;
+  };
+  const handleFocus = (e) => {
+    console.log('focus');
+    if (checkRefetch()) {
+      console.log('its okay to refetch');
+      queryFocus(e);
+    } else {
+      console.log('god no dont do it');
+    }
+  };
+
+  // const handleBlur = function () {
+  //   console.log('blur');
+  //   window.localStorage.setItem('userLeftTab', Date.now());
+  // };
+
+  const handleVisibilityChange = function (e) {
+    console.log('visible');
+    if (document.visibilityState === 'visible') {
+      handleFocus(e);
+    }
+  };
+
+  if (typeof window !== 'undefined' && window.addEventListener) {
+    // window.addEventListener('blur', handleBlur);
+    window.addEventListener('focus', handleFocus, false);
+    window.addEventListener('visibilitychange', handleVisibilityChange, false);
+  }
+
+  return () => {
+    // window.removeEventListener('blur', handleBlur);
+    clearTimeout(timeout);
+    window.removeEventListener('focus', handleFocus);
+    window.removeEventListener('visibilitychange', handleVisibilityChange);
+  };
+};

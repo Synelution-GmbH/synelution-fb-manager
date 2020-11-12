@@ -16,12 +16,18 @@ const postSchema = new mongoose.Schema({
       done: Boolean,
     },
   ],
-  asset: {
-    path: String,
-    type: { type: String },
-    video: Boolean,
-    image: Boolean,
-  },
+  assets: [
+    {
+      path: String,
+      thumb: String,
+      name: String,
+      type: { type: String },
+      video: Boolean,
+      image: Boolean,
+      content: String,
+    },
+  ],
+  assetOrder: [String],
   checked: {
     type: Boolean,
     default: false,

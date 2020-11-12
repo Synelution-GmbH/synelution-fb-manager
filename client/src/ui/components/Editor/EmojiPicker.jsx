@@ -2,7 +2,13 @@ import React, { useState } from 'react';
 import 'emoji-mart/css/emoji-mart.css';
 import data from 'emoji-mart/data/facebook.json';
 import { NimblePicker } from 'emoji-mart';
-import { Avatar, Box, Grow, makeStyles } from '@material-ui/core';
+import {
+  Avatar,
+  Box,
+  ClickAwayListener,
+  Grow,
+  makeStyles,
+} from '@material-ui/core';
 import { AwesomeIcon } from '../Icons/Icon';
 
 const useStyles = makeStyles((theme) => ({
@@ -27,39 +33,48 @@ const useStyles = makeStyles((theme) => ({
   }),
 }));
 
-export const EmojiePicker = ({ onSelect, className, ...props }) => {
-  const [open, setOpen] = useState();
-  const classes = useStyles({ open });
+export const EmojiePicker = React.memo(
+  ({ onSelect, className, renderPicker = true, ...props }) => {
+    const [open, setOpen] = useState();
+    const classes = useStyles({ open });
 
-  return (
-    <>
-      <Avatar
-        {...props}
-        className={classes.avatar + ' ' + className}
-        variant="rounded"
-        onClick={() => setOpen(!open)}
-      >
-        <AwesomeIcon icon="smile" />
-      </Avatar>
-      <Box className={classes.picker}>
-        <Grow in={open} style={{ transformOrigin: '0 0 0' }}>
-          <NimblePicker
-            notFoundEmoji="sob"
-            title="Emojies"
-            set="facebook"
-            data={data}
-            onSelect={(emoji) => {
-              onSelect(emoji.native);
-              setOpen(false);
-            }}
-            // onClick={(emoji) => {
-            //   console.log(emoji);
-            //   onSelect(emoji.native);
-            //   setOpen(false);
-            // }}
-          />
-        </Grow>
-      </Box>
-    </>
-  );
-};
+    return (
+      <>
+        <ClickAwayListener onClickAway={() => setOpen(false)}>
+          <div>
+            <Avatar
+              {...props}
+              className={classes.avatar + ' ' + className}
+              variant="rounded"
+              onClick={() => setOpen(!open)}
+            >
+              <AwesomeIcon icon="smile" />
+            </Avatar>
+
+            {renderPicker ? (
+              <Box className={classes.picker}>
+                <Grow in={open} style={{ transformOrigin: '0 0 0' }}>
+                  <NimblePicker
+                    notFoundEmoji="sob"
+                    title="Emojies"
+                    set="facebook"
+                    data={data}
+                    onSelect={(emoji) => {
+                      onSelect(emoji.native);
+                      setOpen(false);
+                    }}
+                    // onClick={(emoji) => {
+                    //   console.log(emoji);
+                    //   onSelect(emoji.native);
+                    //   setOpen(false);
+                    // }}
+                  />
+                </Grow>
+              </Box>
+            ) : null}
+          </div>
+        </ClickAwayListener>
+      </>
+    );
+  }
+);

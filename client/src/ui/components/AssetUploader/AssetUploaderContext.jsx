@@ -8,11 +8,42 @@ export const useAssetUploader = () => useContext(AssetUploaderContext);
 export const useAssetUploaderDispatch = () =>
   useContext(AssetUploaderDispatchContext);
 
+const mapToObject = (array, fnc, key) => {
+  const obj = {};
+  for (const item of array) {
+    obj[item[key]] = fnc(item);
+  }
+
+  return obj;
+};
+
 const reducer = (state, action) => {
-  console.log(action.type);
   switch (action.type) {
+    case 'add_assets': {
+      const { assetOrder, assets } = action.payload;
+      const { previewIndex } = state;
+      // check asset order??
+      console.log(assets);
+      return {
+        ...state,
+        previewIndex: previewIndex
+          ? assetOrder.indexOf(previewIndex) !== -1
+            ? previewIndex
+            : assetOrder[0]
+          : assetOrder[0],
+        assetOrder,
+        assets: mapToObject(
+          assets,
+          (asset) => ({
+            ...asset,
+            id: asset.name,
+            loading: false,
+          }),
+          'name'
+        ),
+      };
+    }
     case 'add_asset':
-      console.log(action.payload);
       const filename = action.payload.name.replace(/[ /#\\?%*:;,|"=§$!'<>]/g, '_');
       const assetOrder =
         state.assetOrder.indexOf(filename) === -1
@@ -31,6 +62,26 @@ const reducer = (state, action) => {
         },
         assetOrder,
       };
+
+    case 'delete_asset':
+      const { name: payloadId } = action.payload;
+      const { [payloadId]: deleteThis, ...newAssets } = state.assets;
+      const newAssetOrder = Array.from(state.assetOrder);
+      const assetOrderIndex = state.assetOrder.findIndex((id) => id === payloadId);
+      newAssetOrder.splice(assetOrderIndex, 1);
+      return {
+        ...state,
+        previewIndex:
+          state.previewIndex === payloadId ? newAssetOrder[0] : state.previewIndex,
+        assetOrder: newAssetOrder,
+        assets: newAssets,
+      };
+    case 'update_text':
+      const { name, content } = action.payload;
+      return {
+        ...state,
+        assets: { ...state.assets, [name]: { ...state.assets[name], content } },
+      };
     case 'set_payload':
       return {
         ...state,
@@ -41,7 +92,7 @@ const reducer = (state, action) => {
   }
 };
 
-export const AssetUploaderProvider = ({ children }) => {
+export const AssetUploaderProvider = ({ children, handleDragEnd }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const onDragEnd = (result) => {
@@ -57,14 +108,14 @@ export const AssetUploaderProvider = ({ children }) => {
       const newAssetOrder = Array.from(state.assetOrder);
       newAssetOrder.splice(source.index, 1);
       newAssetOrder.splice(destination.index, 0, draggableId);
-      console.log(newAssetOrder);
       dispatch({ type: 'set_payload', payload: { assetOrder: newAssetOrder } });
+      handleDragEnd({ assetOrder: newAssetOrder });
     }
 
     // const asset = state.assets[source.droppableId];
   };
-  console.log(state);
-  console.log(state);
+  // console.log(state);
+  // console.log(state);
   return (
     <>
       <AssetUploaderContext.Provider value={state}>

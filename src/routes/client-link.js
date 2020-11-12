@@ -41,6 +41,8 @@ export const clientLinkRoutes = ({ router }) => {
           $gte: dayjs(from, FORMAT).startOf('day').valueOf(),
           $lte: dayjs(to, FORMAT).endOf('day').valueOf(),
         },
+      }).sort({
+        date: 1,
       });
 
       const existingClient = await Client.findOne({ slug: client });
@@ -72,6 +74,8 @@ export const clientLinkRoutes = ({ router }) => {
           $gte: dayjs(from, FORMAT).startOf('day').valueOf(),
           $lte: dayjs(to, FORMAT).endOf('day').valueOf(),
         },
+      }).sort({
+        date: 1,
       });
 
       ctx.set('Cache-Control', 'no-cache');

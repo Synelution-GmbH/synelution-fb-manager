@@ -50,10 +50,8 @@ export const GetNotified = (props) => {
 
   useEffect(() => {
     (async function () {
-      console.log('hi');
       if (Notification.permission !== 'granted') return;
       const registration = await navigator.serviceWorker.ready;
-      console.log(registration);
       const subscription = await registration.pushManager.getSubscription();
       if (subscription) return setEnabled(true);
     })();

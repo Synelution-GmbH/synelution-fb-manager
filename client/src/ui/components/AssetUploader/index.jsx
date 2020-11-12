@@ -1,5 +1,4 @@
 import {
-  Box,
   Card,
   CardContent,
   Grid,
@@ -7,16 +6,15 @@ import {
   Paper,
   Typography,
 } from '@material-ui/core';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { AwesomeIcon } from '../Icons/Icon';
 
 import { Video } from './Video';
 import { useAssetUploaderDispatch } from './AssetUploaderContext';
 import { useAssetUploader } from './AssetUploaderContext';
-import { AssetPreview } from './AssetPreview';
-import { Droppable } from 'react-beautiful-dnd';
 export * from './AssetUploaderContext';
+export * from './AssetUploaderList';
 
 const useStyles = makeStyles((theme) => ({
   root: () => ({
@@ -66,10 +64,7 @@ export const AssetUploader = ({
 
   const onDrop = useCallback(
     async (acceptedFiles) => {
-      console.log(acceptedFiles);
       acceptedFiles.forEach((file) => {
-        console.log(file);
-
         const reader = new FileReader();
 
         reader.onabort = () => console.log('file reading was aborted');
@@ -77,7 +72,6 @@ export const AssetUploader = ({
         reader.onload = async () => {
           // Do whatever you want with the file contents
           const binaryStr = reader.result;
-          console.log(file.name);
           const mp4 = file.type.search('mp4') !== -1;
           dispatch({
             type: 'add_asset',
@@ -88,6 +82,8 @@ export const AssetUploader = ({
         // reader.readAsArrayBuffer(file);
         reader.readAsDataURL(file);
       });
+
+      setFile(acceptedFiles);
     },
     [setFile, setDataUrl]
   );
@@ -99,13 +95,6 @@ export const AssetUploader = ({
 
   const classes = useStyles({ isDragActive, hide: previewIndex });
 
-  // useEffect(() => {
-  //   if (!previewIndex || !assets[previewIndex].path) return;
-  //   const preview = assets[previewIndex];
-  //   if (preview.image) return setImage(preview.path);
-  //   if (preview.video) return setVideo(preview.path);
-  // }, [previewIndex]);
-
   return (
     <>
       <Card
@@ -115,7 +104,12 @@ export const AssetUploader = ({
             ? { backgroundImage: `url(${assets[previewIndex].path})` }
             : null
         }
-        {...getRootProps()}
+        {...getRootProps({
+          onClick: () => {
+            console.log('dropzuone click');
+            window.localStorage.setItem('dont-refetch', 'dont, just dont >-<');
+          },
+        })}
       >
         {previewIndex && assets[previewIndex].video ? (
           <Video src={assets[previewIndex].path}></Video>
@@ -150,34 +144,5 @@ export const AssetUploader = ({
         {children}
       </Card>
     </>
-  );
-};
-
-export const AssetUploaderList = () => {
-  const { assets, assetOrder } = useAssetUploader();
-
-  return (
-    <Box clone pt={1}>
-      <Droppable
-        droppableId={'sheet-dont-matter'}
-        direction="horizontal"
-        type="column"
-      >
-        {(provided) => (
-          <Grid
-            ref={provided.innerRef}
-            {...provided.droppableProps}
-            container
-            spacing={1}
-          >
-            {assetOrder.map((assetId, i) => {
-              const asset = assets[assetId];
-              return <AssetPreview index={i} key={asset.id} {...asset} />;
-            })}
-            {provided.placeholder}
-          </Grid>
-        )}
-      </Droppable>
-    </Box>
   );
 };

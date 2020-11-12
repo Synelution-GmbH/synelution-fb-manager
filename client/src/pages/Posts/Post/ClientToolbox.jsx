@@ -28,83 +28,85 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const ClientToolbox = ({ approved, clientCorrected, imageChanges: ic }) => {
-  const classes = useStyles({ approved });
-  const [open, setOpen] = useState(false);
-  const [imageChanges, setImageChanges] = useState(ic);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+export const ClientToolbox = React.memo(
+  ({ approved, clientCorrected, imageChanges: ic }) => {
+    const classes = useStyles({ approved });
+    const [open, setOpen] = useState(false);
+    const [imageChanges, setImageChanges] = useState(ic);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
 
-  const unfinishedImageChanges = useMemo(
-    () => imageChanges.filter(({ done }) => !done),
-    [imageChanges]
-  );
-  const imageChangesExist = imageChanges.length > 0;
+    const unfinishedImageChanges = useMemo(
+      () => imageChanges.filter(({ done }) => !done),
+      [imageChanges]
+    );
+    const imageChangesExist = imageChanges.length > 0;
 
-  return (
-    <>
-      <Tooltip title={approved ? 'Freigegeben' : 'nicht Freigegeben'}>
-        <Avatar
-          className={(approved ? ' rainbow ' : '') + classes.large}
-          variant="rounded"
-        >
-          <AwesomeIcon icon="check-circle" />
-        </Avatar>
-      </Tooltip>
-      <Tooltip title={clientCorrected ? 'Customer changed text!' : ''}>
-        <Avatar
-          className={`${classes.large} ${clientCorrected ? 'rainbow' : 'test'}`}
-          variant="rounded"
-        >
-          <AwesomeIcon icon="pen" />
-        </Avatar>
-      </Tooltip>
-      <Tooltip title={imageChangesExist > 0 ? 'Client is ****' : ''}>
-        <Badge color="primary" badgeContent={unfinishedImageChanges.length}>
+    return (
+      <>
+        <Tooltip title={approved ? 'Freigegeben' : 'nicht Freigegeben'}>
           <Avatar
-            onClick={() => {
-              if (!imageChangesExist) return;
-              handleOpen();
-            }}
-            className={`${classes.large} ${imageChangesExist ? 'rainbow' : ''}`}
-            style={imageChangesExist ? { cursor: 'pointer' } : null}
+            className={(approved ? ' rainbow ' : '') + classes.large}
             variant="rounded"
           >
-            <AwesomeIcon icon="image" />
+            <AwesomeIcon icon="check-circle" />
           </Avatar>
-        </Badge>
-      </Tooltip>
-      <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Client Image Changes:</DialogTitle>
-        <List>
-          {imageChanges.map(({ text, done }, i) => (
-            <ListItem
-              key={i}
-              button
+        </Tooltip>
+        <Tooltip title={clientCorrected ? 'Customer changed text!' : ''}>
+          <Avatar
+            className={`${classes.large} ${clientCorrected ? 'rainbow' : 'test'}`}
+            variant="rounded"
+          >
+            <AwesomeIcon icon="pen" />
+          </Avatar>
+        </Tooltip>
+        <Tooltip title={imageChangesExist > 0 ? 'Client is ****' : ''}>
+          <Badge color="primary" badgeContent={unfinishedImageChanges.length}>
+            <Avatar
               onClick={() => {
-                const newImageChanges = imageChanges.map((item, index) => {
-                  if (index === i) {
-                    return { ...item, done: !done };
-                  }
-                  return item;
-                });
-                console.log(newImageChanges);
-
-                setImageChanges(newImageChanges);
+                if (!imageChangesExist) return;
+                handleOpen();
               }}
+              className={`${classes.large} ${imageChangesExist ? 'rainbow' : ''}`}
+              style={imageChangesExist ? { cursor: 'pointer' } : null}
+              variant="rounded"
             >
-              <ListItemIcon>
-                <Checkbox
-                  disableRipple
-                  color="primary"
-                  checked={done ? true : false}
-                />
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
-        </List>
-      </Dialog>
-    </>
-  );
-};
+              <AwesomeIcon icon="image" />
+            </Avatar>
+          </Badge>
+        </Tooltip>
+        <Dialog open={open} onClose={handleClose}>
+          <DialogTitle>Client Image Changes:</DialogTitle>
+          <List>
+            {imageChanges.map(({ text, done }, i) => (
+              <ListItem
+                key={i}
+                button
+                onClick={() => {
+                  const newImageChanges = imageChanges.map((item, index) => {
+                    if (index === i) {
+                      return { ...item, done: !done };
+                    }
+                    return item;
+                  });
+                  console.log(newImageChanges);
+
+                  setImageChanges(newImageChanges);
+                }}
+              >
+                <ListItemIcon>
+                  <Checkbox
+                    disableRipple
+                    color="primary"
+                    checked={done ? true : false}
+                  />
+                </ListItemIcon>
+                <ListItemText primary={text} />
+              </ListItem>
+            ))}
+          </List>
+        </Dialog>
+      </>
+    );
+  }
+);

@@ -5,7 +5,6 @@ import { AwesomeIcon } from 'ui/components/Icons/Icon';
 import { getErrorText } from 'utils';
 
 const useStyles = makeStyles((theme) => {
-  console.log(theme);
   return {
     avatar: {
       cursor: 'pointer',
@@ -76,8 +75,6 @@ export const DatePicker = ({ value, handleClose, setValue }) => {
     setValue(newValue);
     handleClose(newValue);
   };
-
-  console.log(date, value);
 
   return (
     <Grid container alignItems="center" style={{ width: 'auto' }}>

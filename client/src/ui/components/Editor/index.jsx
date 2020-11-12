@@ -8,8 +8,9 @@ import {
   Tooltip,
   Typography,
 } from '@material-ui/core';
-import React, { useRef } from 'react';
+import React, { useCallback, useRef } from 'react';
 import { Editable, Slate } from 'slate-react';
+import { useInView } from 'react-intersection-observer';
 
 import { EmojiePicker } from './EmojiPicker';
 import { CopyToClipboard } from './CopyToClipboard';
@@ -65,6 +66,7 @@ export const Editor = ({
   disabled = false,
   ...props
 }) => {
+  const { ref, inView } = useInView();
   // const socket = useSocket();
   // const editor = useMemo(() => withHistory(withReact(createEditor())), []);
   const classes = useStyles();
@@ -93,8 +95,18 @@ export const Editor = ({
   //   });
   // }, []);
 
+  const onSelect = useCallback(
+    (text) => {
+      if (!editor.selection) {
+        editor.selection = selection.current;
+      }
+      editor.insertText(text);
+    },
+    [editor]
+  );
+
   return (
-    <Card className={classes.root} style={style}>
+    <Card ref={ref} className={classes.root} style={style}>
       <Grid
         container
         direction="column"
@@ -121,12 +133,8 @@ export const Editor = ({
                 <Grid container justify="flex-start">
                   <EmojiePicker
                     className="emoji-picker tool"
-                    onSelect={(text) => {
-                      if (!editor.selection) {
-                        editor.selection = selection.current;
-                      }
-                      editor.insertText(text);
-                    }}
+                    renderPicker={inView}
+                    onSelect={onSelect}
                   />
                 </Grid>
               </Grid>

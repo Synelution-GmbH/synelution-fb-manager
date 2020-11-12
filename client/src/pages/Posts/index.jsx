@@ -17,7 +17,7 @@ import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { LocalizationProvider } from '@material-ui/pickers';
 import { DatePicker } from './DatePicker';
 import { Post } from './Post';
-import { useMutation, useQuery, useQueryCache } from 'react-query';
+import { setFocusHandler, useMutation, useQuery, useQueryCache } from 'react-query';
 import { FORMAT } from 'config';
 import { AwesomeIcon } from 'ui/components/Icons/Icon';
 import { getPosts, createPost, deletePost } from 'services';
@@ -27,6 +27,9 @@ import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab';
 import { NotifyProofreaderBtn } from './NotifyProofreaderBtn';
 import { ShareToClientButton } from './ShareToClientBtn';
 import { Helmet } from 'react-helmet';
+import { setQueryFocusHandler } from 'utils';
+
+setFocusHandler(setQueryFocusHandler);
 
 dayjs.extend(customParseFormat);
 dayjs.locale('de');
@@ -199,7 +202,9 @@ const PostList = ({ dateInterval, from, to, client, type }) => {
     to,
   ]);
 
-  const { isLoading, data } = useQuery(QUERY, getPosts);
+  const { isLoading, data } = useQuery(QUERY, getPosts, {
+    refetchOnWindowFocus: true,
+  });
 
   const [addPost] = useMutation(createPost, {
     onMutate: () => {

@@ -7,6 +7,7 @@ export const FORMAT = 'DD-MM-YYYY';
 
 export const pipeline = promisify(stream.pipeline);
 export const checkCreatePath = async (path) => {
+  console.log(path);
   try {
     await fs.promises.mkdir(path, { recursive: true });
   } catch (e) {
@@ -20,7 +21,8 @@ export const deleteDirectory = (path) =>
 //   rimraf(path, () => resolve('done'));
 // });
 
-const formatFileName = () => {};
+export const formatFileName = (fileName) =>
+  fileName.replace(/[ /#\\?%*:;,|"=§$!'<>]/g, '_');
 
 export const saveFileAndResize = async ({
   uploadPath,
@@ -35,7 +37,7 @@ export const saveFileAndResize = async ({
     // const jpeg = await test.jpeg({ quality: 80 });
     // console.log(await jpeg.metadata());
     // console.log(fileName.replace(test.format, jpeg.format));
-    const saveFileName = fileName.replace(/[ /#\\?%*:;,|"=§$!'<>]/g, '_');
+    const saveFileName = fileName;
     await sharp(uploadPath)
       .resize(...resize)
       .jpeg({ quality: 80 })
@@ -51,7 +53,7 @@ export const saveFile = async ({ uploadPath, fileName, savePath }) => {
   await checkCreatePath(savePath);
   const readStream = fs.createReadStream(uploadPath);
   try {
-    const saveFileName = fileName.replace(/[ /#]/g, '_');
+    const saveFileName = fileName;
     await pipeline(readStream, fs.createWriteStream(`${savePath}${saveFileName}`));
     return `${savePath.replace('public', '')}${saveFileName}`;
   } catch (error) {

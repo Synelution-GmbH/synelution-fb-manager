@@ -1,7 +1,7 @@
 import koaBody from 'koa-body';
 import fs from 'fs';
 
-import { saveFile, saveFileAndResize } from '../utils';
+import { saveFile, saveFileAndResize, formatFileName } from '../utils';
 import dayjs from 'dayjs';
 import Post from '../models/Post';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
@@ -16,7 +16,9 @@ dayjs.locale('de');
 export default ({ router }) => {
   router.get('/:client', async (ctx) => {
     const { client } = ctx.params;
-    const posts = await Post.find({ client: client });
+    const posts = await Post.find({ client: client }).sort({
+      date: 1,
+    });
 
     ctx.body = posts;
   });
@@ -31,6 +33,8 @@ export default ({ router }) => {
           $gte: dayjs(from, FORMAT).startOf('day').valueOf(),
           $lte: dayjs(to, FORMAT).endOf('day').valueOf(),
         },
+      }).sort({
+        date: 1,
       });
       ctx.body = posts;
     } catch (error) {
@@ -67,42 +71,75 @@ export default ({ router }) => {
     async (ctx) => {
       const { id } = ctx.params;
       if (!id) return ctx.throw(400, 'bad boy 凸ಠ益ಠ)凸');
-      const { file } = ctx.request.files;
+      const { files } = ctx.request.files;
+
+      const { body } = ctx.request;
+      console.log(body);
+      // console.log(files);
+      // return (ctx.body = 'asd');
 
       try {
         const post = await Post.findById(id);
-        const savePath = `public/uploads/${post.client}/`;
-        const fileName = `${Date.now()}_${file.name}`;
-        const asset = {
-          type: file.type,
-          video: false,
-          image: false,
-        };
+        if (!post.assets) post.assets = [];
+        const fileArray = Array.isArray(files) ? files : [files];
+        const newAssetOrder = post.assetOrder ? post.assetOrder : [];
+        for (const file of fileArray) {
+          const savePath = `public/uploads/${post.client}/`;
+          const formattedFileName = formatFileName(file.name);
+          const fileName = `${Date.now()}_${formattedFileName}`;
+          newAssetOrder.push(formattedFileName);
+          const asset = {
+            type: file.type,
+            video: false,
+            image: false,
+            name: formattedFileName,
+          };
 
-        if (file.type.search('video') !== -1) {
-          asset.video = true;
-          asset.path = await saveFile({
-            uploadPath: file.path,
-            fileName,
-            savePath,
-          });
-        } else {
-          asset.image = true;
-          asset.path = await saveFileAndResize({
-            uploadPath: file.path,
-            fileName,
-            savePath,
-            resize: [1500, 1500],
-          });
-        }
+          if (file.type.search('video') !== -1) {
+            asset.video = true;
+            asset.path = await saveFile({
+              uploadPath: file.path,
+              fileName,
+              savePath,
+            });
+          } else {
+            asset.image = true;
+            asset.path = await saveFileAndResize({
+              uploadPath: file.path,
+              fileName,
+              savePath,
+              resize: [1500, 1500],
+            });
 
-        if (post.asset && post.asset.path)
-          try {
-            await fs.promises.unlink('public' + post.asset.path);
-          } catch (e) {
-            console.log(e);
+            const fileEnd = fileName.substring(
+              fileName.lastIndexOf('.'),
+              fileName.length
+            );
+            asset.thumb = await saveFileAndResize({
+              uploadPath: file.path,
+              fileName: fileName.replace(fileEnd, `_thumb${fileEnd}`),
+              savePath,
+              resize: [150, 150],
+            });
           }
-        post.asset = asset;
+
+          const existingAsset = post.assets.find(
+            (asset) => asset.name === formattedFileName
+          );
+          // console.log(post.assets);
+          if (existingAsset)
+            try {
+              console.log(existingAsset);
+              await fs.promises.unlink('public' + existingAsset.path);
+              await fs.promises.unlink('public' + existingAsset.thumb);
+              console.log(asset);
+              await existingAsset.set(asset);
+            } catch (e) {
+              console.log(e);
+            }
+          else post.assets.push(asset);
+        }
+        post.assetOrder = newAssetOrder;
         console.log(post);
         await post.save();
 
@@ -117,12 +154,47 @@ export default ({ router }) => {
   router.delete('/:id', koaBody(), async (ctx) => {
     const { id } = ctx.params;
     if (!id) return ctx.throw(400, 'bad boy 凸ಠ益ಠ)凸');
-
     try {
       const post = await Post.findByIdAndDelete(id);
+      console.log(post);
+      for (const asset of post.assets) {
+        await fs.promises.unlink('public' + asset.path);
+        await fs.promises.unlink('public' + asset.thumb);
+      }
 
       ctx.body = post;
     } catch (e) {
+      console.log(e);
+      ctx.throw(404, 'post not found');
+    }
+  });
+
+  router.delete('/:id/:assetId', koaBody(), async (ctx) => {
+    const { id, assetId } = ctx.params;
+    if (!id) return ctx.throw(400, 'bad boy 凸ಠ益ಠ)凸');
+    try {
+      const post = await Post.findById(id);
+      const asset = await post.assets.id(assetId);
+      const assetToRemove = asset.name;
+      console.log(assetToRemove);
+      await fs.promises.unlink('public' + asset.path);
+      await fs.promises.unlink('public' + asset.thumb);
+      await asset.remove();
+
+      const newAssetOrder = Array.from(post.assetOrder);
+      const assetOrderIndex = post.assetOrder.findIndex(
+        (name) => name === assetToRemove
+      );
+      console.log(newAssetOrder);
+      newAssetOrder.splice(assetOrderIndex, 1);
+      console.log(newAssetOrder);
+      post.assetOrder = newAssetOrder;
+
+      post.save();
+
+      ctx.body = { assetOrder: post.assetOrder, assets: post.assets };
+    } catch (e) {
+      console.log(e);
       ctx.throw(404, 'post not found');
     }
   });
