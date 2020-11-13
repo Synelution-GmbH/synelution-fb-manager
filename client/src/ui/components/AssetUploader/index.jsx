@@ -63,7 +63,7 @@ export const AssetUploader = ({
       const file = acceptedFiles[0];
       setFile(file);
       const reader = new FileReader();
-
+      if (file.type.search('video') !== -1) return;
       reader.onabort = () => console.log('file reading was aborted');
       reader.onerror = () => console.log('file reading has failed');
       reader.onload = async () => {

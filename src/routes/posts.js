@@ -120,6 +120,7 @@ export default ({ router }) => {
 
     try {
       const post = await Post.findByIdAndDelete(id);
+      await fs.promises.unlink('public' + post.asset.path);
 
       ctx.body = post;
     } catch (e) {
