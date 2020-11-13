@@ -51,6 +51,7 @@ export default ({ router }) => {
       });
 
       if (proofreader.length <= 0) ctx.throw(404, 'no proofreaders found ( ≧Д≦)');
+console.log(body);
       const payload = JSON.stringify({
         ...body,
         tag: uuidv4(),
