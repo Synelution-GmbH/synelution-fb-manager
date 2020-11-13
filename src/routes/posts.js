@@ -119,7 +119,7 @@ export default ({ router }) => {
               uploadPath: file.path,
               fileName: fileName.replace(fileEnd, `_thumb${fileEnd}`),
               savePath,
-              resize: [150, 150],
+              resize: [230, 230],
             });
           }
 
