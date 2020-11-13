@@ -1,21 +1,14 @@
 import React, { createContext, useContext, useReducer } from 'react';
 import { DragDropContext } from 'react-beautiful-dnd';
 
+import { mapToObject } from 'utils';
+
 const initialState = { assetOrder: [], assets: {} };
 const AssetUploaderContext = createContext();
 const AssetUploaderDispatchContext = createContext();
 export const useAssetUploader = () => useContext(AssetUploaderContext);
 export const useAssetUploaderDispatch = () =>
   useContext(AssetUploaderDispatchContext);
-
-const mapToObject = (array, fnc, key) => {
-  const obj = {};
-  for (const item of array) {
-    obj[item[key]] = fnc(item);
-  }
-
-  return obj;
-};
 
 const reducer = (state, action) => {
   switch (action.type) {

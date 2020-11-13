@@ -92,12 +92,7 @@ export const EditAssetContent = ({ handleEdit, name, className }) => {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button
-            disabled={!asset.content}
-            variant="contained"
-            color="primary"
-            onClick={handleSubmit}
-          >
+          <Button variant="contained" color="primary" onClick={handleSubmit}>
             Save
           </Button>
         </DialogActions>

@@ -10,7 +10,7 @@ import { useAssetUploaderDispatch } from 'ui/components/AssetUploader/AssetUploa
 
 const useStyles = makeStyles((theme) => ({
   clipboardButton: {
-    zIndex: 100,
+    zIndex: 5,
     position: 'absolute',
     bottom: theme.spacing(1),
     right: theme.spacing(1),

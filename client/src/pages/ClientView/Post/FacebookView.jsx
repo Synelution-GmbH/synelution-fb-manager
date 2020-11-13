@@ -8,7 +8,7 @@ import {
 } from '@material-ui/core';
 import React from 'react';
 import { AwesomeIcon } from 'ui/components/Icons/Icon';
-import { Asset } from './Asset';
+import { AssetPicker } from './AssetPicker';
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -59,8 +59,9 @@ export const FacebookView = ({
   client,
   editorComponent,
   dateFormatted,
-  asset,
+  assets,
   children,
+  assetOrder,
 }) => {
   const classes = useStyles();
   return (
@@ -81,7 +82,11 @@ export const FacebookView = ({
       <div variant="div" className={classes.text}>
         {editorComponent}
       </div>
-      <Asset className={classes.asset} asset={asset} />
+      <AssetPicker
+        className={classes.asset}
+        assetOrder={assetOrder}
+        assets={assets}
+      />
       {children}
     </Card>
   );

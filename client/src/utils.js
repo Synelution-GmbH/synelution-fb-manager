@@ -79,3 +79,12 @@ export const setQueryFocusHandler = (queryFocus) => {
     window.removeEventListener('visibilitychange', handleVisibilityChange);
   };
 };
+
+export const mapToObject = (array, fnc, key) => {
+  const obj = {};
+  for (const item of array) {
+    obj[item[key]] = fnc(item);
+  }
+
+  return obj;
+};
