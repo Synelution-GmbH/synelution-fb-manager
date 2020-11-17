@@ -8,6 +8,8 @@ import { Post } from './Post';
 import { AskCode } from './AskCode';
 import { useAuth } from 'services';
 
+import 'objectFitPolyfill/dist/objectFitPolyfill.min.js';
+
 const ClientView = () => {
   const { id } = useParams();
   const { user } = useAuth();

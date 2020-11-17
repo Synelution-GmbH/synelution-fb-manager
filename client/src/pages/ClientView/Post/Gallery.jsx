@@ -8,7 +8,7 @@ import {
   Slider,
 } from '@material-ui/core';
 import { Asset } from './Asset';
-import { mapToObject } from 'utils';
+import { mapToObject, useObjectFitPolyfill } from 'utils';
 import { AwesomeIcon } from 'ui/components/Icons/Icon';
 import { SliderButton } from './SliderButton';
 import { ExitButton } from './SliderButton';
@@ -95,6 +95,7 @@ export const Gallery = ({ assets, assetOrder, ...props }) => {
   const assetsM = useMemo(() => mapToObject(assets, (asset) => asset, 'name'), [
     assets,
   ]);
+  useObjectFitPolyfill();
 
   useEffect(() => {
     if (!open) return;
@@ -141,7 +142,12 @@ export const Gallery = ({ assets, assetOrder, ...props }) => {
                 className="content-sizer"
                 style={{ paddingTop: smallImg ? '100%' : '50%' }}
               >
-                <Asset asset={assetsM[asset]} smallImg={smallImg} {...props} />
+                <Asset
+                  asset={assetsM[asset]}
+                  data-object-fit={i === 0 ? 'cover' : null}
+                  smallImg={smallImg}
+                  {...props}
+                />
                 {assets.length > 4 && i === 3 ? (
                   <div className={classes.slider + ' ' + classes.overlay}>
                     <span>+{assets.length - 3}</span>
@@ -170,5 +176,6 @@ export const Gallery = ({ assets, assetOrder, ...props }) => {
 };
 
 const Slide = ({ path, ...props }) => {
+  useObjectFitPolyfill();
   return <img {...props} src={path} alt="" />;
 };

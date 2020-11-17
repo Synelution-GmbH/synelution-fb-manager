@@ -1,12 +1,15 @@
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { makeStyles } from '@material-ui/core';
 import { Asset } from './Asset';
-import { mapToObject } from 'utils';
+import { isIE, mapToObject } from 'utils';
 import SwiperCore, { Navigation } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 import 'scss/swiper.min.css';
 import { SliderButton } from './SliderButton';
+import { webkitLineClamp } from 'webkit-line-clamp';
+console.log(webkitLineClamp);
+
 SwiperCore.use([Navigation]);
 const useStyles = makeStyles(() => ({
   gallery: {
@@ -73,6 +76,7 @@ const useStyles = makeStyles(() => ({
   },
 
   text: {
+    display: 'block',
     lineClamp: 1,
     lineHeight: 1.2308,
     display: '-webkit-box',
@@ -85,6 +89,7 @@ const useStyles = makeStyles(() => ({
   title: {
     lineHeight: '1.3333',
     fontSize: '.9375em',
+    display: 'block',
     display: '-webkit-box',
     boxOrient: 'vertical',
     overflow: 'hidden',
@@ -159,15 +164,11 @@ export const AssetCarousel = ({ assets, assetOrder, ...props }) => {
               target="_blank"
               rel="noreferrer noopener"
               tag={assetsM[asset].link ? 'a' : 'div'}
-              key={asset}
+              key={assetsM[asset]}
               item
               className={classes.link}
             >
               <Slide asset={assetsM[asset]} {...props} />
-              <div className={classes.slideContent}>
-                <p className={classes.title}>{assetsM[asset].title}</p>
-                <p className={classes.text}>{assetsM[asset].content}</p>
-              </div>
             </SwiperSlide>
           );
         })}
@@ -194,10 +195,25 @@ export const AssetCarousel = ({ assets, assetOrder, ...props }) => {
   );
 };
 
-const Slide = ({ path, ...props }) => {
+const Slide = ({ asset, path, ...props }) => {
+  const classes = useStyles();
+  const slideRef = useRef();
+  useEffect(() => {
+    if (!isIE()) return;
+    console.log(slideRef.current);
+    webkitLineClamp(slideRef.current.querySelector(`.${classes.title}`), 2);
+    webkitLineClamp(slideRef.current.querySelector(`.${classes.text}`), 1);
+  }, []);
+
   return (
-    <div className="img">
-      <Asset {...props} />
-    </div>
+    <>
+      <div className="img">
+        <Asset asset={asset} {...props} />
+      </div>
+      <div ref={slideRef} className={classes.slideContent}>
+        <p className={classes.title}>{asset.title}</p>
+        <p className={classes.text}>{asset.content}</p>
+      </div>
+    </>
   );
 };
