@@ -1,5 +1,5 @@
 import React, { useMemo, useRef, useState } from 'react';
-import { Grid, makeStyles, Typography } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core';
 import { Asset } from './Asset';
 import { mapToObject } from 'utils';
 import SwiperCore, { Navigation } from 'swiper';
@@ -8,7 +8,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'scss/swiper.min.css';
 import { SliderButton } from './SliderButton';
 SwiperCore.use([Navigation]);
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   gallery: {
     // position: 'relative',
     marginBottom: '6px',
@@ -111,15 +111,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const preloadImages = (...args) => {
-  const images = [];
-  for (var i = 0; i < args.length; i++) {
-    images[i] = new Image();
-    images[i].src = args[i];
-  }
-  return images;
-};
-
 export const AssetCarousel = ({ assets, assetOrder, ...props }) => {
   const classes = useStyles();
   const assetsM = useMemo(() => mapToObject(assets, (asset) => asset, 'name'), [
@@ -139,7 +130,6 @@ export const AssetCarousel = ({ assets, assetOrder, ...props }) => {
   const slideNext = () => {
     if (!swiper.current) return;
     swiper.current.slideNext();
-    console.log(swiper.current);
     setIsStart(swiper.current.isBeginning);
     setIsEnd(swiper.current.isEnd);
   };
