@@ -4,10 +4,12 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  FormLabel,
   IconButton,
   makeStyles,
+  TextField,
 } from '@material-ui/core';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { EditorClient } from '../EditorClient';
 import { AwesomeIcon } from '../Icons/Icon';
 import { useAssetUploader } from './AssetUploaderContext';
@@ -17,10 +19,15 @@ const useStyles = makeStyles((theme) => ({
   dialog: {
     '& .MuiDialog-paper': {
       overflow: 'visible',
+      maxWidth: '548px',
     },
     '& .editor': {
-      minHeight: '150px',
+      minHeight: '80px',
     },
+  },
+  label: {
+    margin: '16px 0 8px',
+    display: 'block',
   },
 }));
 
@@ -28,12 +35,14 @@ export const EditAssetContent = ({ handleEdit, name, className }) => {
   const { dispatch } = useAssetUploaderDispatch();
   const { assets } = useAssetUploader();
   const classes = useStyles();
+  const asset = assets[name] ? assets[name] : {};
   const [open, setOpen] = useState(false);
+  const [link, setLink] = useState(asset.link || '');
+  const linkSaveTimeout = useRef();
   // const [text, setText] = useState(content);
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const asset = assets[name] ? assets[name] : {};
   const handleSubmit = () => {
     handleEdit({ assets: Object.values(assets) });
     handleClose();
@@ -60,6 +69,27 @@ export const EditAssetContent = ({ handleEdit, name, className }) => {
       >
         <DialogTitle>Carousel Post Text</DialogTitle>
         <DialogContent style={{ overflow: 'visible' }}>
+          <FormLabel className={classes.label} style={{ marginTop: 0 }}>
+            Title
+          </FormLabel>
+          <EditorClient
+            content={asset.title || ''}
+            onSave={({ serializedValue }) => {
+              dispatch({
+                type: 'update_text',
+                payload: { name, title: serializedValue },
+              });
+            }}
+            saveDelay={500}
+            editorProps={{
+              style: {
+                maxWidth: '500px',
+                width: '100vw',
+              },
+            }}
+          />
+
+          <FormLabel className={classes.label}>Text</FormLabel>
           <EditorClient
             content={asset.content || ''}
             onSave={({ serializedValue }) => {
@@ -76,6 +106,31 @@ export const EditAssetContent = ({ handleEdit, name, className }) => {
               },
             }}
           />
+
+          <TextField
+            className={classes.label}
+            label="Link"
+            value={link}
+            fullWidth
+            variant="outlined"
+            helperText={
+              <a style={{ wordBreak: 'break-all' }} href={link}>
+                {link}
+              </a>
+            }
+            onChange={(e) => {
+              clearTimeout(linkSaveTimeout.current);
+              const value = e.target.value;
+              linkSaveTimeout.current = setTimeout(() => {
+                dispatch({
+                  type: 'update_text',
+                  payload: { name, link: value },
+                });
+              }, [300]);
+              setLink(value);
+            }}
+          />
+
           <div></div>
           {/* <TextField
             value={text}

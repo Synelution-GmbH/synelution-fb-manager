@@ -115,6 +115,7 @@ const Posts = () => {
   };
 
   if (!value) return null;
+
   return (
     <LocalizationProvider
       dateLibInstance={dayjs}
@@ -203,7 +204,7 @@ const PostList = ({ dateInterval, from, to, client, type }) => {
   ]);
 
   const { isLoading, data } = useQuery(QUERY, getPosts, {
-    refetchOnWindowFocus: true,
+    refetchOnWindowFocus: false,
   });
 
   const [addPost] = useMutation(createPost, {

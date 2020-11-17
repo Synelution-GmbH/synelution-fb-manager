@@ -26,6 +26,7 @@ import {
   faGlobeAmericas,
   faPen,
   faImage,
+  faRedo,
 } from '@fortawesome/free-solid-svg-icons';
 
 import { faInstagram, faFacebook } from '@fortawesome/free-brands-svg-icons';
@@ -39,6 +40,7 @@ import {
 } from './custom-icons';
 
 library.add(
+  faRedo,
   faEye,
   faEyeSlash,
   faTimesCircle,

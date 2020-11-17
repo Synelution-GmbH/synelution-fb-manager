@@ -59,10 +59,10 @@ export const ExitButton = (props) => {
   );
 };
 
-export const SliderButton = ({ direction = 'right', ...props }) => {
+export const SliderButton = ({ direction = 'right', className, ...props }) => {
   const classes = useStyles({ right: direction === 'right' });
   return (
-    <div {...props} className={classes.buttonContainer}>
+    <div {...props} className={classes.buttonContainer + ' ' + className}>
       <div className={classes.button}>
         <AwesomeIcon icon={`chevron-${direction}`} />
       </div>

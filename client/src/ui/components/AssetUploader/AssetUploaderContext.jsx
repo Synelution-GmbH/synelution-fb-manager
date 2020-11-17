@@ -70,10 +70,10 @@ const reducer = (state, action) => {
         assets: newAssets,
       };
     case 'update_text':
-      const { name, content } = action.payload;
+      const { name, ...payload } = action.payload;
       return {
         ...state,
-        assets: { ...state.assets, [name]: { ...state.assets[name], content } },
+        assets: { ...state.assets, [name]: { ...state.assets[name], ...payload } },
       };
     case 'set_payload':
       return {

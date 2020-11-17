@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme) => {
     },
     toolbar: {
       padding: `${theme.spacing(1)}px ${theme.spacing(2)}px`,
-      zIndex: 20,
+      // zIndex: 20,
       backgroundColor: theme.palette.grey[100],
       width: '100%',
     },

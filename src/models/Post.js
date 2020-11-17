@@ -25,6 +25,8 @@ const postSchema = new mongoose.Schema({
       video: Boolean,
       image: Boolean,
       content: String,
+      title: String,
+      link: String,
     },
   ],
   assetOrder: [String],

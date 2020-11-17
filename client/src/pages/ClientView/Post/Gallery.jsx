@@ -16,6 +16,8 @@ import { ExitButton } from './SliderButton';
 const useStyles = makeStyles((theme) => ({
   gallery: {
     position: 'relative',
+    marginBottom: '6px',
+
     '& img': {
       height: '100%',
       width: '100%',

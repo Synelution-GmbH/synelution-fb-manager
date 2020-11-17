@@ -1,6 +1,6 @@
 import React from 'react';
 import { Asset } from './Asset';
-import { Carousel } from './Carousel';
+import { AssetCarousel } from './Carousel';
 import { Gallery } from './Gallery';
 
 export const AssetPicker = ({ assets, assetOrder, ...props }) => {
@@ -10,6 +10,6 @@ export const AssetPicker = ({ assets, assetOrder, ...props }) => {
   const isCarousel = assets.filter((asset) => asset.content);
   console.log(isCarousel);
   if (isCarousel.length > 0)
-    return <Carousel {...props} assetOrder={assetOrder} assets={assets} />;
+    return <AssetCarousel {...props} assetOrder={assetOrder} assets={assets} />;
   return <Gallery {...props} assetOrder={assetOrder} assets={assets} />;
 };
