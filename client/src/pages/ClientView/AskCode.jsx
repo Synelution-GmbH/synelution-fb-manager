@@ -50,6 +50,16 @@ export const AskCode = ({ id, QUERY }) => {
   };
 
   useEffect(() => {
+    (async () => {
+      try {
+        const res = await checkCode({ code: 'check', id });
+        console.log(res);
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+  }, [user]);
+  useEffect(() => {
     if (!user) return handleOpen();
   }, [user]);
 

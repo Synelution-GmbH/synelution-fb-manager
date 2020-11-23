@@ -56,16 +56,18 @@ export const clientLinkRoutes = ({ router }) => {
 
   router.get('/client-link/:uuid/:code', async (ctx) => {
     const { uuid, code } = ctx.params;
+    console.log(uuid, code);
     try {
       const existing = await ClientLink.findOne({ uuid });
       if (!existing) ctx.throw(404, 'link not found');
       const { client, from, to, type } = existing;
       const existingClient = await Client.findOne({ slug: client });
-      const existingCode = existingClient.codes.find((el) => el.code === code);
-      console.log(existingCode);
-      if (!existingCode) {
-        ctx.throw();
-        return;
+      if (existingClient.codes.length > 0) {
+        const existingCode = existingClient.codes.find((el) => el.code === code);
+        if (!existingCode) {
+          ctx.throw(400, 'no code');
+          return;
+        }
       }
       const posts = await Post.find({
         client,
