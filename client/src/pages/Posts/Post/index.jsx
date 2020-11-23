@@ -27,7 +27,6 @@ export const useUpdate = () => {
 
   return { updateCache, cache };
 };
-console.log('post');
 
 const reducer = (state, action) => {
   switch (action.type) {

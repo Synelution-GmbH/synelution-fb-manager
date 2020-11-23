@@ -13,13 +13,11 @@ const getPngBlob = ({ src }) =>
     const c = document.createElement('canvas');
     const ctx = c.getContext('2d');
     const img = new Image();
-    console.log('asd');
     img.onload = () => {
       c.height = img.height;
       c.width = img.width;
       ctx.drawImage(img, 0, 0);
       const newName = src.replace(/\.\w{1,}$/g, '.png');
-      console.log(newName);
       c.toBlob(
         function (blob) {
           resolve(blob);

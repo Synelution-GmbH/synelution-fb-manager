@@ -16,7 +16,6 @@ const reducer = (state, action) => {
       const { assetOrder, assets } = action.payload;
       const { previewIndex } = state;
       // check asset order??
-      console.log(assets);
       return {
         ...state,
         previewIndex: previewIndex

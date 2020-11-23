@@ -19,7 +19,6 @@ export const CreateCode = ({ onSubmit, slug }) => {
     setLoading(true);
     try {
       const code = await postCode({ slug, data: state });
-      console.log(code);
       cache.invalidateQueries(['clients', { slug }]);
       setLoading(false);
       setOpen(false);

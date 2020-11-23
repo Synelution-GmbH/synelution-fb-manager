@@ -100,7 +100,7 @@ export const Asset = ({
                 name={asset.name}
                 handleEdit={updatePost}
               />
-              <DeleteAssetButton {...asset} handleDelete={handleDelete} />
+              <DeleteAssetButton name={asset.name} handleDelete={handleDelete} />
             </Grid>
           ) : null}
         </AssetUploader>

@@ -8,7 +8,6 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'scss/swiper.min.css';
 import { SliderButton } from './SliderButton';
 import { webkitLineClamp } from 'webkit-line-clamp';
-console.log(webkitLineClamp);
 
 SwiperCore.use([Navigation]);
 const useStyles = makeStyles(() => ({
@@ -203,7 +202,6 @@ const Slide = ({ asset, path, ...props }) => {
   const slideRef = useRef();
   useEffect(() => {
     if (!isIE()) return;
-    console.log(slideRef.current);
     webkitLineClamp(slideRef.current.querySelector(`.${classes.title}`), 2);
     webkitLineClamp(slideRef.current.querySelector(`.${classes.text}`), 1);
   }, []);

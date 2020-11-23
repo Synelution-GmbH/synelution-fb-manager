@@ -106,7 +106,6 @@ export const Gallery = ({ assets, assetOrder, ...props }) => {
         assetsM[indexNext].path,
         assetsM[indexPrev].path
       );
-      console.log(images);
     }, 200);
   }, [open, sliderIndex]);
 

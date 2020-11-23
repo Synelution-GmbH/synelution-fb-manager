@@ -61,7 +61,7 @@ export const DeleteAssetButton = ({ handleDelete, name, ...props }) => {
   const { dispatch } = useAssetUploaderDispatch();
   const classes = useStyles();
   return (
-    <Tooltip {...props} title="Delete" placement="top">
+    <Tooltip title="Delete" placement="top">
       <Button
         {...props}
         onClick={() => {

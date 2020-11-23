@@ -27,7 +27,6 @@ const requestPermission = () =>
     else {
       Notification.requestPermission()
         .then(function (permission) {
-          console.log(permission);
           // If the user accepts, let's create a notification
           if (permission === 'granted') {
             new Notification('Thanks you will be notified!');

@@ -57,7 +57,6 @@ export const AskCode = ({ id, QUERY }) => {
     <Dialog
       open={open}
       onBackdropClick={(e) => {
-        console.log(e);
         e.preventDefault();
       }}
     >

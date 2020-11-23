@@ -62,7 +62,6 @@ const ClientCard = ({ name, profilePicture, slug }) => {
 };
 
 export const ClientList = ({ clients }) => {
-  console.log(clients);
   return (
     <List>
       {clients.map((client, i) => (

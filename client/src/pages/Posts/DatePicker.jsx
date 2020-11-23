@@ -98,9 +98,8 @@ export const DatePicker = ({ value, handleClose, setValue }) => {
           if (error[0] || error[1]) return;
           handleClose(date);
         }}
-        onChange={(newValue, test) => {
+        onChange={(newValue) => {
           setDate(newValue);
-          console.log(test);
         }}
         onError={(e) => setError(e.map((err) => getErrorText(err)))}
         renderInput={(startProps, endProps) => (

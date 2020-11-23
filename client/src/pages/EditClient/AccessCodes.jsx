@@ -48,7 +48,6 @@ const CodeListItem = ({ name, email, code, slug }) => {
   const handleSubmit = async (state) => {
     if (!state.email || !state.name) return;
     setLoading(true);
-    console.log(state);
     try {
       await putCode({ slug, code, data: state });
       cache.invalidateQueries(['clients', { slug }]);
