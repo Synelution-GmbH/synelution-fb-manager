@@ -62,7 +62,18 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const InstagramView = ({ client, editorComponent, asset, children }) => {
+export const AssetPicker = ({ assets, assetOrder, ...props }) => {
+  if (!assets || assets.length <= 0) return null;
+  return <Asset {...props} asset={assets[0]} />;
+};
+
+export const InstagramView = ({
+  client,
+  editorComponent,
+  assets,
+  assetOrder,
+  children,
+}) => {
   const classes = useStyles();
   const likes = useMemo(() => Math.floor(Math.random() * 500) + 500, []);
   return (
@@ -77,7 +88,11 @@ export const InstagramView = ({ client, editorComponent, asset, children }) => {
           </div>
         </Grid>
       </CardContent>
-      <Asset className={classes.asset} asset={asset} />
+      <AssetPicker
+        className={classes.asset}
+        assetOrder={assetOrder}
+        assets={assets}
+      />
       <CardContent className={classes.iconContainer}>
         <Grid container>
           <AwesomeIcon className={classes.icon} prefix="ig" icon="like" />

@@ -27,6 +27,7 @@ import {
   faPen,
   faImage,
   faRedo,
+  faDownload,
 } from '@fortawesome/free-solid-svg-icons';
 
 import { faInstagram, faFacebook } from '@fortawesome/free-brands-svg-icons';
@@ -37,10 +38,12 @@ import {
   igComment,
   igShare,
   igSave,
+  faPreview,
 } from './custom-icons';
 
 library.add(
   faRedo,
+  faPreview,
   faEye,
   faEyeSlash,
   faTimesCircle,
@@ -69,6 +72,7 @@ library.add(
   igLike,
   igComment,
   igShare,
+  faDownload,
   igSave
 );
 

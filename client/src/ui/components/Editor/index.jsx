@@ -129,7 +129,7 @@ export const Editor = ({
         {toolbar ? (
           <Toolbar className={classes.toolbar} variant="dense" p={1}>
             <Grid container justify="space-between" alignItems="center">
-              <Grid item sm={4}>
+              <Grid item>
                 <Grid container justify="flex-start">
                   <EmojiePicker
                     className="emoji-picker tool"
@@ -138,7 +138,7 @@ export const Editor = ({
                   />
                 </Grid>
               </Grid>
-              <Grid item sm={8}>
+              <Grid item>
                 <Grid container justify="flex-end">
                   {children}
                   <CopyToClipboard value={serializedValue} />

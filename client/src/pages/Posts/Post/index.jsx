@@ -12,6 +12,7 @@ import { PostDatePicker } from './PostDatePicker';
 import { ClientToolbox } from './ClientToolbox';
 import { Asset } from './Asset';
 import { AssetUploaderProvider } from 'ui/components/AssetUploader/AssetUploaderContext';
+import { PreviewPostButton } from './PreviewPostButton';
 
 export const useUpdate = () => {
   const cache = useQueryCache();
@@ -125,6 +126,7 @@ export const Post = React.memo(
               approved={approved}
               clientCorrected={clientCorrected}
               imageChanges={imageChanges}
+              updatePost={updatePost}
             />
           </Grid>
         </Grid>
@@ -148,6 +150,11 @@ export const Post = React.memo(
               updateCache({ QUERY, index, update });
             }}
           >
+            <PreviewPostButton
+              post={post}
+              assets={assets}
+              assetOrder={assetOrder}
+            />
             <CheckedButton
               checked={checked}
               style={{ marginRight: '8px' }}

@@ -130,12 +130,15 @@ export default ({ router }) => {
           if (existingAsset)
             try {
               console.log(existingAsset);
+              newAssetOrder.pop();
               await fs.promises.unlink('public' + existingAsset.path);
-              await fs.promises.unlink('public' + existingAsset.thumb);
-              console.log(asset);
+              if (existingAsset.thumb)
+                await fs.promises.unlink('public' + existingAsset.thumb);
+
               await existingAsset.set(asset);
             } catch (e) {
               console.log(e);
+              await existingAsset.set(asset);
             }
           else post.assets.push(asset);
         }
@@ -174,11 +177,14 @@ export default ({ router }) => {
     if (!id) return ctx.throw(400, 'bad boy 凸ಠ益ಠ)凸');
     try {
       const post = await Post.findById(id);
+      if (!post) return ctx.throw(404, 'not found');
       const asset = await post.assets.id(assetId);
+      console.log(asset);
+      if (!asset) return ctx.throw(404, 'not found');
       const assetToRemove = asset.name;
       console.log(assetToRemove);
       await fs.promises.unlink('public' + asset.path);
-      await fs.promises.unlink('public' + asset.thumb);
+      if (asset.thumb) await fs.promises.unlink('public' + asset.thumb);
       await asset.remove();
 
       const newAssetOrder = Array.from(post.assetOrder);

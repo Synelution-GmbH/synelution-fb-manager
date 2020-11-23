@@ -7,13 +7,30 @@ import { CopyToClipboard } from 'ui/components/Editor/CopyToClipboard';
 import { useAssetUploader } from 'ui/components/AssetUploader/AssetUploaderContext';
 import { putPost, deleteAsset } from 'services';
 import { useAssetUploaderDispatch } from 'ui/components/AssetUploader/AssetUploaderContext';
+import { Autocomplete } from '@material-ui/lab';
+import { DownloadButton, EditButton, DeleteAssetButton } from './Toolbox';
 
 const useStyles = makeStyles((theme) => ({
   clipboardButton: {
     zIndex: 5,
+    // position: 'absolute',
+    // bottom: theme.spacing(1),
+    // right: theme.spacing(1),
+  },
+  toolbox: {
+    zIndex: -1,
     position: 'absolute',
-    bottom: theme.spacing(1),
-    right: theme.spacing(1),
+    top: '0',
+    left: '100%',
+    padding: `${theme.spacing(2)}px 0`,
+    width: 'auto',
+
+    '& .MuiButtonBase-root': {
+      borderTopLeftRadius: '0',
+      borderBottomLeftRadius: '0',
+      width: '34px',
+      marginBottom: '4px',
+    },
   },
 }));
 
@@ -62,13 +79,29 @@ export const Asset = ({
   const asset = assets[previewIndex];
   return (
     <>
-      <Grid item xs={12} md={4}>
+      <Grid item xs={12} md={4} style={{ zIndex: 2 }}>
         <AssetUploader setFile={updateImage}>
           {asset && asset.path ? (
-            <CopyToClipboard
-              className={classes.clipboardButton}
-              value={window.location.origin + asset.path}
-            />
+            <Grid
+              container
+              direction="column"
+              justify="flex-start"
+              alignItems="flex-start"
+              className={classes.toolbox}
+            >
+              <CopyToClipboard
+                className={classes.clipboardButton}
+                value={window.location.origin + asset.path}
+                type="icon"
+              />
+              <DownloadButton path={asset.path} download={asset.name} />
+              <EditButton
+                className={classes.edit}
+                name={asset.name}
+                handleEdit={updatePost}
+              />
+              <DeleteAssetButton {...asset} handleDelete={handleDelete} />
+            </Grid>
           ) : null}
         </AssetUploader>
       </Grid>

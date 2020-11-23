@@ -9,6 +9,7 @@ import {
   makeStyles,
   TextField,
 } from '@material-ui/core';
+import { logDOM } from '@testing-library/react';
 import React, { useRef, useState } from 'react';
 import { EditorClient } from '../EditorClient';
 import { AwesomeIcon } from '../Icons/Icon';
@@ -31,7 +32,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const EditAssetContent = ({ handleEdit, name, className }) => {
+export const EditAssetContent = ({
+  handleEdit,
+  name,
+  className,
+  buttonComponent,
+}) => {
   const { dispatch } = useAssetUploaderDispatch();
   const { assets } = useAssetUploader();
   const classes = useStyles();
@@ -50,20 +56,32 @@ export const EditAssetContent = ({ handleEdit, name, className }) => {
 
   return (
     <>
-      <IconButton
-        className={className}
-        onClick={(e) => {
-          e.stopPropagation();
-          handleOpen();
-        }}
-      >
-        <AwesomeIcon icon="pen" />
-      </IconButton>
+      {buttonComponent ? (
+        buttonComponent({
+          onClick: (e) => {
+            e.stopPropagation();
+            handleOpen();
+          },
+          children: <AwesomeIcon icon="pen" />,
+        })
+      ) : (
+        <IconButton
+          className={className}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleOpen();
+          }}
+        >
+          <AwesomeIcon icon="pen" />
+        </IconButton>
+      )}
       <Dialog
         open={open}
         onClose={handleClose}
         className={classes.dialog}
         onBackdropClick={(e) => {
+          console.log(e);
+          e.preventDefault();
           e.stopPropagation();
         }}
       >

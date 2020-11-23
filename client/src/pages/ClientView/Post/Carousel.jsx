@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { makeStyles } from '@material-ui/core';
+import { CardContent, makeStyles } from '@material-ui/core';
 import { Asset } from './Asset';
 import { isIE, mapToObject } from 'utils';
 import SwiperCore, { Navigation } from 'swiper';
@@ -73,6 +73,10 @@ const useStyles = makeStyles(() => ({
     boxSizing: 'border-box',
     padding: '8px 12px 11px',
     fontSize: '16px',
+    display: 'flex',
+    flexFlow: 'column',
+    justifyContent: 'center',
+    alignItems: 'flex-start',
   },
 
   text: {
@@ -146,7 +150,7 @@ export const AssetCarousel = ({ assets, assetOrder, ...props }) => {
   };
 
   return (
-    <>
+    <div style={{ paddingLeft: '10px' }}>
       <Swiper
         {...settings}
         simulateTouch={false}
@@ -164,8 +168,7 @@ export const AssetCarousel = ({ assets, assetOrder, ...props }) => {
               target="_blank"
               rel="noreferrer noopener"
               tag={assetsM[asset].link ? 'a' : 'div'}
-              key={assetsM[asset]}
-              item
+              key={asset}
               className={classes.link}
             >
               <Slide asset={assetsM[asset]} {...props} />
@@ -191,7 +194,7 @@ export const AssetCarousel = ({ assets, assetOrder, ...props }) => {
           }}
         />
       </Swiper>
-    </>
+    </div>
   );
 };
 

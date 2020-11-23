@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const ClientToolbox = React.memo(
-  ({ approved, clientCorrected, imageChanges: ic }) => {
+  ({ approved, clientCorrected, imageChanges: ic, updatePost }) => {
     const classes = useStyles({ approved });
     const [open, setOpen] = useState(false);
     const [imageChanges, setImageChanges] = useState(ic);
@@ -41,7 +41,6 @@ export const ClientToolbox = React.memo(
       [imageChanges]
     );
     const imageChangesExist = imageChanges.length > 0;
-
     return (
       <>
         <Tooltip title={approved ? 'Freigegeben' : 'nicht Freigegeben'}>
@@ -67,7 +66,11 @@ export const ClientToolbox = React.memo(
                 if (!imageChangesExist) return;
                 handleOpen();
               }}
-              className={`${classes.large} ${imageChangesExist ? 'rainbow' : ''}`}
+              className={`${classes.large} ${
+                imageChangesExist && unfinishedImageChanges.length > 0
+                  ? 'rainbow'
+                  : ''
+              }`}
               style={imageChangesExist ? { cursor: 'pointer' } : null}
               variant="rounded"
             >
@@ -89,9 +92,8 @@ export const ClientToolbox = React.memo(
                     }
                     return item;
                   });
-                  console.log(newImageChanges);
-
                   setImageChanges(newImageChanges);
+                  updatePost({ imageChanges: newImageChanges });
                 }}
               >
                 <ListItemIcon>

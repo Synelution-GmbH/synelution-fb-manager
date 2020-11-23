@@ -175,7 +175,7 @@ const Posts = () => {
         </Container>
       </div>
       <Box clone p={2}>
-        <Container maxWidth="lg">
+        <Container maxWidth="lg" style={{ paddingBottom: '400px' }}>
           {date[0] && date[1] ? (
             <PostList
               dateInterval={dateInterval}

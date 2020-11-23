@@ -66,9 +66,7 @@ export const EmojiePicker = React.memo(
   ({ onSelect, className, renderPicker = true, ...props }) => {
     const [open, setOpen] = useState();
     const classes = useStyles({ open });
-    console.log(open);
 
-    console.log('picker');
     return (
       <>
         {/* <ClickAwayListener onClickAway={() => setOpen(false)}> */}
@@ -120,7 +118,7 @@ export const EmojiePicker = React.memo(
                     onSelect={(emoji) => {
                       console.log(emoji);
                       onSelect(emoji.native);
-                      setOpen(false);
+                      // setOpen(false);
                     }}
                     // onClick={(emoji) => {
                     //   console.log(emoji);

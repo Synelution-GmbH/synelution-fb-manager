@@ -3,8 +3,8 @@ import {
   CardContent,
   CircularProgress,
   Grid,
-  IconButton,
   makeStyles,
+  Tooltip,
 } from '@material-ui/core';
 import React, { useRef } from 'react';
 import { Draggable } from 'react-beautiful-dnd';
@@ -140,15 +140,18 @@ export const AssetPreview = ({
               ) : null}
             </CardContent>
             <div className="options">
-              <AwesomeIcon
-                onClick={(e) => {
-                  e.stopPropagation();
-                  dispatch({ type: 'delete_asset', payload: { name } });
-                  handleDelete(props._id);
-                }}
-                className={classes.delete}
-                icon="times"
-              />
+              <Tooltip title="delete" placement="top">
+                <div className={classes.delete}>
+                  <AwesomeIcon
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      dispatch({ type: 'delete_asset', payload: { name } });
+                      handleDelete(props._id);
+                    }}
+                    icon="times"
+                  />
+                </div>
+              </Tooltip>
               <EditAssetContent
                 className={classes.edit}
                 name={name}

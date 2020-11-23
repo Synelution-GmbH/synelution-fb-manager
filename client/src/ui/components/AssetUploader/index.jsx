@@ -18,7 +18,7 @@ export * from './AssetUploaderList';
 
 const useStyles = makeStyles((theme) => ({
   root: () => ({
-    overflow: 'hidden',
+    overflow: 'visible',
     position: 'relative',
     paddingTop: '100%',
     '& > .MuiCardContent-root': {
@@ -104,17 +104,18 @@ export const AssetUploader = ({
             ? { backgroundImage: `url(${assets[previewIndex].path})` }
             : null
         }
-        {...getRootProps({
-          onClick: () => {
-            console.log('dropzuone click');
-            window.localStorage.setItem('dont-refetch', 'dont, just dont >-<');
-          },
-        })}
       >
-        {previewIndex && assets[previewIndex].video ? (
-          <Video src={assets[previewIndex].path}></Video>
-        ) : null}
-        <CardContent>
+        <CardContent
+          {...getRootProps({
+            onClick: () => {
+              console.log('dropzuone click');
+              window.localStorage.setItem('dont-refetch', 'dont, just dont >-<');
+            },
+          })}
+        >
+          {previewIndex && assets[previewIndex].video ? (
+            <Video src={assets[previewIndex].path}></Video>
+          ) : null}
           <Paper
             className={classes.upload}
             variant="outlined"
