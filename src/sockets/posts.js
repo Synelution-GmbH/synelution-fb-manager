@@ -28,7 +28,7 @@ const getEmailText = (key, data) => {
     case 'approved':
       return data[key]
         ? 'Post wurde freigegeben!'
-        : 'Post freigabe wurde wiederrufen!';
+        : 'Post freigabe wurde widerrufen!';
 
     case 'imageChanges':
       return `Bild Korrekturen: <br> ${data[key].text}`;

@@ -10,7 +10,8 @@
     "client": "npm run start --prefix client",
     "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
     "build": "cd client/ && npm install && npm run build && cp -r build/* ../public/",
-    "mongo-win": "md mongo-db & \"C:/Program Files/MongoDb/Server/4.4/bin/mongod.exe\" --dbpath mongo-db"
+    "mongo-win": "md mongo-db & \"C:/Program Files/MongoDb/Server/4.4/bin/mongod.exe\" --dbpath mongo-db",
+    "update": "nodemon --exec babel-node src/update-db.js"
   },
   "repository": {
     "type": "git",

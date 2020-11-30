@@ -129,8 +129,14 @@ export default ({ router }) => {
         throw 'client not found';
       }
       const deleteThis = client.codes.find((el) => el.code === code);
+      console.log(deleteThis);
       if (!deleteThis) throw 'code not found';
-      await deleteThis.remove();
+      if (client.codes.length <= 1) {
+        client.codes = [];
+      } else {
+        await deleteThis.remove();
+      }
+      console.log(client.codes);
       await client.save();
 
       ctx.body = 'yay';

@@ -45,6 +45,7 @@ export const FreigebenBtn = ({ approved, id, QUERY }) => {
         startIcon={<AwesomeIcon icon="check-circle" />}
         disabled={loading}
         onClick={() => {
+          if (approved) return;
           setLoading(true);
           const clientName = user.username;
           const clientEmail = user.email;
@@ -52,7 +53,7 @@ export const FreigebenBtn = ({ approved, id, QUERY }) => {
             'client change',
             {
               id,
-              approved: !approved,
+              approved: true,
               clientName,
               clientEmail,
             },

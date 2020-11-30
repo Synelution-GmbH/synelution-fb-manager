@@ -9,6 +9,12 @@ const postSchema = new mongoose.Schema({
   content: String,
   approved: Boolean,
   clientCorrected: Boolean,
+  asset: {
+    path: String,
+    type: { type: String },
+    video: Boolean,
+    image: Boolean,
+  },
   imageChanges: [
     {
       text: String,
