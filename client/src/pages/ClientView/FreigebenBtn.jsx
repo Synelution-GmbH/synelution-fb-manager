@@ -43,6 +43,7 @@ export const FreigebenBtn = ({ approved, id, QUERY }) => {
         startIcon={<AwesomeIcon icon="check-circle" />}
         disabled={loading}
         onClick={() => {
+          if (approved) return;
           setLoading(true);
           console.log('emitting');
           console.log(approved);
