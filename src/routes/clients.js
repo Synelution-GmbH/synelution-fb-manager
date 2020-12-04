@@ -46,6 +46,7 @@ export default ({ router }) => {
     koaBody({ multipart: true, uploadDir: '.', urlencoded: true }),
     async (ctx) => {
       const { name } = ctx.request.body;
+
       const slug = name
         .trim()
         .replace(/ /g, '-')
