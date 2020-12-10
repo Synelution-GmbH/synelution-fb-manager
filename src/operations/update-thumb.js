@@ -31,15 +31,15 @@ initDB({ app });
         });
 
         asset.thumb = path;
+        await item.markModified('assets');
+        await item.save();
       });
-      await item.markModified('assets');
-      await item.save();
       console.log('done and finished');
     } catch (error) {
       console.error(error);
       console.log('error for: ', post);
     }
 
-    await Post.updateOne({_id: post.id}, {})
+    // await Post.updateOne({_id: post.id}, {})
   });
 })();
