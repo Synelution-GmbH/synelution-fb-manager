@@ -11,16 +11,17 @@ initDB({ app });
   const posts = await Post.find({});
   posts.forEach(async (item) => {
     const post = item._doc;
-    console.log(!post.assets, post.assets.length === 0);
     if (!post.assets || post.assets.length === 0) return;
     // console.log(count++);
     const { assets } = post;
-    console.log(assets);
-  try {
-    assets.forEach(async asset => {      
+    try {
+      await assets.forEach(async (asset) => {
         const fileName = asset.path.split('/')[asset.path.split('/').length - 1];
         console.log('creating thumb for: ', fileName);
-        const fileEnd = fileName.substring(fileName.lastIndexOf('.'), fileName.length);
+        const fileEnd = fileName.substring(
+          fileName.lastIndexOf('.'),
+          fileName.length
+        );
         const savePath = `public/uploads/${post.client}/`;
         const path = await saveFileAndResize({
           uploadPath: 'public' + asset.path,
@@ -28,18 +29,17 @@ initDB({ app });
           savePath,
           resize: [230, 230],
         });
-        console.log(path);
 
         asset.thumb = path;
-
-      });  
+      });
+      await item.markModified('assets');
       await item.save();
-  } catch (error) {
-    console.log(error);
-  }
-    
-    // await Post.findByIdAndUpdate(post.id, {})
+      console.log('done and finished');
+    } catch (error) {
+      console.error(error);
+      console.log('error for: ', post);
+    }
 
-    
+    await Post.updateOne({_id: post.id}, {})
   });
 })();

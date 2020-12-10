@@ -7,7 +7,7 @@ export const FORMAT = 'DD-MM-YYYY';
 
 export const pipeline = promisify(stream.pipeline);
 export const checkCreatePath = async (path) => {
-  console.log(path);
+  // console.log(path);
   try {
     await fs.promises.mkdir(path, { recursive: true });
   } catch (e) {
