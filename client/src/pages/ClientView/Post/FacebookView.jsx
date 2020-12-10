@@ -19,6 +19,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: '16px',
     '-webkitFontSmoothing': 'antialiased',
     maxWidth: '500px',
+    position: 'relative',
   },
   cardContent: {
     padding: '12px 16px 12px',
