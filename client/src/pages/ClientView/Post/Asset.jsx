@@ -1,5 +1,7 @@
 import React from 'react';
 import { useObjectFitPolyfill } from 'utils';
+import { Video } from 'ui/components/AssetUploader/Video';
+
 
 export const Asset = ({ asset, className, smallImg, ...props }) => {
   return asset && asset.path ? (
@@ -11,7 +13,11 @@ export const Asset = ({ asset, className, smallImg, ...props }) => {
         alt=""
       />
     ) : (
-      <video className={className} src={asset.path}></video>
+      <Video
+        className={className}
+        containerStyles={{ position: 'relative', marginBottom: '8px' }}
+        src={asset.path}
+      ></Video>
     )
   ) : null;
 };

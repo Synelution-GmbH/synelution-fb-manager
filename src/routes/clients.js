@@ -81,6 +81,7 @@ export default ({ router }) => {
         await newClient.save();
         ctx.body = newClient;
       } catch (e) {
+        console.log(e);
         ctx.throw(400, e);
       }
     }

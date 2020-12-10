@@ -165,6 +165,7 @@ export default ({ router }) => {
         await fs.promises.unlink('public' + asset.thumb);
       }
 
+
       ctx.body = post;
     } catch (e) {
       console.log(e);
