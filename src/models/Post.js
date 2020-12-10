@@ -9,6 +9,12 @@ const postSchema = new mongoose.Schema({
   content: String,
   approved: Boolean,
   clientCorrected: Boolean,
+  asset: {
+    path: String,
+    type: { type: String },
+    video: Boolean,
+    image: Boolean,
+  },
   imageChanges: [
     {
       text: String,
@@ -16,12 +22,20 @@ const postSchema = new mongoose.Schema({
       done: Boolean,
     },
   ],
-  asset: {
-    path: String,
-    type: { type: String },
-    video: Boolean,
-    image: Boolean,
-  },
+  assets: [
+    {
+      path: String,
+      thumb: String,
+      name: String,
+      type: { type: String },
+      video: Boolean,
+      image: Boolean,
+      content: String,
+      title: String,
+      link: String,
+    },
+  ],
+  assetOrder: [String],
   checked: {
     type: Boolean,
     default: false,

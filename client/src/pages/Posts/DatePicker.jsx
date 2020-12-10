@@ -5,7 +5,6 @@ import { AwesomeIcon } from 'ui/components/Icons/Icon';
 import { getErrorText } from 'utils';
 
 const useStyles = makeStyles((theme) => {
-  console.log(theme);
   return {
     avatar: {
       cursor: 'pointer',
@@ -77,8 +76,6 @@ export const DatePicker = ({ value, handleClose, setValue }) => {
     handleClose(newValue);
   };
 
-  console.log(date, value);
-
   return (
     <Grid container alignItems="center" style={{ width: 'auto' }}>
       <Avatar
@@ -101,9 +98,8 @@ export const DatePicker = ({ value, handleClose, setValue }) => {
           if (error[0] || error[1]) return;
           handleClose(date);
         }}
-        onChange={(newValue, test) => {
+        onChange={(newValue) => {
           setDate(newValue);
-          console.log(test);
         }}
         onError={(e) => setError(e.map((err) => getErrorText(err)))}
         renderInput={(startProps, endProps) => (

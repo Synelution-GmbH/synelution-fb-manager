@@ -43,6 +43,7 @@ export const clientLinkRoutes = ({ router }) => {
         },
       }).sort({date: 1});
 
+
       const existingClient = await Client.findOne({ slug: client });
       ctx.set('Cache-Control', 'no-cache');
       ctx.body = { link: existing, posts, client: existingClient };
@@ -54,16 +55,26 @@ export const clientLinkRoutes = ({ router }) => {
 
   router.get('/client-link/:uuid/:code', async (ctx) => {
     const { uuid, code } = ctx.params;
+    console.log(uuid, code);
     try {
       const existing = await ClientLink.findOne({ uuid });
       if (!existing) ctx.throw(404, 'link not found');
       const { client, from, to, type } = existing;
       const existingClient = await Client.findOne({ slug: client });
-      const existingCode = existingClient.codes.find((el) => el.code === code);
-      console.log(existingCode);
-      if (!existingCode) {
-        ctx.throw();
-        return;
+      let existingCode;
+      if (existingClient.codes && existingClient.codes.length > 0) {
+        existingCode = existingClient.codes.find((el) => el.code === code);
+        if (!existingCode) {
+          ctx.throw(400, 'no code');
+          return;
+        }
+      } else {
+        console.log(client);
+        existingCode = {
+          code: 'xxxx',
+          name: client,
+          email: 'noch kein CODE vorhanden',
+        };
       }
       const posts = await Post.find({
         client,
@@ -72,6 +83,8 @@ export const clientLinkRoutes = ({ router }) => {
           $gte: dayjs(from, FORMAT).startOf('day').valueOf(),
           $lte: dayjs(to, FORMAT).endOf('day').valueOf(),
         },
+      }).sort({
+        date: 1,
       });
 
       ctx.set('Cache-Control', 'no-cache');

@@ -1,10 +1,17 @@
 import React from 'react';
+import { useObjectFitPolyfill } from 'utils';
 import { Video } from 'ui/components/AssetUploader/Video';
 
-export const Asset = ({ asset, className }) => {
+
+export const Asset = ({ asset, className, smallImg, ...props }) => {
   return asset && asset.path ? (
     asset.image ? (
-      <img className={className} src={asset.path} alt="" />
+      <img
+        {...props}
+        className={className}
+        src={smallImg ? asset.thumb : asset.path}
+        alt=""
+      />
     ) : (
       <Video
         className={className}

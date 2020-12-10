@@ -47,15 +47,13 @@ export const FreigebenBtn = ({ approved, id, QUERY }) => {
         onClick={() => {
           if (approved) return;
           setLoading(true);
-          console.log('emitting');
-          console.log(approved);
           const clientName = user.username;
           const clientEmail = user.email;
           socket.emit(
             'client change',
             {
               id,
-              approved: !approved,
+              approved: true,
               clientName,
               clientEmail,
             },

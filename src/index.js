@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import Koa from 'koa';
 import http from 'http';
-import https from 'https';
+// import https from 'https';
 import socketIO from 'socket.io';
 
 import initMiddleware from './middleware';
@@ -15,7 +15,7 @@ const app = new Koa();
 const server = http.createServer(app.callback());
 
 const io = socketIO(server);
-import serve from 'koa-static';
+// import serve from 'koa-static';
 import send from 'koa-send';
 
 initDB({ app });

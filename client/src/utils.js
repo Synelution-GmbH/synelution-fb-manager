@@ -1,3 +1,5 @@
+const { useEffect } = require('react');
+
 export function urlBase64ToUint8Array(base64String) {
   const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
   const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
@@ -30,4 +32,72 @@ export const getErrorText = (error) => {
     default:
       return null;
   }
+};
+
+export const setQueryFocusHandler = (queryFocus) => {
+  let timeout;
+  const checkRefetch = () => {
+    // const userLeftTab = window.localStorage.getItem('userLeftTab') || 0;
+    // return parseInt(userLeftTab) + 1000 * 5 <= Date.now();
+    const dontRefetch = window.localStorage.getItem('dont-refetch');
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+      window.localStorage.removeItem('dont-refetch');
+    }, 1000);
+    return !dontRefetch;
+  };
+  const handleFocus = (e) => {
+    console.log('focus');
+    if (checkRefetch()) {
+      console.log('its okay to refetch');
+      queryFocus(e);
+    } else {
+      console.log('god no dont do it');
+    }
+  };
+
+  // const handleBlur = function () {
+  //   console.log('blur');
+  //   window.localStorage.setItem('userLeftTab', Date.now());
+  // };
+
+  const handleVisibilityChange = function (e) {
+    console.log('visible');
+    if (document.visibilityState === 'visible') {
+      handleFocus(e);
+    }
+  };
+
+  if (typeof window !== 'undefined' && window.addEventListener) {
+    // window.addEventListener('blur', handleBlur);
+    window.addEventListener('focus', handleFocus, false);
+    window.addEventListener('visibilitychange', handleVisibilityChange, false);
+  }
+
+  return () => {
+    // window.removeEventListener('blur', handleBlur);
+    clearTimeout(timeout);
+    window.removeEventListener('focus', handleFocus);
+    window.removeEventListener('visibilitychange', handleVisibilityChange);
+  };
+};
+
+export const mapToObject = (array, fnc, key) => {
+  const obj = {};
+  for (const item of array) {
+    obj[item[key]] = fnc(item);
+  }
+
+  return obj;
+};
+
+export const useObjectFitPolyfill = () => {
+  useEffect(() => {
+    console.log(window.objectFitPolyfill);
+    if (!window.objectFitPolyfill) return;
+    window.objectFitPolyfill();
+    setTimeout(() => {
+      window.objectFitPolyfill();
+    }, 600);
+  }, []);
 };

@@ -1,6 +1,7 @@
 // if you need it
 import 'react-app-polyfill/ie11';
 import 'react-app-polyfill/stable';
+import 'intersection-observer';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -19,3 +20,4 @@ ReactDOM.render(
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA
 serviceWorker.register();
+// serviceWorker.unregister();

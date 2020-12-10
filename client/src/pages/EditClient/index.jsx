@@ -40,7 +40,6 @@ const EditClient = () => {
     getClient({ slug })
   );
   const cache = useQueryCache();
-  console.log(cache);
   const client = useMemo(
     () =>
       !isLoading
@@ -51,7 +50,6 @@ const EditClient = () => {
     [isLoading, data]
   );
 
-  console.log(client);
   if (!client) return null;
   return (
     <>

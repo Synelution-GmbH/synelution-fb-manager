@@ -27,7 +27,6 @@ const requestPermission = () =>
     else {
       Notification.requestPermission()
         .then(function (permission) {
-          console.log(permission);
           // If the user accepts, let's create a notification
           if (permission === 'granted') {
             new Notification('Thanks you will be notified!');
@@ -50,10 +49,8 @@ export const GetNotified = (props) => {
 
   useEffect(() => {
     (async function () {
-      console.log('hi');
       if (Notification.permission !== 'granted') return;
       const registration = await navigator.serviceWorker.ready;
-      console.log(registration);
       const subscription = await registration.pushManager.getSubscription();
       if (subscription) return setEnabled(true);
     })();

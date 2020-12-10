@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button } from '@material-ui/core';
+import { Button, Tooltip } from '@material-ui/core';
 import { AwesomeIcon } from '../Icons/Icon';
 import { askClipboardPermissions } from './helper';
 
@@ -13,13 +13,11 @@ const getPngBlob = ({ src }) =>
     const c = document.createElement('canvas');
     const ctx = c.getContext('2d');
     const img = new Image();
-    console.log('asd');
     img.onload = () => {
       c.height = img.height;
       c.width = img.width;
       ctx.drawImage(img, 0, 0);
       const newName = src.replace(/\.\w{1,}$/g, '.png');
-      console.log(newName);
       c.toBlob(
         function (blob) {
           resolve(blob);
@@ -31,7 +29,7 @@ const getPngBlob = ({ src }) =>
     img.src = src;
   });
 
-export const CopyToClipboard = ({ value, ...props }) => {
+export const CopyToClipboard = ({ value, type, ...props }) => {
   const [copied, setCopied] = useState(false);
   const saveToClipboard = async (e) => {
     e.stopPropagation();
@@ -60,17 +58,36 @@ export const CopyToClipboard = ({ value, ...props }) => {
       }, 1000);
   }, [copied]);
 
-  return (
-    <Button
-      variant="contained"
-      {...props}
-      color="primary"
-      onClick={saveToClipboard}
-      size="medium"
-      style={{ padding: '8px 16px' }}
-      endIcon={<AwesomeIcon icon="copy" style={{ marginLeft: '8px' }} />}
-    >
-      {copied ? 'Copied' : 'Copy'}
-    </Button>
-  );
+  switch (type) {
+    case 'icon':
+      return (
+        <Tooltip title={copied ? 'Copied' : 'Copy'} placement="top">
+          <Button
+            variant="contained"
+            {...props}
+            color="primary"
+            onClick={saveToClipboard}
+            size="medium"
+            style={{ padding: '10px', fontSize: 'inherit', minWidth: 'auto' }}
+          >
+            <AwesomeIcon icon="copy" />
+          </Button>
+        </Tooltip>
+      );
+
+    default:
+      return (
+        <Button
+          variant="contained"
+          {...props}
+          color="primary"
+          onClick={saveToClipboard}
+          size="medium"
+          style={{ padding: '8px 16px' }}
+          endIcon={<AwesomeIcon icon="copy" style={{ marginLeft: '8px' }} />}
+        >
+          {copied ? 'Copied' : 'Copy'}
+        </Button>
+      );
+  }
 };

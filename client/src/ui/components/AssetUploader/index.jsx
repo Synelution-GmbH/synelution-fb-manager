@@ -6,15 +6,19 @@ import {
   Paper,
   Typography,
 } from '@material-ui/core';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { AwesomeIcon } from '../Icons/Icon';
 
 import { Video } from './Video';
+import { useAssetUploaderDispatch } from './AssetUploaderContext';
+import { useAssetUploader } from './AssetUploaderContext';
+export * from './AssetUploaderContext';
+export * from './AssetUploaderList';
 
 const useStyles = makeStyles((theme) => ({
   root: () => ({
-    overflow: 'hidden',
+    overflow: 'visible',
     position: 'relative',
     paddingTop: '100%',
     '& > .MuiCardContent-root': {
@@ -55,51 +59,63 @@ export const AssetUploader = ({
   preview = null,
   children,
 }) => {
-  const [image, setImage] = useState();
-  const [video, setVideo] = useState();
+  const { dispatch } = useAssetUploaderDispatch();
+  const { previewIndex, assets } = useAssetUploader();
 
   const onDrop = useCallback(
     async (acceptedFiles) => {
-      const file = acceptedFiles[0];
-      setFile(file);
-      const reader = new FileReader();
-      if (file.type.search('video') !== -1) return;
-      reader.onabort = () => console.log('file reading was aborted');
-      reader.onerror = () => console.log('file reading has failed');
-      reader.onload = async () => {
-        // Do whatever you want with the file contents
-        const binaryStr = reader.result;
-        setImage(binaryStr);
-        setDataUrl(binaryStr);
-      };
-      // reader.readAsArrayBuffer(file);
-      reader.readAsDataURL(file);
+      acceptedFiles.forEach((file) => {
+        const reader = new FileReader();
+
+        reader.onabort = () => console.log('file reading was aborted');
+        reader.onerror = () => console.log('file reading has failed');
+        reader.onload = async () => {
+          // Do whatever you want with the file contents
+          const binaryStr = reader.result;
+          const mp4 = file.type.search('mp4') !== -1;
+          dispatch({
+            type: 'add_asset',
+            payload: { name: file.name, path: binaryStr, image: !mp4, video: mp4 },
+          });
+          setDataUrl(binaryStr);
+        };
+        // reader.readAsArrayBuffer(file);
+        reader.readAsDataURL(file);
+      });
+
+      setFile(acceptedFiles);
     },
     [setFile, setDataUrl]
   );
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
-    maxFiles: 1,
-    multiple: false,
+    maxFiles: 10,
+    multiple: true,
   });
 
-  const classes = useStyles({ isDragActive, hide: image || video, image });
+  const classes = useStyles({ isDragActive, hide: previewIndex });
 
-  useEffect(() => {
-    if (!preview || !preview.path) return;
-    if (preview.image) return setImage(preview.path);
-    if (preview.video) return setVideo(preview.path);
-  }, [preview]);
-  console.log(image);
   return (
     <>
       <Card
         className={classes.root}
-        style={image ? { backgroundImage: `url(${image})` } : null}
-        {...getRootProps()}
+        style={
+          previewIndex && assets[previewIndex].image
+            ? { backgroundImage: `url(${assets[previewIndex].path})` }
+            : null
+        }
       >
-        {video ? <Video src={video}></Video> : null}
-        <CardContent>
+        <CardContent
+          {...getRootProps({
+            onClick: () => {
+              console.log('dropzuone click');
+              window.localStorage.setItem('dont-refetch', 'dont, just dont >-<');
+            },
+          })}
+        >
+          {previewIndex && assets[previewIndex].video ? (
+            <Video src={assets[previewIndex].path}></Video>
+          ) : null}
           <Paper
             className={classes.upload}
             variant="outlined"

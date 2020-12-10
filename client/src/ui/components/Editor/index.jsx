@@ -8,8 +8,9 @@ import {
   Tooltip,
   Typography,
 } from '@material-ui/core';
-import React, { useRef } from 'react';
+import React, { useCallback, useRef } from 'react';
 import { Editable, Slate } from 'slate-react';
+import { useInView } from 'react-intersection-observer';
 
 import { EmojiePicker } from './EmojiPicker';
 import { CopyToClipboard } from './CopyToClipboard';
@@ -47,7 +48,7 @@ const useStyles = makeStyles((theme) => {
     },
     toolbar: {
       padding: `${theme.spacing(1)}px ${theme.spacing(2)}px`,
-      zIndex: 20,
+      // zIndex: 20,
       backgroundColor: theme.palette.grey[100],
       width: '100%',
     },
@@ -65,6 +66,7 @@ export const Editor = ({
   disabled = false,
   ...props
 }) => {
+  const { ref, inView } = useInView();
   // const socket = useSocket();
   // const editor = useMemo(() => withHistory(withReact(createEditor())), []);
   const classes = useStyles();
@@ -93,8 +95,18 @@ export const Editor = ({
   //   });
   // }, []);
 
+  const onSelect = useCallback(
+    (text) => {
+      if (!editor.selection) {
+        editor.selection = selection.current;
+      }
+      editor.insertText(text);
+    },
+    [editor]
+  );
+
   return (
-    <Card className={classes.root} style={style}>
+    <Card ref={ref} className={classes.root} style={style}>
       <Grid
         container
         direction="column"
@@ -117,20 +129,16 @@ export const Editor = ({
         {toolbar ? (
           <Toolbar className={classes.toolbar} variant="dense" p={1}>
             <Grid container justify="space-between" alignItems="center">
-              <Grid item sm={4}>
+              <Grid item>
                 <Grid container justify="flex-start">
                   <EmojiePicker
                     className="emoji-picker tool"
-                    onSelect={(text) => {
-                      if (!editor.selection) {
-                        editor.selection = selection.current;
-                      }
-                      editor.insertText(text);
-                    }}
+                    renderPicker={inView}
+                    onSelect={onSelect}
                   />
                 </Grid>
               </Grid>
-              <Grid item sm={8}>
+              <Grid item>
                 <Grid container justify="flex-end">
                   {children}
                   <CopyToClipboard value={serializedValue} />

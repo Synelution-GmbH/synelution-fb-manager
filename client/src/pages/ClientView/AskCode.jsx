@@ -11,6 +11,8 @@ import {
 } from '@material-ui/core';
 import { useAuth, checkCode } from 'services';
 import { useQueryCache } from 'react-query';
+import { Loader } from 'ui/components/Loader';
+
 const useStyles = makeStyles((theme) => ({
   buttonProgress: {
     color: theme.palette.success.main,
@@ -27,7 +29,7 @@ export const AskCode = ({ id, QUERY }) => {
   const [open, setOpen] = useState(false);
   const [code, setCode] = useState('');
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState('');
+  const [loading, setLoading] = useState(true);
   const cache = useQueryCache();
 
   const handleOpen = () => setOpen(true);
@@ -50,46 +52,65 @@ export const AskCode = ({ id, QUERY }) => {
   };
 
   useEffect(() => {
-    if (!user) return handleOpen();
+    (async () => {
+      try {
+        setLoading(true);
+        const res = await checkCode({ code: 'check', id });
+        cache.setQueryData(QUERY, () => res.queryData);
+        setUser({ ...res.code, username: res.code.name, role: 'guest' });
+        handleClose();
+        setLoading(false);
+        console.log(res);
+      } catch (error) {
+        console.log(error);
+        setLoading(false);
+        if (!user) return handleOpen();
+      }
+    })();
+  }, []);
+  useEffect(() => {
+    // if (!user) return handleOpen();
   }, [user]);
-
+  console.log(loading);
   return (
-    <Dialog
-      open={open}
-      onBackdropClick={(e) => {
-        console.log(e);
-        e.preventDefault();
-      }}
-    >
-      <form onSubmit={handleSubmit}>
-        <DialogTitle>Geben Sie Ihren Code ein ԅ(≖‿≖ԅ)</DialogTitle>
-        <DialogContent>
-          <TextField
-            value={code}
-            onChange={(e) => setCode(e.target.value)}
-            label="Code"
-            fullWidth
-            margin="dense"
-            variant="outlined"
-            focused
-            autoFocus
-            error={error ? true : false}
-            helperText={error}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button
-            disabled={code ? false : true || loading}
-            color="primary"
-            onClick={handleSubmit}
-          >
-            Absenden
-            {loading ? (
-              <CircularProgress className={classes.buttonProgress} size={24} />
-            ) : null}
-          </Button>
-        </DialogActions>
-      </form>
-    </Dialog>
+    <>
+      <Loader loading={loading} />
+      <Dialog
+        open={open}
+        onBackdropClick={(e) => {
+          e.preventDefault();
+        }}
+      >
+        <form onSubmit={handleSubmit}>
+          <DialogTitle>Geben Sie Ihren Code ein ԅ(≖‿≖ԅ)</DialogTitle>
+          <DialogContent>
+            <TextField
+              value={code}
+              onChange={(e) => setCode(e.target.value)}
+              label="Code"
+              fullWidth
+              margin="dense"
+              variant="outlined"
+              focused
+              autoFocus
+              error={error ? true : false}
+              helperText={error}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button
+              disabled={code ? false : true || loading}
+              color="primary"
+              onClick={handleSubmit}
+            >
+              Absenden
+              {loading ? (
+                <CircularProgress className={classes.buttonProgress} size={24} />
+              ) : null}
+            </Button>
+          </DialogActions>
+        </form>
+      </Dialog>
+    </>
   );
 };

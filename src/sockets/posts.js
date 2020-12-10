@@ -28,7 +28,7 @@ const getEmailText = (key, data) => {
     case 'approved':
       return data[key]
         ? 'Post wurde freigegeben!'
-        : 'Post freigabe wurde wiederrufen!';
+        : 'Post freigabe wurde widerrufen!';
 
     case 'imageChanges':
       return `Bild Korrekturen: <br> ${data[key].text}`;
@@ -39,9 +39,13 @@ const getEmailText = (key, data) => {
 };
 
 export default ({ socket, posts }) => {
-  socket.on('update post', async ({ id, ...rest }) => {
+  socket.on('update post', async ({ id, NO_DB, ...rest }) => {
+    console.log(rest);
+    if (NO_DB) return socket.to(id).emit('update post', { id, data: rest });
+
     try {
-      const post = posts[id] ? posts[id].post : await Post.findById(id);
+      const post = await Post.findById(id);
+      // const post = posts[id] ? posts[id].post : await Post.findById(id);
       for (const key in rest) {
         if (key === 'asset') continue;
         post[key] = rest[key];
