@@ -47,9 +47,9 @@ export const setQueryFocusHandler = (queryFocus) => {
     return !dontRefetch;
   };
   const handleFocus = (e) => {
-    console.log('focus');
+    // console.log('focus');
     if (checkRefetch()) {
-      console.log('its okay to refetch');
+      // console.log('its okay to refetch');
       queryFocus(e);
     } else {
       console.log('god no dont do it');

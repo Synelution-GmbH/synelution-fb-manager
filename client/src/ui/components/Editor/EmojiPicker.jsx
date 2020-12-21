@@ -108,23 +108,7 @@ export const EmojiePicker = React.memo(
                       <AwesomeIcon icon="redo" />
                     </div>
                   </Tooltip>
-                  <NimblePicker
-                    onClick={() => console.log('click')}
-                    onLeave={() => console.log('leave')}
-                    notFoundEmoji="sob"
-                    title="Emojies"
-                    set="facebook"
-                    data={data}
-                    onSelect={(emoji) => {
-                      onSelect(emoji.native);
-                      // setOpen(false);
-                    }}
-                    // onClick={(emoji) => {
-                    //   console.log(emoji);
-                    //   onSelect(emoji.native);
-                    //   setOpen(false);
-                    // }}
-                  />
+                  <Picker onSelect={onSelect} />
                 </div>
               ) : null
             }
@@ -135,3 +119,24 @@ export const EmojiePicker = React.memo(
     );
   }
 );
+
+const Picker = React.memo(({ onSelect }) => {
+  console.log('picker');
+  return (
+    <NimblePicker
+      notFoundEmoji="sob"
+      title="Emojies"
+      set="facebook"
+      data={data}
+      onSelect={(emoji) => {
+        onSelect(emoji.native);
+        // setOpen(false);
+      }}
+      // onClick={(emoji) => {
+      //   console.log(emoji);
+      //   onSelect(emoji.native);
+      //   setOpen(false);
+      // }}
+    />
+  );
+});

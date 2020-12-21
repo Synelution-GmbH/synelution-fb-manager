@@ -12,6 +12,7 @@ import {
 } from '@material-ui/core';
 import React, { useState } from 'react';
 import { AssetUploader } from 'ui/components/AssetUploader';
+import { AssetUploaderProvider } from 'ui/components/AssetUploader/AssetUploaderContext';
 import { AwesomeIcon } from 'ui/components/Icons/Icon';
 
 const useStyles = makeStyles((theme) => ({
@@ -47,6 +48,13 @@ export const CreateClient = ({ addClient = () => {} }) => {
     } catch (error) {
       setLoading(false);
     }
+  };
+
+  const updateImage = async (files) => {
+    setFile(files[0])
+    // const post = await putPost({ id, data });
+
+ 
   };
 
   const handleOpen = () => setOpen(true);
@@ -93,7 +101,9 @@ export const CreateClient = ({ addClient = () => {} }) => {
             type="text"
           /> */}
           <InputLabel style={{ margin: '16px 0 8px' }}>Profile Picture</InputLabel>
-          <AssetUploader setFile={setFile} />
+          <AssetUploaderProvider >
+            <AssetUploader multiple={false} setFile={updateImage} />
+          </AssetUploaderProvider>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
