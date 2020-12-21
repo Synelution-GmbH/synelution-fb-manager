@@ -57,6 +57,7 @@ export const AssetUploader = ({
   setFile = () => {},
   setDataUrl = () => {},
   preview = null,
+  multiple= true,
   children,
 }) => {
   const { dispatch } = useAssetUploaderDispatch();
@@ -90,7 +91,7 @@ export const AssetUploader = ({
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     maxFiles: 10,
-    multiple: true,
+    multiple: multiple,
   });
 
   const classes = useStyles({ isDragActive, hide: previewIndex });
