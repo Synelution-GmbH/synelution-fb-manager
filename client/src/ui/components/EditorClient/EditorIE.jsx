@@ -4,7 +4,6 @@ import { withHistory } from 'slate-history';
 import { withReact } from 'slate-react';
 import { Editor } from '../Editor';
 import { IE } from 'utils';
-import { logDOM } from '@testing-library/react';
 import { TextareaAutosize } from '@material-ui/core';
 
 const defaultValue = [

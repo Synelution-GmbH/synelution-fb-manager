@@ -121,7 +121,6 @@ export const EmojiePicker = React.memo(
 );
 
 const Picker = React.memo(({ onSelect }) => {
-  console.log('picker');
   return (
     <NimblePicker
       notFoundEmoji="sob"

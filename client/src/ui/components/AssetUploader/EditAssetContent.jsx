@@ -9,7 +9,6 @@ import {
   makeStyles,
   TextField,
 } from '@material-ui/core';
-import { logDOM } from '@testing-library/react';
 import React, { useRef, useState } from 'react';
 import { EditorClient } from '../EditorClient';
 import { AwesomeIcon } from '../Icons/Icon';

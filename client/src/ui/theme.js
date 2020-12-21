@@ -44,7 +44,7 @@ const themeIG = createMuiTheme({
   },
 });
 
-console.log(theme);
+// console.log(theme);
 
 export const Theme = ({ children }) => {
   let dateParams = useRouteMatch('/:client/posts/:type');
