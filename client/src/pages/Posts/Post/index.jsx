@@ -96,7 +96,11 @@ export const Post = React.memo(
       console.log(update);
 
       saveTimeout.current = setTimeout(() => {
-        if (post.checked && !update.checked) {
+        if (
+          post.checked &&
+          !update.checked &&
+          typeof update.published === 'undefined'
+        ) {
           update.checked = false;
         }
         socket.emit('update post', { id, ...update });
