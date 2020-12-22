@@ -128,6 +128,7 @@ export const ClientToolbox = React.memo(
           </List>
         </Dialog>
         <PublishButton
+          style={{ marginLeft: '30px' }}
           className={classes.button}
           onClick={() => {
             updatePost({ published: !published });
@@ -139,13 +140,12 @@ export const ClientToolbox = React.memo(
   }
 );
 
-const PublishButton = ({ published, ...props }) => {
+const PublishButton = ({ published, onClick, ...props }) => {
   const { user } = useAuth();
-  // user.role === 'proofreader' ?
   return (
     <Button
       {...props}
-      style={{ marginLeft: '10px' }}
+      onClick={user.role === 'proofreader' ? onClick : () => {}}
       startIcon={<AwesomeIcon icon={published ? 'check-circle' : 'times-circle'} />}
       variant="contained"
     >
