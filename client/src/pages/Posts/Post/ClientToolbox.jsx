@@ -1,6 +1,7 @@
 import {
   Avatar,
   Badge,
+  Button,
   Checkbox,
   Dialog,
   DialogTitle,
@@ -13,6 +14,7 @@ import {
 } from '@material-ui/core';
 import React, { useMemo, useState } from 'react';
 import { AwesomeIcon } from 'ui/components/Icons/Icon';
+import { useAuth } from 'services';
 
 const useStyles = makeStyles((theme) => ({
   avatar: ({ approved }) => ({
@@ -26,11 +28,27 @@ const useStyles = makeStyles((theme) => ({
     width: theme.spacing(5.5),
     height: theme.spacing(5.5),
   },
+  button: ({ published }) => ({
+    backgroundColor: published
+      ? theme.palette.success.main
+      : theme.palette.grey[300],
+    '&:hover': {
+      backgroundColor: published
+        ? theme.palette.success.dark
+        : theme.palette.grey[300],
+    },
+  }),
 }));
 
 export const ClientToolbox = React.memo(
-  ({ approved, clientCorrected, imageChanges: ic, updatePost }) => {
-    const classes = useStyles({ approved });
+  ({
+    approved,
+    clientCorrected,
+    imageChanges: ic,
+    updatePost,
+    published = false,
+  }) => {
+    const classes = useStyles({ approved, published });
     const [open, setOpen] = useState(false);
     const [imageChanges, setImageChanges] = useState(ic);
     const handleOpen = () => setOpen(true);
@@ -41,6 +59,7 @@ export const ClientToolbox = React.memo(
       [imageChanges]
     );
     const imageChangesExist = imageChanges.length > 0;
+
     return (
       <>
         <Tooltip title={approved ? 'Freigegeben' : 'nicht Freigegeben'}>
@@ -108,7 +127,29 @@ export const ClientToolbox = React.memo(
             ))}
           </List>
         </Dialog>
+        <PublishButton
+          className={classes.button}
+          onClick={() => {
+            updatePost({ published: !published });
+          }}
+          published={published}
+        />
       </>
     );
   }
 );
+
+const PublishButton = ({ published, ...props }) => {
+  const { user } = useAuth();
+  // user.role === 'proofreader' ?
+  return (
+    <Button
+      {...props}
+      style={{ marginLeft: '10px' }}
+      startIcon={<AwesomeIcon icon={published ? 'check-circle' : 'times-circle'} />}
+      variant="contained"
+    >
+      Veröffentlicht
+    </Button>
+  );
+};

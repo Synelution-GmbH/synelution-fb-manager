@@ -41,6 +41,7 @@ const reducer = (state, action) => {
 export const Post = React.memo(
   ({
     approved,
+    published,
     clientCorrected,
     imageChanges,
     date,
@@ -92,6 +93,8 @@ export const Post = React.memo(
     const updatePost = (update) => {
       dispatch({ type: 'update_post', payload: update });
       clearTimeout(saveTimeout.current);
+      console.log(update);
+
       saveTimeout.current = setTimeout(() => {
         if (post.checked && !update.checked) {
           update.checked = false;
@@ -126,6 +129,7 @@ export const Post = React.memo(
               clientCorrected={clientCorrected}
               imageChanges={imageChanges}
               updatePost={updatePost}
+              published={published}
             />
           </Grid>
         </Grid>

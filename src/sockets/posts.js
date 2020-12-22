@@ -50,6 +50,7 @@ export default ({ socket, posts }) => {
         if (key === 'asset') continue;
         post[key] = rest[key];
       }
+      console.log(post);
 
       await post.save();
       socket.to(id).emit('update post', { id, data: rest });

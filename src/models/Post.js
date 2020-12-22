@@ -9,6 +9,7 @@ const postSchema = new mongoose.Schema({
   content: String,
   approved: Boolean,
   clientCorrected: Boolean,
+  published: Boolean,
   asset: {
     path: String,
     type: { type: String },
