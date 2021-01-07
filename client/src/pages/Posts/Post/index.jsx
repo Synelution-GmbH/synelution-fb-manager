@@ -1,5 +1,5 @@
 import React, { useEffect, useReducer, useRef, useState } from 'react';
-import { Grid, InputAdornment, TextField } from '@material-ui/core';
+import { Grid, InputAdornment, makeStyles, TextField } from '@material-ui/core';
 
 import { DeleteButton } from './DeleteButton';
 import { useSocket } from 'services/socket-provider';
@@ -13,6 +13,15 @@ import { ClientToolbox } from './ClientToolbox';
 import { Asset } from './Asset';
 import { AssetUploaderProvider } from 'ui/components/AssetUploader/AssetUploaderContext';
 import { PreviewPostButton } from './PreviewPostButton';
+
+const useStyles = makeStyles((theme) => ({
+  budgeButton: {
+    maxWidth: '140px',
+    // position: 'absolute',
+    // bottom: theme.spacing(1),
+    // right: theme.spacing(1),
+  },
+}));
 
 export const useUpdate = () => {
   const cache = useQueryCache();
@@ -46,6 +55,7 @@ export const Post = React.memo(
     imageChanges,
     date,
     budget,
+    budgetIG = 0,
     content,
     assets = [],
     assetOrder = [],
@@ -58,6 +68,8 @@ export const Post = React.memo(
     to,
   }) => {
     const { updateCache } = useUpdate();
+    const classes = useStyles();
+
     // const [post, setPost] = useState({
     //   budget,
     //   date,
@@ -68,6 +80,7 @@ export const Post = React.memo(
     // });
     const [post, dispatch] = useReducer(reducer, {
       budget,
+      budgetIG,
       date,
       content,
       assets,
@@ -114,13 +127,25 @@ export const Post = React.memo(
         <Grid item xs={10}>
           <Grid container>
             <TextField
-              label="Budget"
+              className={classes.budgeButton}
+              label="Budget Facebook"
               variant="outlined"
               onChange={(e) => updatePost({ budget: e.target.value })}
               value={post.budget}
               InputProps={{
                 startAdornment: <InputAdornment position="start">€</InputAdornment>,
               }}
+            />
+            <TextField
+              className={classes.budgeButton}
+              label="Budget Instagram"
+              variant="outlined"
+              onChange={(e) => updatePost({ budgetIG: e.target.value })}
+              value={post.budgetIG}
+              InputProps={{
+                startAdornment: <InputAdornment position="start">€</InputAdornment>,
+              }}
+              style={{ marginLeft: '8px' }}
             />
             <PostDatePicker
               value={post.date}

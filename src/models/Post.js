@@ -6,6 +6,7 @@ const postSchema = new mongoose.Schema({
   type: String,
   date: Number,
   budget: Number,
+  budgetIG: Number,
   content: String,
   approved: Boolean,
   clientCorrected: Boolean,

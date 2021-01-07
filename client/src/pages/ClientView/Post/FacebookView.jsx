@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
     lineHeight: 1.3333,
   },
   date: {
-    lineHeight: 1.2308,
+    // lineHeight: 1.2308,
     fontFamily: 'Segoe UI, Helvetica, Arial, sans-serif',
     fontSize: '.8125em',
     color: '#65676b',
@@ -63,6 +63,7 @@ export const FacebookView = ({
   assets,
   children,
   assetOrder,
+  ...props
 }) => {
   const classes = useStyles();
   return (
@@ -74,9 +75,22 @@ export const FacebookView = ({
             <Typography className={classes.title} variant="h6">
               {client.facebookName}
             </Typography>
-            <Typography className={classes.date} variant="caption">
-              {dateFormatted} · <AwesomeIcon icon="globe-americas" />
-            </Typography>
+            <Grid container justify="space-between" align-items="center">
+              <Typography className={classes.date} variant="caption">
+                {dateFormatted} · <AwesomeIcon icon="globe-americas" />
+              </Typography>
+              <div>
+                <Typography className={classes.date} variant="caption">
+                  {' '}
+                  <AwesomeIcon prefix="fab" icon="facebook-square" /> {props.budget}{' '}
+                  €
+                </Typography>
+                <Typography className={classes.date} variant="caption">
+                  {' '}
+                  <AwesomeIcon prefix="fab" icon="instagram" /> {props.budgetIG} €
+                </Typography>
+              </div>
+            </Grid>
           </div>
         </Grid>
       </CardContent>

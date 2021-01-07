@@ -30,7 +30,11 @@ import {
   faDownload,
 } from '@fortawesome/free-solid-svg-icons';
 
-import { faInstagram, faFacebook } from '@fortawesome/free-brands-svg-icons';
+import {
+  faInstagram,
+  faFacebook,
+  faFacebookSquare,
+} from '@fortawesome/free-brands-svg-icons';
 import {
   faChevronRight,
   faChevronLeft,
@@ -51,6 +55,7 @@ library.add(
   faSmile,
   faInstagram,
   faFacebook,
+  faFacebookSquare,
   faCopy,
   faClipboardCheck,
   faPlus,
