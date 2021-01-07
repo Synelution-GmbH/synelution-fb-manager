@@ -82,12 +82,13 @@ export const FacebookView = ({
               <div>
                 <Typography className={classes.date} variant="caption">
                   {' '}
-                  <AwesomeIcon prefix="fab" icon="facebook-square" /> {props.budget}{' '}
-                  €
+                  <AwesomeIcon prefix="fab" icon="facebook-square" />{' '}
+                  {props.budget || 0} €
                 </Typography>
                 <Typography className={classes.date} variant="caption">
                   {' '}
-                  <AwesomeIcon prefix="fab" icon="instagram" /> {props.budgetIG} €
+                  <AwesomeIcon prefix="fab" icon="instagram" />{' '}
+                  {props.budgetIG || 0} €
                 </Typography>
               </div>
             </Grid>
