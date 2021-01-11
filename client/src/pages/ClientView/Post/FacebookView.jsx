@@ -7,6 +7,8 @@ import {
   Typography,
 } from '@material-ui/core';
 import React from 'react';
+import { useAuth } from 'services';
+import { useAssetUploader } from 'ui/components/AssetUploader/AssetUploaderContext';
 import { AwesomeIcon } from 'ui/components/Icons/Icon';
 import { AssetPicker } from './AssetPicker';
 
@@ -65,6 +67,7 @@ export const FacebookView = ({
   assetOrder,
   ...props
 }) => {
+  const { user } = useAuth();
   const classes = useStyles();
   return (
     <Card className={classes.card}>
@@ -79,18 +82,20 @@ export const FacebookView = ({
               <Typography className={classes.date} variant="caption">
                 {dateFormatted} · <AwesomeIcon icon="globe-americas" />
               </Typography>
-              <div>
-                <Typography className={classes.date} variant="caption">
-                  {' '}
-                  <AwesomeIcon prefix="fab" icon="facebook-square" />{' '}
-                  {props.budget || 0} €
-                </Typography>
-                <Typography className={classes.date} variant="caption">
-                  {' '}
-                  <AwesomeIcon prefix="fab" icon="instagram" />{' '}
-                  {props.budgetIG || 0} €
-                </Typography>
-              </div>
+              {user.role !== 'guest' ? (
+                <div>
+                  <Typography className={classes.date} variant="caption">
+                    {' '}
+                    <AwesomeIcon prefix="fab" icon="facebook-square" />{' '}
+                    {props.budget || 0} €
+                  </Typography>
+                  <Typography className={classes.date} variant="caption">
+                    {' '}
+                    <AwesomeIcon prefix="fab" icon="instagram" />{' '}
+                    {props.budgetIG || 0} €
+                  </Typography>
+                </div>
+              ) : null}
             </Grid>
           </div>
         </Grid>
