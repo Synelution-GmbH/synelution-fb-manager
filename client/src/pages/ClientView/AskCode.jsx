@@ -82,7 +82,10 @@ export const AskCode = ({ id, QUERY }) => {
         }}
       >
         <form onSubmit={handleSubmit}>
-          <DialogTitle>Geben Sie Ihren Code ein ԅ(≖‿≖ԅ)</DialogTitle>
+          <DialogTitle>
+            Geben Sie Ihren Code ein{' '}
+            {process.env.NODE_ENV === 'development' ? 'ԅ(≖‿≖ԅ)' : ''}
+          </DialogTitle>
           <DialogContent>
             <TextField
               value={code}
