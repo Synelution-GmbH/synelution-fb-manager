@@ -21,7 +21,6 @@ export const ServiceWorkerProvider = (props) => {
     });
   }, []);
 
-  console.log(state);
   return (
     <>
       <ServiceWorkerContext.Provider value={state} {...props} />
