@@ -5,6 +5,7 @@ import 'scss/index.min.css';
 import { AuthProvider, useAuth } from './services/auth-provider';
 import ScrollRestoration from './router/scrollRestoration';
 import { Theme } from 'ui/theme';
+import { ServiceWorkerNotice } from './ServiceWorkerNotice';
 
 const AuthenticatedApp = React.lazy(() => import('./AuthenticatedApp'));
 const UnauthenticatedApp = React.lazy(() => import('./UnauthenticatedApp'));
@@ -16,6 +17,7 @@ export const App = () => {
       <ScrollRestoration>
         <Theme>
           <AuthProvider>
+            <ServiceWorkerNotice />
             <AuthSwitcher />
           </AuthProvider>
         </Theme>
