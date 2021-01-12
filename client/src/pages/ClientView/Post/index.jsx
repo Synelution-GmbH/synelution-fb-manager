@@ -94,6 +94,7 @@ export const Post = ({ QUERY, date, approved, id, content, type, ...props }) => 
               id={id}
               style={{ marginRight: '8px' }}
               color="primary"
+              disabled={approved}
               onSave={() => {
                 setMsg({
                   toggle: !msg.toggle,
@@ -117,7 +118,7 @@ export const Post = ({ QUERY, date, approved, id, content, type, ...props }) => 
                     icon={correctionMode ? 'check-circle' : 'pen'}
                   />
                 }
-                disabled={correctionMode && !clientText}
+                disabled={approved || (correctionMode && !clientText)}
                 onClick={() => {
                   if (correctionMode && clientText) {
                     const clientName = user.username;
