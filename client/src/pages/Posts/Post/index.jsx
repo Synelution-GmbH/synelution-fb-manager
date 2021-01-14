@@ -4,7 +4,6 @@ import { Grid, InputAdornment, makeStyles, TextField } from '@material-ui/core';
 import { DeleteButton } from './DeleteButton';
 import { useSocket } from 'services/socket-provider';
 import { EditorClient } from 'ui/components/EditorClient';
-import { putPost } from 'services';
 import { useQueryCache } from 'react-query';
 import { CheckedButton } from './CheckedButton';
 

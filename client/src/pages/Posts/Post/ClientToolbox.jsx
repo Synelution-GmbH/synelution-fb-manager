@@ -69,8 +69,12 @@ export const ClientToolbox = React.memo(
       <>
         <Tooltip title={approved ? 'Freigegeben' : 'nicht Freigegeben'}>
           <Avatar
-            className={(approved ? ' classes.primary ' : '') + classes.large}
+            className={(approved ? ' rainbow ' : '') + classes.large}
             variant="rounded"
+            style={{ cursor: 'pointer' }}
+            onClick={() => {
+              updatePost({ approved: !approved });
+            }}
           >
             <AwesomeIcon icon="check-circle" />
           </Avatar>
