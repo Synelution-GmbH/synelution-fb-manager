@@ -81,9 +81,10 @@ export default ({ socket, posts }) => {
         }
         console.log(approvedUpdate);
         console.log('hi');
-        const post = await Post.updateOne({ _id: id }, approvedUpdate, {
+        const post = await Post.findOneAndUpdate({ _id: id }, approvedUpdate, {
           new: true,
         });
+        console.log(post);
         fn('success');
         socket.to(id).emit('update post', { id, data: approvedUpdate });
 
