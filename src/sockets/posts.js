@@ -62,6 +62,9 @@ export default ({ socket, posts }) => {
   socket.on(
     'client change',
     async ({ id, clientName, clientEmail, ...update }, fn) => {
+      console.log('client change');
+      console.log(clientName, clientEmail);
+      console.log(update);
       try {
         const post = posts[id] ? posts[id].post : await Post.findById(id);
         const approvedUpdate = {};
@@ -77,6 +80,7 @@ export default ({ socket, posts }) => {
             approvedUpdate[key] = post[key];
           }
         }
+        console.log(approvedUpdate);
 
         await post.save();
         fn('success');
