@@ -64,25 +64,26 @@ export default ({ socket, posts }) => {
     async ({ id, clientName, clientEmail, ...update }, fn) => {
       console.log('client change');
       console.log(clientName, clientEmail);
-      console.log(update);
       try {
-        const post = posts[id] ? posts[id].post : await Post.findById(id);
+        // const post = posts[id] ? posts[id].post : await Post.findById(id);
         const approvedUpdate = {};
         for (const key in update) {
           if (checkUpdate(key)) {
-            post[key] = update[key];
+            // post[key] = update[key];
             approvedUpdate[key] = update[key];
           }
           if (key === 'imageChanges') {
-            if (!post[key]) post[key] = [];
+            // if (!post[key]) post[key] = [];
 
-            post[key].push(update[key]);
-            approvedUpdate[key] = post[key];
+            // post[key].push(update[key]);
+            approvedUpdate['$push'] = { [key]: update[key] };
           }
         }
         console.log(approvedUpdate);
-
-        await post.save();
+        console.log('hi');
+        const post = await Post.updateOne({ _id: id }, approvedUpdate, {
+          new: true,
+        });
         fn('success');
         socket.to(id).emit('update post', { id, data: approvedUpdate });
 
@@ -99,16 +100,11 @@ export default ({ socket, posts }) => {
         console.log(clientName, clientEmail);
         if (process.env.NODE_ENV === 'production')
           await sendMail({
-            // from: clientEmail ? clientEmail : null,
             subject: `${post.type} - ${post.client} - ${formattedDate}`,
             html:
               `<p>${emailBody
                 .join('<br>')
                 .replace(/(?:\r\n|\r|\n)/g, '<br>')}</p>` + `${defaultBody}`,
-            // text: `${emailBody.join('\\n')} <br><br> ${defaultBody}`.replace(
-            //   /<br>/g,
-            //   '\\n'
-            // ),
           });
       } catch (e) {
         console.log(e);

@@ -61,6 +61,7 @@ export const FreigebenBtn = ({ approved, id, QUERY }) => {
               clientEmail,
             },
             (e) => {
+              console.log(e);
               // setLoading(false);
               console.log('invalidate query');
               cache.invalidateQueries(QUERY);
