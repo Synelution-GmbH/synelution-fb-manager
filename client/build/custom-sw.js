@@ -15,3 +15,10 @@ self.addEventListener('notificationclick', function (event) {
   event.notification.close();
   event.waitUntil(clients.openWindow(event.notification.data.url));
 });
+
+self.addEventListener('message', (event) => {
+  if (event.data === 'SKIP_WAITING') {
+    console.log('skipping');
+    self.skipWaiting();
+  }
+});

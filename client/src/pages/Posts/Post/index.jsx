@@ -16,7 +16,7 @@ import { PreviewPostButton } from './PreviewPostButton';
 
 const useStyles = makeStyles((theme) => ({
   budgeButton: {
-    maxWidth: '140px',
+    maxWidth: '120px',
     // position: 'absolute',
     // bottom: theme.spacing(1),
     // right: theme.spacing(1),
@@ -125,7 +125,7 @@ export const Post = React.memo(
     // console.log(post);
     return (
       <Grid container spacing={2} alignItems="stretch">
-        <Grid item xs={10}>
+        <Grid item xs={11}>
           <Grid container>
             <TextField
               className={classes.budgeButton}
@@ -164,7 +164,7 @@ export const Post = React.memo(
             />
           </Grid>
         </Grid>
-        <Grid item xs={2}>
+        <Grid item xs={1}>
           <Grid container justify="flex-end">
             <DeleteButton
               onClick={() => {

@@ -15,10 +15,15 @@ export const ServiceWorkerNotice = () => {
 
   useEffect(() => {
     (async function () {
-      console.log('should work now');
+      if (!('serviceWorker' in navigator)) return;
+      console.log('should work now 2');
       if (update) setOpen(true);
     })();
   }, [update]);
+
+  // useEffect(() => {
+  //   if (!('serviceWorker' in navigator)) return;
+  // }, []);
 
   if (!open) return null;
   return (
@@ -47,8 +52,19 @@ export const ServiceWorkerNotice = () => {
         <Button
           color="primary"
           variant="contained"
-          onClick={() => {
-            window.location.reload(true);
+          onClick={async () => {
+            const registration = await navigator.serviceWorker.ready;
+            if (!registration.waiting) return;
+            navigator.serviceWorker.addEventListener('controllerchange', () => {
+              console.log('controllerchange');
+              window.location.reload();
+              // if (!refreshing) {
+              // refreshing = true;
+              // }
+            });
+            console.log(registration.waiting.postMessage('SKIP_WAITING'));
+
+            // window.location.reload(true);
           }}
         >
           Neu laden
