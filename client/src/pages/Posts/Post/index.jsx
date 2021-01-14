@@ -56,6 +56,7 @@ export const Post = React.memo(
     date,
     budget,
     budgetIG = 0,
+    hidden = false,
     content,
     assets = [],
     assetOrder = [],
@@ -154,6 +155,7 @@ export const Post = React.memo(
               updatePost={updatePost}
             />
             <ClientToolbox
+              hidden={hidden}
               approved={approved}
               clientCorrected={clientCorrected}
               imageChanges={imageChanges}

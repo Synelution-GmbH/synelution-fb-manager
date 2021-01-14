@@ -28,6 +28,10 @@ const useStyles = makeStyles((theme) => ({
     width: theme.spacing(5.5),
     height: theme.spacing(5.5),
   },
+  primary: {
+    backgroundColor: theme.palette.primary.main,
+    color: '#fff',
+  },
   button: ({ published }) => ({
     backgroundColor: published
       ? theme.palette.success.main
@@ -42,6 +46,7 @@ const useStyles = makeStyles((theme) => ({
 
 export const ClientToolbox = React.memo(
   ({
+    hidden,
     approved,
     clientCorrected,
     imageChanges: ic,
@@ -64,7 +69,7 @@ export const ClientToolbox = React.memo(
       <>
         <Tooltip title={approved ? 'Freigegeben' : 'nicht Freigegeben'}>
           <Avatar
-            className={(approved ? ' rainbow ' : '') + classes.large}
+            className={(approved ? ' classes.primary ' : '') + classes.large}
             variant="rounded"
           >
             <AwesomeIcon icon="check-circle" />
@@ -96,6 +101,18 @@ export const ClientToolbox = React.memo(
               <AwesomeIcon icon="image" />
             </Avatar>
           </Badge>
+        </Tooltip>
+        <Tooltip title={'hide post'}>
+          <Avatar
+            onClick={() => {
+              updatePost({ hidden: !hidden });
+            }}
+            className={(hidden ? ` ${classes.primary} ` : '') + classes.large}
+            variant="rounded"
+            style={{ cursor: 'pointer' }}
+          >
+            <AwesomeIcon icon="eye-slash" />
+          </Avatar>
         </Tooltip>
         <Dialog open={open} onClose={handleClose}>
           <DialogTitle>Client Image Changes:</DialogTitle>

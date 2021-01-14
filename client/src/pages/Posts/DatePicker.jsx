@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { DateRangePicker, DateRangeDelimiter } from '@material-ui/pickers';
-import { Avatar, Grid, makeStyles, TextField } from '@material-ui/core';
+import {
+  Avatar,
+  ClickAwayListener,
+  Grid,
+  makeStyles,
+  TextField,
+} from '@material-ui/core';
 import { AwesomeIcon } from 'ui/components/Icons/Icon';
 import { getErrorText } from 'utils';
 
@@ -86,30 +92,32 @@ export const DatePicker = ({ value, handleClose, setValue }) => {
       >
         <AwesomeIcon icon="chevron-left" />
       </Avatar>
-      <DateRangePicker
-        startText="Start-date"
-        endText="End-date"
-        value={date}
-        defaultValue={value}
-        inputFormat="DD.MM.YYYY"
-        disableCloseOnSelect
-        mask="__.__.____"
-        onClose={() => {
-          if (error[0] || error[1]) return;
-          handleClose(date);
-        }}
-        onChange={(newValue) => {
-          setDate(newValue);
-        }}
-        onError={(e) => setError(e.map((err) => getErrorText(err)))}
-        renderInput={(startProps, endProps) => (
-          <React.Fragment>
-            <TextField {...startProps} helperText={error[0]} />
-            <DateRangeDelimiter> to </DateRangeDelimiter>
-            <TextField {...endProps} helperText={error[1]} />
-          </React.Fragment>
-        )}
-      />
+      <ClickAwayListener onClickAway={() => {}}>
+        <DateRangePicker
+          startText="Start-date"
+          endText="End-date"
+          value={date}
+          defaultValue={value}
+          inputFormat="DD.MM.YYYY"
+          disableCloseOnSelect
+          mask="__.__.____"
+          onClose={() => {
+            if (error[0] || error[1]) return;
+            handleClose(date);
+          }}
+          onChange={(newValue) => {
+            setDate(newValue);
+          }}
+          onError={(e) => setError(e.map((err) => getErrorText(err)))}
+          renderInput={(startProps, endProps) => (
+            <React.Fragment>
+              <TextField {...startProps} helperText={error[0]} />
+              <DateRangeDelimiter> to </DateRangeDelimiter>
+              <TextField {...endProps} helperText={error[1]} />
+            </React.Fragment>
+          )}
+        />
+      </ClickAwayListener>
       <Avatar
         className={classes.avatar}
         variant="rounded"

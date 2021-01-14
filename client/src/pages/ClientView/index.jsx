@@ -48,12 +48,14 @@ const PostList = ({ posts, client, QUERY }) => {
           alignItems="flex-start"
           alignContent="flex-start"
         >
-          {posts.map(({ _id, ...postProps }) => (
-            <React.Fragment key={_id}>
-              <Post {...postProps} QUERY={QUERY} id={_id} client={client}></Post>
-              <br />
-            </React.Fragment>
-          ))}
+          {posts.map(({ _id, ...postProps }) =>
+            postProps.hidden ? null : (
+              <React.Fragment key={_id}>
+                <Post {...postProps} QUERY={QUERY} id={_id} client={client}></Post>
+                <br />
+              </React.Fragment>
+            )
+          )}
         </Grid>
       </Container>
     </>
