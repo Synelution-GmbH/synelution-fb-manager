@@ -12,6 +12,7 @@ import { ClientToolbox } from './ClientToolbox';
 import { Asset } from './Asset';
 import { AssetUploaderProvider } from 'ui/components/AssetUploader/AssetUploaderContext';
 import { PreviewPostButton } from './PreviewPostButton';
+import { CommentBox } from './CommentBox';
 
 const useStyles = makeStyles((theme) => ({
   budgeButton: {
@@ -172,7 +173,8 @@ export const Post = React.memo(
             />
           </Grid>
         </Grid>
-        <Grid item xs={12} md={8}>
+        <Grid item xs={12} md={8} style={{ position: 'relative', zIndex: 0 }}>
+          <CommentBox />
           <EditorClient
             id={id}
             content={post.content}

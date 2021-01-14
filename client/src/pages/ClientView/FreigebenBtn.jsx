@@ -49,6 +49,9 @@ export const FreigebenBtn = ({ approved, id, QUERY }) => {
           setLoading(true);
           const clientName = user.username;
           const clientEmail = user.email;
+
+          console.log(clientName);
+          console.log(clientEmail);
           socket.emit(
             'client change',
             {

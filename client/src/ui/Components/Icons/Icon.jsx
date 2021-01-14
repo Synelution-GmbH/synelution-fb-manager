@@ -28,6 +28,7 @@ import {
   faImage,
   faRedo,
   faDownload,
+  faComments,
 } from '@fortawesome/free-solid-svg-icons';
 
 import {
@@ -78,7 +79,8 @@ library.add(
   igComment,
   igShare,
   faDownload,
-  igSave
+  igSave,
+  faComments
 );
 
 export const AwesomeIcon = ({ ...props }) => {

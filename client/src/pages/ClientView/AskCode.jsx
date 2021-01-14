@@ -71,7 +71,7 @@ export const AskCode = ({ id, QUERY }) => {
   useEffect(() => {
     // if (!user) return handleOpen();
   }, [user]);
-  console.log(loading);
+
   return (
     <>
       <Loader loading={loading} />
