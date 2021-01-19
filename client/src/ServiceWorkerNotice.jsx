@@ -17,6 +17,8 @@ export const ServiceWorkerNotice = () => {
     (async function () {
       if (!('serviceWorker' in navigator)) return;
       console.log('should work now 2');
+      const registration = await navigator.serviceWorker.ready;
+      if (!registration.waiting) return;
       if (update) setOpen(true);
     })();
   }, [update]);
@@ -54,7 +56,7 @@ export const ServiceWorkerNotice = () => {
           variant="contained"
           onClick={async () => {
             const registration = await navigator.serviceWorker.ready;
-            if (!registration.waiting) return;
+            if (!registration.waiting) return window.location.reload();
             navigator.serviceWorker.addEventListener('controllerchange', () => {
               console.log('controllerchange');
               window.location.reload();
@@ -62,7 +64,7 @@ export const ServiceWorkerNotice = () => {
               // refreshing = true;
               // }
             });
-            console.log(registration.waiting.postMessage('SKIP_WAITING'));
+            registration.waiting.postMessage('SKIP_WAITING');
 
             // window.location.reload(true);
           }}

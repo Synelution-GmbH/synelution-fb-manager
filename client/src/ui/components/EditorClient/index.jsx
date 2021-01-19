@@ -29,7 +29,6 @@ const deserialize = (string) => {
 };
 
 export const EditorClient = ({
-  id,
   content = null,
   editorRef,
   children,
@@ -37,6 +36,7 @@ export const EditorClient = ({
   editorProps = {},
   disabled = false,
   saveDelay = 1000,
+  ...props
 }) => {
   const [value, setValue] = useState(content ? deserialize(content) : defaultValue);
   const saveTimeout = useRef();
@@ -57,6 +57,7 @@ export const EditorClient = ({
   const serialized = serialize(value);
   return (
     <Editor
+      {...props}
       {...editorProps}
       editor={editor}
       value={value}

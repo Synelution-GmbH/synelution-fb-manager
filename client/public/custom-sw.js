@@ -1,6 +1,7 @@
 console.log('Loaded service worker!');
 
 self.addEventListener('push', (ev) => {
+  if (!ev.data) return console.log('no payload');
   const data = ev.data.json();
   console.log('Got push', data);
   self.registration.showNotification(data.title, {

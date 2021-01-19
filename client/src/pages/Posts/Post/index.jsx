@@ -16,7 +16,7 @@ import { CommentBox } from './CommentBox';
 
 const useStyles = makeStyles((theme) => ({
   budgeButton: {
-    maxWidth: '120px',
+    maxWidth: '135px',
     // position: 'absolute',
     // bottom: theme.spacing(1),
     // right: theme.spacing(1),
@@ -60,6 +60,7 @@ export const Post = React.memo(
     content,
     assets = [],
     assetOrder = [],
+    comments,
     id,
     checked,
     removePost,
@@ -107,7 +108,6 @@ export const Post = React.memo(
     const updatePost = (update) => {
       dispatch({ type: 'update_post', payload: update });
       clearTimeout(saveTimeout.current);
-      console.log(update);
 
       saveTimeout.current = setTimeout(() => {
         if (
@@ -174,7 +174,7 @@ export const Post = React.memo(
           </Grid>
         </Grid>
         <Grid item xs={12} md={8} style={{ position: 'relative', zIndex: 0 }}>
-          <CommentBox />
+          <CommentBox updatePost={updatePost} comments={comments} />
           <EditorClient
             id={id}
             content={post.content}

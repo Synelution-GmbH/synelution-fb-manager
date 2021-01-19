@@ -118,7 +118,7 @@ export const Editor = ({
             {...props}
             readOnly={disabled}
             spellCheck={true}
-            className="editor"
+            className={`editor ${props.className || ''}`}
             placeholder="Beginn typing !!"
             onBlur={() => (selection.current = editor.selection)}
             // renderLeaf={renderLeaf}

@@ -1,6 +1,4 @@
-import { faFontAwesomeLogoFull } from '@fortawesome/free-brands-svg-icons';
 import koaBody from 'koa-body';
-import { use } from 'koa-passport';
 import webpush from 'web-push';
 import User from '../models/User';
 import { v4 as uuidv4 } from 'uuid';
@@ -51,7 +49,7 @@ export default ({ router }) => {
       });
 
       if (proofreader.length <= 0) ctx.throw(404, 'no proofreaders found ( ≧Д≦)');
-console.log(body);
+      console.log(body);
       const payload = JSON.stringify({
         ...body,
         tag: uuidv4(),
