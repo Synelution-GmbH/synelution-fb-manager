@@ -68,6 +68,7 @@ export const Post = React.memo(
     index,
     from,
     to,
+    ...props
   }) => {
     const { updateCache } = useUpdate();
     const classes = useStyles();
@@ -121,6 +122,8 @@ export const Post = React.memo(
         updateCache({ QUERY, index, update });
       }, 500);
     };
+
+    console.log(post);
     // console.log('post');
     // console.log(post);
     return (
@@ -203,6 +206,8 @@ export const Post = React.memo(
           <Asset
             assets={post.assets}
             assetOrder={post.assetOrder}
+            salary={props.salary}
+            employmentType={props.employmentType}
             id={id}
             updatePost={updatePost}
           />

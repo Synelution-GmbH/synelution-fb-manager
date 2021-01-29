@@ -59,13 +59,10 @@ export const CommentBox = ({ updatePost, comments }) => {
   );
   useEffect(() => {
     const left = postContainer.getBoundingClientRect().left;
-    console.log(left);
     if (open && left === 380) return;
 
     if (open) postContainer.style.transform = `translateX(${380 - left}px)`;
     else postContainer.style.transform = 'translateX(0px)';
-
-    console.log();
   }, [open]);
 
   return (

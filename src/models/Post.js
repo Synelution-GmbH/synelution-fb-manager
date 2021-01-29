@@ -13,6 +13,8 @@ const postSchema = new mongoose.Schema({
   published: Boolean,
   hidden: Boolean,
   comments: String,
+  salary: String,
+  employmentType: String,
   asset: {
     path: String,
     type: { type: String },

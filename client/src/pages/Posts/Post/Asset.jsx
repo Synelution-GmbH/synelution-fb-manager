@@ -7,8 +7,8 @@ import { CopyToClipboard } from 'ui/components/Editor/CopyToClipboard';
 import { useAssetUploader } from 'ui/components/AssetUploader/AssetUploaderContext';
 import { putPost, deleteAsset } from 'services';
 import { useAssetUploaderDispatch } from 'ui/components/AssetUploader/AssetUploaderContext';
-import { Autocomplete } from '@material-ui/lab';
 import { DownloadButton, EditButton, DeleteAssetButton } from './Toolbox';
+import { JobPostButton } from './JobPostButton';
 
 const useStyles = makeStyles((theme) => ({
   clipboardButton: {
@@ -39,6 +39,8 @@ export const Asset = ({
   assetOrder: initialAssetOrder,
   id,
   updatePost,
+  salary,
+  employmentType,
 }) => {
   const classes = useStyles();
   const { dispatch } = useAssetUploaderDispatch();
@@ -99,6 +101,13 @@ export const Asset = ({
                 className={classes.edit}
                 name={asset.name}
                 handleEdit={updatePost}
+              />
+              <JobPostButton
+                className={classes.edit}
+                name={asset.name}
+                handleEdit={updatePost}
+                salary={salary}
+                employmentType={employmentType}
               />
               <DeleteAssetButton
                 _id={asset._id}

@@ -108,7 +108,7 @@ export default ({ router }) => {
               uploadPath: file.path,
               fileName,
               savePath,
-              resize: [1500, 1500],
+              resize: [1500, 1500, { fit: 'inside' }],
             });
 
             const fileEnd = fileName.substring(
@@ -164,7 +164,6 @@ export default ({ router }) => {
         await fs.promises.unlink('public' + asset.path);
         await fs.promises.unlink('public' + asset.thumb);
       }
-
 
       ctx.body = post;
     } catch (e) {

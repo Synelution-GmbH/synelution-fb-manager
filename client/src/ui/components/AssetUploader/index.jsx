@@ -29,8 +29,10 @@ const useStyles = makeStyles((theme) => ({
       height: '100%',
       padding: theme.spacing(3),
     },
-    backgroundSize: 'cover',
+    backgroundSize: 'contain',
     backgroundPosition: 'center',
+    backgroundRepeat: 'no-repeat',
+    backgroundColor: 'black',
   }),
   upload: ({ isDragActive, hide }) => ({
     position: 'relative',
@@ -57,7 +59,7 @@ export const AssetUploader = ({
   setFile = () => {},
   setDataUrl = () => {},
   preview = null,
-  multiple= true,
+  multiple = true,
   children,
 }) => {
   const { dispatch } = useAssetUploaderDispatch();

@@ -109,45 +109,47 @@ export const Post = ({ QUERY, date, approved, id, content, type, ...props }) => 
               title="Ändern Sie den Text gleich direkt am Post!"
               placement="top"
             >
-              <Button
-                variant="contained"
-                color="primary"
-                startIcon={
-                  <AwesomeIcon
-                    style={{ fontSize: '100%' }}
-                    icon={correctionMode ? 'check-circle' : 'pen'}
-                  />
-                }
-                disabled={approved || (correctionMode && !clientText)}
-                onClick={() => {
-                  if (correctionMode && clientText) {
-                    const clientName = user.username;
-                    const clientEmail = user.email;
-                    socket.emit(
-                      'client change',
-                      {
-                        id,
-                        content: clientText,
-                        clientCorrected: true,
-                        clientName,
-                        clientEmail,
-                      },
-                      () => {
-                        setMsg({
-                          toggle: !msg.toggle,
-                          text: 'Korrektur wurde gespeichert!',
-                          severity: 'success',
-                        });
-                      }
-                    );
-
-                    setClientText(null);
+              <span>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  startIcon={
+                    <AwesomeIcon
+                      style={{ fontSize: '100%' }}
+                      icon={correctionMode ? 'check-circle' : 'pen'}
+                    />
                   }
-                  setCorrectionMode(!correctionMode);
-                }}
-              >
-                {correctionMode ? 'Speichern' : 'Korrigieren'}
-              </Button>
+                  disabled={approved || (correctionMode && !clientText)}
+                  onClick={() => {
+                    if (correctionMode && clientText) {
+                      const clientName = user.username;
+                      const clientEmail = user.email;
+                      socket.emit(
+                        'client change',
+                        {
+                          id,
+                          content: clientText,
+                          clientCorrected: true,
+                          clientName,
+                          clientEmail,
+                        },
+                        () => {
+                          setMsg({
+                            toggle: !msg.toggle,
+                            text: 'Korrektur wurde gespeichert!',
+                            severity: 'success',
+                          });
+                        }
+                      );
+
+                      setClientText(null);
+                    }
+                    setCorrectionMode(!correctionMode);
+                  }}
+                >
+                  {correctionMode ? 'Speichern' : 'Korrigieren'}
+                </Button>
+              </span>
             </Tooltip>
           </Grid>
         </Grid>

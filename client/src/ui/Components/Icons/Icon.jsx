@@ -29,6 +29,7 @@ import {
   faRedo,
   faDownload,
   faComments,
+  faBriefcase,
 } from '@fortawesome/free-solid-svg-icons';
 
 import {
@@ -47,6 +48,7 @@ import {
 } from './custom-icons';
 
 library.add(
+  faBriefcase,
   faRedo,
   faPreview,
   faEye,
