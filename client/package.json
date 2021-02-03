@@ -17,7 +17,6 @@
     "cra-append-sw": "^2.7.0",
     "dayjs": "^1.9.1",
     "emoji-mart": "^3.0.0",
-    "fontsource-roboto": "^3.0.3",
     "intersection-observer": "^0.11.0",
     "objectFitPolyfill": "^2.3.0",
     "react": "^16.13.1",
